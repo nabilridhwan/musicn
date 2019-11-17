@@ -1,0 +1,43 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #222222;
+}
+
+img,
+a {
+    margin: 0;
+    padding: 0;
+}
+
+#main_body {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    grid-gap: 5px;
+}
+
+img {
+    max-width: 100%;
+}
+
+a {
+    color: white;
+    height: 0 !important;
+    width: 0 !important;
+}
+
+@media screen and (max-width: 600px) {
+    #main_body {
+        display: grid;
+        grid-template-columns: repeat(2, 50%);
+        grid-gap: 5px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #main_body {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-gap: 5px;
+    }
+}
