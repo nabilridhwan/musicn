@@ -21,17 +21,23 @@
     <script>
         let path = window.location.pathname;
         let pathArray = path.split("/")
-        pathArray.splice(0,2)
+        pathArray.splice(0, 2)
 
         console.log(pathArray)
 
-        if(pathArray.length == 0){
+        if (pathArray.length == 0) {
             // No user id
             window.location.href = "/";
         } else {
             const userid = pathArray.join("");
             fetch("/api/songs/" + userid)
-                .then(res => res.json())
+                .then(res => {
+                    if (res.ok) {
+                        return res.json()
+                    } else {
+                        window.location.href = "/";
+                    }
+                })
                 .then(data => {
                     data.items.forEach(d => {
 
