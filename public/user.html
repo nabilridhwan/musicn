@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./main.css">
+    <title>Spotifyer</title>
+</head>
+
+<body id="body">
+
+    <div id="main_body"></div>
+
+    <script>
+        const query = new URLSearchParams(window.location.search);
+        if (!query.get("userid")) {
+            window.location.href = "./index.html";
+        } else {
+            const userid = query.get("userid");
+            fetch("/api/songs/" + userid)
+                .then(res => res.json())
+                .then(data => {
+                    data.items.forEach(d => {
+
+                        const {
+                            name,
+                            artists,
+                            external_urls: {
+                                spotify: url
+                            },
+                            album: {
+                                images: [bigImage]
+                            }
+                        } = d;
+                        // console.log(name, artists, url, bigImage.url);
+
+                        document.getElementById("main_body").innerHTML += `
+        <div class="track">
+            <a href="${url}">
+                <img src=${bigImage.url} />
+            </a>
+        </div>
+        `
+                    })
+
+                })
+        }
+    </script>
+</body>
+
+</html>

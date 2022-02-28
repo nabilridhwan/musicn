@@ -1,0 +1,30 @@
+{
+  "name": "spotifyer",
+  "version": "1.0.0",
+  "description": "![](./readme_assets/homepage.png)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nabilridhwan/spotifyer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nabilridhwan/spotifyer/issues"
+  },
+  "homepage": "https://github.com/nabilridhwan/spotifyer#readme",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongodb": "^4.4.0",
+    "mongoose": "^6.2.3",
+    "randomstring": "^1.2.2",
+    "spotify-web-api-js": "^1.5.2"
+  }
+}
