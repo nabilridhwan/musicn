@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./main.css">
+
+    <!-- TODO: Fix the url -->
+    <link rel="stylesheet" href="../main.css">
     <title>Spotifyer</title>
 </head>
 
@@ -13,11 +15,17 @@
     <div id="main_body"></div>
 
     <script>
-        const query = new URLSearchParams(window.location.search);
-        if (!query.get("userid")) {
+        let path = window.location.pathname;
+        let pathArray = path.split("/")
+        pathArray.splice(0,2)
+
+        console.log(pathArray)
+
+        if(pathArray.length == 0){
+            // No user id
             window.location.href = "./index.html";
         } else {
-            const userid = query.get("userid");
+            const userid = pathArray.join("");
             fetch("/api/songs/" + userid)
                 .then(res => res.json())
                 .then(data => {

@@ -79,11 +79,11 @@ router.get("/callback", (req, res) => {
                             email: email
                         }, saveBody).then(val => {
                             let app_userid = val.app_userid;
-                            return res.redirect(`/user?userid=${app_userid}`)
+                            return res.redirect(`/user/${app_userid}`)
                         })
                     }
                 } else {
-                    return res.redirect(`/api/songs/${app_userid}`)
+                    return res.redirect(`/user/${app_userid}`)
                 }
 
             })

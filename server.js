@@ -14,6 +14,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.get("/", (req, res) => {res.sendFile("index.html")})
 app.get("/user", (req, res) => {res.sendFile(path.join(__dirname, "public/user.html"))})
+app.get("/user/:id", (req, res) => {res.sendFile(path.join(__dirname, "public/user.html"))})
 
 app.use("/auth", authRoutes)
 
