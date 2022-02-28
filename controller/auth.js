@@ -41,6 +41,10 @@ router.get("/callback", (req, res) => {
         // Save the access token in database
         // Get user email
 
+        if(tokenResponse.statusCode){
+            return res.status(400).send("Thank you for testing my application! You are not part of the Spotify Developer Program. Please contact me so I could register you in!");
+        }
+
         axios.get("https://api.spotify.com/v1/me", {
             headers: {
                 "Authorization": `Bearer ${tokenResponse.data.access_token}`
@@ -89,6 +93,8 @@ router.get("/callback", (req, res) => {
             })
         })
 
+    }).catch(error => {
+        return res.redirect("/auth")
     })
 })
 
