@@ -6,12 +6,11 @@ const User = require("../models/User");
 
 require("dotenv").config()
 
-const REDIRECT_URI = "http://localhost:3000/auth/callback";
 const SCOPE = "user-read-private user-read-email user-top-read"
 const SHOW_DIALOG = true;
 
 router.get("/", (req, res) => {
-    return res.redirect(`https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`)
+    return res.redirect(`https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${process.env.REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`)
 })
 
 
@@ -28,7 +27,7 @@ router.get("/callback", (req, res) => {
     const formData = new URLSearchParams();
     formData.append("grant_type", "authorization_code")
     formData.append("code", code)
-    formData.append("redirect_uri", REDIRECT_URI)
+    formData.append("redirect_uri", process.env.REDIRECT_URI)
 
     axios({
         method: "POST",
