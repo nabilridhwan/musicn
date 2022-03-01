@@ -26,6 +26,7 @@ router.get("/:id", (req, res) => {
             if (!user) return res.sendStatus(404);
             const response = {
                 app_userid: user.app_userid,
+                spotify_userid: user.spotify_userid,
                 images: user.images,
                 name: user.name
             }

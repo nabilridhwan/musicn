@@ -19,7 +19,6 @@ app.get("/users", (req, res) => {res.sendFile(path.join(__dirname, "public/users
 app.get("/user/:id", (req, res) => {res.sendFile(path.join(__dirname, "public/user.html"))})
 
 // Backend routes
-// TODO: Make every backend endpoint start with /api/
 app.use("/api/auth", authRoutes)
 app.use("/api/songs", songApiRoutes)
 app.use("/api/user", userApiRoutes)

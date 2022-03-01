@@ -20,7 +20,7 @@ router.get("/:id", (req, res) => {
 
                 axios({
                     method: "GET",
-                    url: `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=short_term`, 
+                    url: `https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=short_term`, 
                     headers: {
                         "Authorization": `Bearer ${access_token}`
                     }

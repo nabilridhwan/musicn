@@ -13,51 +13,44 @@
     <title>Spotifyer</title>
 </head>
 
-<body id="body" class="m-5">
+<body id="body">
 
-    <div class="py-20">
-        <div class="flex justify-center items-center">
-            <img class="profile_picture rounded-full w-24 h-24 mr-5">
+    <div class="jumbotron my-10 flex flex-col items-center">
 
-            <div class="justify-center items-center">
-                <h2 id="username" class="text-3xl font-bold"></h2>
+        <img class="profile_picture rounded-full w-24 h-24">
 
-                <!-- TODO: Follower count -->
-                <!-- <p class="text-black/50">15 followers on Spotify</p> -->
+        <h2 id="username" class="text-3xl font-bold mb-5"></h2>
 
-                <!-- TODO: Profile page -->
-                <!-- <a id="profile-spotify-link" 
-                    class="block bg-spotify-green text-white p-2 px-7 rounded-lg shadow-spotify-green/50 shadow-md transition ease-out hover:scale-105">
 
-                    <div class="flex items-center">
-                        <i class="fa fa-spotify text-2xl px-2 text-white " aria-hidden="true"></i>
-                        <p>Open Profile</p>
-                    </div>
+        <!-- Profile button -->
+        <a id="spotify-profile-link"
+            class="flex justify-center items-center px-3 py-1 bg-spotify-green text-white rounded-lg shadow-spotify-green/50 shadow-md btn-anim">
+            <i class="fa fa-spotify text-2xl text-center text-white mr-2" aria-hidden="true"></i>
 
-                </a> -->
-            </div>
-        </div>
+            Spotify
 
-        <div class="currently-listening my-4">
-            <h5 class="text-center font-bold my-2">I'm currently listening to</h5>
+        </a>
+    </div>
 
-            <!-- Currently Listening -->
-            <a id="currently-listening-data-url" href="/api/auth">
-                <div id="currently-listening-song"
-                    class="flex bg-white drop-shadow-bg w-fit rounded-lg m-auto items-center transition ease-out duration-500 hover:scale-110">
+    <div class="currently-listening my-20">
+        <h5 class="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
 
-                    <img id="currently-listening-data-img" class="h-14 rounded-tl-lg rounded-bl-lg">
+        <!-- Currently Listening -->
+        <a id="currently-listening-data-url" href="/api/auth">
+            <div id="currently-listening-song"
+                class="flex bg-white drop-shadow-bg w-fit rounded-lg m-auto items-center btn-anim">
 
-                    <div class="mx-4">
-                        <p id="currently-listening-data-title" class="font-bold"></p>
-                        <p id="currently-listening-data-artist" class="text-black/50 text-sm"></p>
-                    </div>
+                <img id="currently-listening-data-img" class="h-14 rounded-tl-lg rounded-bl-lg">
 
+                <div class="mx-4">
+                    <p id="currently-listening-data-title" class="font-bold"></p>
+                    <p id="currently-listening-data-artist" class="text-black/50 text-sm"></p>
                 </div>
 
-            </a>
+            </div>
 
-        </div>
+        </a>
+
     </div>
 
     <h4 class="text-center font-bold my-4">Top songs of the month</h4>
@@ -74,7 +67,7 @@
 
         if (pathArray.length == 0) {
             // No user id
-            window.location.href = "/";
+            window.location.href = "/users";
         } else {
             const userid = pathArray.join("");
 
@@ -82,10 +75,11 @@
             fetch("/api/user/" + userid)
                 .then(res => res.json())
                 .then(d => {
-                    console.log(d)
                     // Set profile_picture to image source
                     document.getElementsByClassName("profile_picture")[0].src = d.images[0].url;
                     document.getElementById("username").innerHTML = d.name;
+                    document.getElementById("spotify-profile-link").href =
+                        `https://open.spotify.com/user/${d.spotify_userid}`;
                 })
 
             // Fetch currently playing
@@ -154,14 +148,15 @@
                         // console.log(name, artists, url, bigImage.url);
 
                         document.getElementById("top-tracks").innerHTML += `
-                        <div class="group lg:w-1/5 sm:w-1/2 md:w-1/3 transition ease-out duration-500 hover:scale-110">
+                        <div class="group z-0 lg:w-1/5 w-1/2 md:w-1/3 btn-anim hover:z-50">
+                             
                 <img src=${bigImage.url}  class="w-fit h-auto"/>
 
                     <a href='${url}'>
-                <div class="hidden group-hover:flex group-hover:flex-col absolute top-0 left-0 bg-black/50 w-full h-full justify-center items-center">
+                <div class="hidden group-hover:flex group-hover:flex-col group-hover:drop-shadow-bg absolute top-0 left-0 bg-black/50 w-full h-full justify-center items-center">
 
-                <h1 class="text-white font-bold">${name}</h1>
-                <p class="text-white">${artists[0].name}</p>
+                <h1 class="text-white text-center font-bold">${name}</h1>
+                <p class="text-white text-sm text-center">${artists[0].name}</p>
 
                 </div>
 
