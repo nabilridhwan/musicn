@@ -6,24 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- TODO: Fix the url -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../main.css">
     <title>Spotifyer</title>
 </head>
 
-<body id="body">
+<body id="body" class="m-5">
 
-    <img class="profile_picture">
-    <h2 id="username"></h2>
-    <h4>Top songs of the month</h4>
-    <div id="main_body"></div>
+    <div class="py-20">
+        <div class="flex justify-center items-center">
+            <img class="profile_picture rounded-full w-24 h-24 mr-5">
+
+            <div class="justify-center items-center">
+                <h2 id="username" class="text-3xl font-bold"></h2>
+
+                <!-- TODO: Follower count -->
+                <!-- <p class="text-black/50">15 followers on Spotify</p> -->
+
+                <!-- TODO: Profile page -->
+                <!-- <a id="profile-spotify-link" 
+                    class="block bg-spotify-green text-white p-2 px-7 rounded-lg shadow-spotify-green/50 shadow-md transition ease-out hover:scale-105">
+
+                    <div class="flex items-center">
+                        <i class="fa fa-spotify text-2xl px-2 text-white " aria-hidden="true"></i>
+                        <p>Open Profile</p>
+                    </div>
+
+                </a> -->
+            </div>
+        </div>
+
+        <div class="currently-listening my-4">
+            <h5 class="text-center font-bold my-2">I'm currently listening to</h5>
+
+            <!-- Currently Listening -->
+            <a id="currently-listening-data-url" href="/api/auth">
+                <div id="currently-listening-song"
+                    class="flex bg-white drop-shadow-bg w-fit rounded-lg m-auto items-center transition ease-out duration-500 hover:scale-110">
+
+                    <img id="currently-listening-data-img" class="h-14 rounded-tl-lg rounded-bl-lg">
+
+                    <div class="mx-4">
+                        <p id="currently-listening-data-title" class="font-bold"></p>
+                        <p id="currently-listening-data-artist" class="text-black/50 text-sm"></p>
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+    </div>
+
+    <h4 class="text-center font-bold my-4">Top songs of the month</h4>
+    <div id="top-tracks" class="flex flex-wrap"></div>
 
     <!-- TODO: Share with friends -->
     <!-- <button class="share_button">Share with your friends!</button> -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.min.js" integrity="sha512-mMe7BAZPOkGbq+zhRBMNV3Q+5ZDzcUEOJoUYXbHpEcODkDBYbttaW7P108jX66AQgwgsAjvlP4Ayb/XLJZfmsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        var colorThief = new ColorThief();
-
         let path = window.location.pathname;
         let pathArray = path.split("/")
         pathArray.splice(0, 2)
@@ -38,12 +80,54 @@
 
             // Fetch the user details
             fetch("/api/user/" + userid)
-            .then(res => res.json())
-            .then(d => {
-                // Set profile_picture to image source
-                document.getElementsByClassName("profile_picture")[0].src = d.images[0].url;
-                document.getElementById("username").innerHTML = d.name;
-            })
+                .then(res => res.json())
+                .then(d => {
+                    console.log(d)
+                    // Set profile_picture to image source
+                    document.getElementsByClassName("profile_picture")[0].src = d.images[0].url;
+                    document.getElementById("username").innerHTML = d.name;
+                })
+
+            // Fetch currently playing
+            fetch("/api/songs/" + userid + "/currently_playing")
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.statusText)
+                    }
+                    return res.json()
+                })
+                .then(data => {
+
+                    let currently_playing_data = data.item;
+
+                    if (data.item) {
+                        let currently_playing_data_img = document.getElementById("currently-listening-data-img");
+                        let currently_playing_data_title = document.getElementById(
+                            "currently-listening-data-title");
+                        let currently_playing_data_artist = document.getElementById(
+                            "currently-listening-data-artist");
+                        let currently_playing_data_url = document.getElementById("currently-listening-data-url");
+
+                        currently_playing_data_img.src = currently_playing_data.album.images[0].url;
+                        currently_playing_data_title.innerHTML = currently_playing_data.name;
+                        currently_playing_data_artist.innerHTML = currently_playing_data.artists[0].name;
+                        currently_playing_data_url.href = currently_playing_data.external_urls.spotify;
+                    } else {
+                        let currently_playing_data_url = document.getElementById("currently-listening-data-url");
+                        currently_playing_data_url.href = "#";
+
+                        document.getElementById("currently-listening-song").innerHTML =
+                            "<p class='p-4 text-black/50 italic'>I'm not listening to anything right now</p>";
+                    }
+
+                }).catch(error => {
+
+                    let currently_playing_data_url = document.getElementById("currently-listening-data-url");
+                    currently_playing_data_url.href = "#";
+
+                    document.getElementById("currently-listening-song").innerHTML =
+                        "<p class='p-4 text-black/50 italic'>Something went wrong! If you are the owner, try <a href='/api/auth' class='text-black/80'>logging in</a> again!</p>";
+                })
 
             fetch("/api/songs/" + userid)
                 .then(res => {
@@ -55,8 +139,6 @@
                 })
                 .then(data => {
                     data.items.forEach(d => {
-
-
                         const {
                             name,
                             artists,
@@ -71,18 +153,21 @@
 
                         // console.log(name, artists, url, bigImage.url);
 
-                        document.getElementById("main_body").innerHTML += `
-        <div class="track">
-                <img src=${bigImage.url} />
-                <div class="track_info">
-                    <a href="${url}">
-                        <h4>
-                            ${name}
-                           </h4> 
-                            </a>
-                    <p>${artists.map(a => a.name).join(", ")}</p>
+                        document.getElementById("top-tracks").innerHTML += `
+                        <div class="group lg:w-1/5 sm:w-1/2 md:w-1/3 transition ease-out duration-500 hover:scale-110">
+                <img src=${bigImage.url}  class="h-fit"/>
+
+                    <a href='${url}'>
+                <div class="hidden group-hover:flex group-hover:flex-col absolute top-0 left-0 bg-black/50 w-full h-full justify-center items-center">
+
+                <h1 class="text-white font-bold">${name}</h1>
+                <p class="text-white">${artists[0].name}</p>
+
                 </div>
-        </div>
+
+                        </a>
+
+                </div>
         `
                     })
 
