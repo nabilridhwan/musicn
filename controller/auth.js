@@ -54,7 +54,8 @@ router.get("/callback", (req, res) => {
                 display_name,
                 country,
                 images,
-                id
+                id,
+                followers: {total: follower_count}
             } = userResponse.data;
 
             let saveBody = {
@@ -65,6 +66,7 @@ router.get("/callback", (req, res) => {
                 country: country,
                 images: images,
                 refresh_token: tokenResponse.data.refresh_token,
+                follower_count: follower_count
             }
 
             new User(saveBody).save(function (err) {

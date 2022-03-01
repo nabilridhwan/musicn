@@ -10,6 +10,7 @@ const User = new Schema({
     images: {type: Array},
     access_token: {type: String},
     refresh_token: {type: String},
+    follower_count: {type: String}
 })
 
 
