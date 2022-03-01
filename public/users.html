@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TODO: Fix the url -->
+    <link rel="stylesheet" href="../main.css">
+    <title>Users</title>
+</head>
+
+<body id="body">
+
+    <h1>Users</h1>
+
+    <div id="user_body"></div>
+
+
+    <script>
+        fetch("/api/user")
+            .then(res => res.json())
+            .then(d => {
+                console.log(d)
+                d.forEach(d => {
+
+                    document.getElementById("user_body").innerHTML += (`
+                    <div class="user">
+                <img class="profile_picture" src="${d.images[0].url}" alt="profile picture">
+                <br>
+                <a  href="/user/${d.app_userid}">${d.name}</a> 
+                </div>
+            `)
+
+                })
+            })
+    </script>
+</body>
+
+</html>

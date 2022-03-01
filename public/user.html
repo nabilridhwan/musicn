@@ -12,13 +12,18 @@
 
 <body id="body">
 
-    <h4>My top songs of the month</h4>
+    <img class="profile_picture">
+    <h2 id="username"></h2>
+    <h4>Top songs of the month</h4>
     <div id="main_body"></div>
 
     <!-- TODO: Share with friends -->
     <!-- <button class="share_button">Share with your friends!</button> -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.min.js" integrity="sha512-mMe7BAZPOkGbq+zhRBMNV3Q+5ZDzcUEOJoUYXbHpEcODkDBYbttaW7P108jX66AQgwgsAjvlP4Ayb/XLJZfmsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        var colorThief = new ColorThief();
+
         let path = window.location.pathname;
         let pathArray = path.split("/")
         pathArray.splice(0, 2)
@@ -30,6 +35,16 @@
             window.location.href = "/";
         } else {
             const userid = pathArray.join("");
+
+            // Fetch the user details
+            fetch("/api/user/" + userid)
+            .then(res => res.json())
+            .then(d => {
+                // Set profile_picture to image source
+                document.getElementsByClassName("profile_picture")[0].src = d.images[0].url;
+                document.getElementById("username").innerHTML = d.name;
+            })
+
             fetch("/api/songs/" + userid)
                 .then(res => {
                     if (res.ok) {
@@ -41,6 +56,7 @@
                 .then(data => {
                     data.items.forEach(d => {
 
+
                         const {
                             name,
                             artists,
@@ -51,13 +67,21 @@
                                 images: [bigImage]
                             }
                         } = d;
+
+
                         // console.log(name, artists, url, bigImage.url);
 
                         document.getElementById("main_body").innerHTML += `
         <div class="track">
-            <a href="${url}">
                 <img src=${bigImage.url} />
-            </a>
+                <div class="track_info">
+                    <a href="${url}">
+                        <h4>
+                            ${name}
+                           </h4> 
+                            </a>
+                    <p>${artists.map(a => a.name).join(", ")}</p>
+                </div>
         </div>
         `
                     })

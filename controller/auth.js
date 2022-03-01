@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
 
 router.get("/callback", (req, res) => {
     if (req.query.error) {
-        // Error has occured
+        // Error has occurred 
         return res.sendStatus(500);
     }
 
@@ -40,10 +40,6 @@ router.get("/callback", (req, res) => {
     }).then(tokenResponse => {
         // Save the access token in database
         // Get user email
-
-        if(tokenResponse.statusCode){
-            return res.status(400).send("Thank you for testing my application! You are not part of the Spotify Developer Program. Please contact me so I could register you in!");
-        }
 
         axios.get("https://api.spotify.com/v1/me", {
             headers: {
@@ -91,10 +87,12 @@ router.get("/callback", (req, res) => {
                 }
 
             })
+        }).catch(error => {
+            return res.send("There is a problem registering your account. Please try again later!")
         })
 
     }).catch(error => {
-        return res.redirect("/auth")
+        return res.redirect("/api/auth")
     })
 })
 
