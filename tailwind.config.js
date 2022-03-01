@@ -8,6 +8,9 @@ module.exports = {
       },
       dropShadow: {
         "bg": "0 0 5px rgba(0,0,0,0.25)"
+      },
+      fontFamily: {
+        "inter": ["Inter", "sans-serif"],
       }
     },
   },
