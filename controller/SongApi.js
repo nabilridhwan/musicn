@@ -18,13 +18,15 @@ router.get("/:id", (req, res) => {
             UserUtils.getAccessToken(user.refresh_token).then(data=> {
                 const {access_token} = data;
 
+                // Get follower count
                 axios({
                     method: "GET",
-                    url: `https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=short_term`, 
+                    url: `https://api.spotify.com/v1/me`, 
                     headers: {
                         "Authorization": `Bearer ${access_token}`
                     }
                 }).then(response => {
+                    console.log(response.data.followers.total)
                     return res.json(response.data)
                 }).catch(error => {
                     return res.status(500).json(error.response.data)

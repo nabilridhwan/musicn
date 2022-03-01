@@ -1,7 +1,11 @@
+const {
+    default: axios
+} = require("axios");
 const express = require("express");
 const router = express.Router();
 
 const User = require("../models/User");
+const UserUtils = require("../utils/User");
 
 router.get("/", (req, res) => {
     User.find().then(users => {
@@ -24,14 +28,37 @@ router.get("/:id", (req, res) => {
         })
         .then(user => {
             if (!user) return res.sendStatus(404);
-            const response = {
-                app_userid: user.app_userid,
-                spotify_userid: user.spotify_userid,
-                images: user.images,
-                name: user.name
-            }
 
-            res.json(response)
+            UserUtils.getAccessToken(user.refresh_token).then(data => {
+                const {
+                    access_token
+                } = data;
+
+                axios({
+                    method: "GET",
+                    url: `https://api.spotify.com/v1/me`,
+                    headers: {
+                        "Authorization": `Bearer ${access_token}`
+                    }
+                }).then(response => {
+                    const follower_count = response.data.followers.total;
+
+                    const rtnbody = {
+                        app_userid: user.app_userid,
+                        spotify_userid: user.spotify_userid,
+                        images: user.images,
+                        name: user.name,
+                        follower_count: follower_count
+                    }
+
+                    return res.json(rtnbody)
+                }).catch(error => {
+                    return res.status(500).json(error.response.data)
+                })
+
+
+
+            })
         })
 })
 

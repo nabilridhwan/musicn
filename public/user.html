@@ -27,12 +27,14 @@
 
             <img class="profile_picture rounded-full w-24 h-24">
 
-            <h2 id="username" class="text-3xl font-bold mb-5"></h2>
+            <h2 id="username" class="text-3xl font-bold"></h2>
+            <p class="text-sm text-black/50" id="follower-count-text">
+            </p>
 
 
             <!-- Profile button -->
             <a id="spotify-profile-link"
-                class="flex justify-center items-center px-3 py-1 bg-spotify-green text-white rounded-lg shadow-spotify-green/50 shadow-md btn-anim">
+                class="flex mt-6 justify-center items-center px-3 py-1 bg-spotify-green text-white rounded-lg shadow-spotify-green/50 shadow-md btn-anim">
                 <i class="fa fa-spotify text-2xl text-center text-white mr-2" aria-hidden="true"></i>
 
                 Spotify
@@ -84,6 +86,12 @@
                         .then(res => res.json())
                         .then(d => {
                             // Set profile_picture to image source
+                            if(!d.follower_count){
+                                document.getElementById("follower-count-text").innerHTML = "This person is pretty mysterious! We can't see their followers on Spotify!"
+                            }else{
+                                document.getElementById("follower-count-text").innerHTML = d.follower_count + " followers on Spotify";
+                            }
+
                             document.getElementsByClassName("profile_picture")[0].src = d.images[0].url;
                             document.getElementById("username").innerHTML = d.name;
                             document.getElementById("spotify-profile-link").href =
