@@ -27,7 +27,7 @@ const User = {
                     resolve(tokenResponse.data)
                 }
             }).catch(error => {
-                reject(error)
+                resolve(error)
             })
         })
     }
