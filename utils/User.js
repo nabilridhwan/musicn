@@ -11,6 +11,7 @@ const User = {
             formData.append("refresh_token", refresh_token)
 
 
+            // TODO: Fix token issue
             axios({
                 method: "POST",
                 url: "https://accounts.spotify.com/api/token",
@@ -25,6 +26,8 @@ const User = {
                 } else {
                     resolve(tokenResponse.data)
                 }
+            }).catch(error => {
+                reject(error)
             })
         })
     }

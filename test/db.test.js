@@ -1,4 +1,4 @@
-const supabase = require("../utils/db");
+const supabase = require("../models/User");
 
 async function getAllUsers() {
     let {
@@ -7,34 +7,7 @@ async function getAllUsers() {
     } = await supabase.from('users').select("*")
 
     if (error) {
-        throw error
-    } else {
-        return users
-    }
-}
-
-async function getUserByAppUserID(app_userID) {
-    let {
-        data: users,
-        error
-    } = await supabase.from('users').select("*").like('app_userid', app_userID)
-
-    if (error) {
-        throw error
-    } else {
-        return users
-    }
-}
-
-async function getUserByEmail(email) {
-
-    let {
-        data: users,
-        error
-    } = await supabase.from('users').select("*").like('email', email)
-
-    if (error) {
-        throw error
+        throw error 
     } else {
         return users
     }
@@ -63,15 +36,8 @@ async function insertUser({
     }])
 
     if (error) {
-        throw error
+        throw error 
     } else {
         return data
     }
-}
-
-module.exports = {
-    insertUser,
-    getAllUsers,
-    getUserByEmail,
-    getUserByAppUserID
 }

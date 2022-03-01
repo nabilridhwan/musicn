@@ -55,7 +55,9 @@ router.get("/callback", (req, res) => {
                 country,
                 images,
                 id,
-                followers: {total: follower_count}
+                followers: {
+                    total: follower_count
+                }
             } = userResponse.data;
 
             let saveBody = {
@@ -69,27 +71,26 @@ router.get("/callback", (req, res) => {
                 follower_count: follower_count
             }
 
-            new User(saveBody).save(function (err) {
-                if (err) {
-
-                    if (err.code == 11000) {
-                        // User already exists
-                        // Update the user
-                        delete saveBody.app_userid;
-                        console.log("User already exists! Updating")
-                        User.findOneAndUpdate({
-                            email: email
-                        }, saveBody).then(val => {
-                            let app_userid = val.app_userid;
-                            return res.redirect(`/user/${app_userid}`)
-                        })
-                    }
+            // Check if user exists or not
+            User.getUserByEmail(email).then(user => {
+                if (user.length == 0) {
+                    User.insertUser(saveBody).then(user => {
+                        return res.redirect(`/user/${user.app_userid}`)
+                    }).catch(error => {
+                        // TODO: Error handling
+                        return res.status(500).json(error)
+                    })
                 } else {
-                    return res.redirect(`/user/${app_userid}`)
+                    return res.redirect(`/user/${user[0].app_userid}`)
                 }
-
+            }).catch(error => {
+                return res.status(500).json(error)
             })
+
+
+
         }).catch(error => {
+            console.log(error)
             return res.send("There is a problem registering your account. Please try again later!")
         })
 
