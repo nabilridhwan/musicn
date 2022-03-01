@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const app = express();
 const path = require("path");
 require("dotenv").config();
@@ -9,9 +8,6 @@ const songApiRoutes = require("./controller/SongApi")
 const userApiRoutes = require("./controller/User")
 
 app.use(express.static("public"))
-
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("Connected to MongoDB"))
 
 // Frontend routes
 app.get("/", (req, res) => {res.sendFile("index.html")})
