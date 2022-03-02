@@ -62,6 +62,8 @@ router.get("/:id/currently_playing", (req, res) => {
                     }).catch(error => {
                         return res.status(500).json(error.response.data)
                     })
+                }).catch(error => {
+                    return res.status(500).json(error)
                 })
             }
         })

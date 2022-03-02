@@ -81,7 +81,7 @@ router.get("/callback", (req, res) => {
                         return res.status(500).json(error)
                     })
                 } else {
-                    return res.redirect(`/user/${user[0].app_userid}`)
+                    return res.redirect(`${process.env.FRONTEND_URL}/user/${user[0].app_userid}`)
                 }
             }).catch(error => {
                 return res.status(500).json(error)
@@ -95,7 +95,8 @@ router.get("/callback", (req, res) => {
         })
 
     }).catch(error => {
-        return res.redirect("/api/auth")
+        console.log("An error occured")
+        return res.status(500).send(error)
     })
 })
 
