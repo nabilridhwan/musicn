@@ -95,7 +95,7 @@ router.get("/callback", (req, res) => {
         })
 
     }).catch(error => {
-        return res.redirect("/api/auth")
+        return res.status(500).send(error)
     })
 })
 
