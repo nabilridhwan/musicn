@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+    body{
+        @apply font-inter
+    }
+
+    .btn-anim {
+        @apply transition ease-out hover:scale-110 duration-300;
+    }
+
+    .jumbotron{
+        @apply text-center m-auto w-4/5 md:w-1/2 ;
+    }
+
+    .jumbotron h1{
+        @apply text-6xl font-extrabold;
+    }
+
+    .jumbotron h3{
+        @apply text-lg my-4;
+    }
+}
