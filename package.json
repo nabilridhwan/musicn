@@ -28,8 +28,5 @@
     "mongodb": "^4.4.0",
     "randomstring": "^1.2.2",
     "spotify-web-api-js": "^1.5.2"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.0.23"
   }
 }
