@@ -46,9 +46,12 @@ export default function User() {
         return fetch(`/api/songs/${app_userid}/currently_playing`)
             .then(res => res.json())
             .then(currentSong => {
+                if(currentSong.error){
+                    return null
+                }
                 return currentSong
-            })
-    }
+            })    
+        }
 
     async function getUserTopSongs() {
         return fetch(`/api/songs/${app_userid}`)
