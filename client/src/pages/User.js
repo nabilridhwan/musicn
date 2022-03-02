@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import {FaSpotify} from "react-icons/fa"
+import {FaPause, FaPlay, FaSpotify} from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 
 export default function User() {
@@ -46,7 +46,7 @@ export default function User() {
         return fetch(`/api/songs/${app_userid}/currently_playing`)
             .then(res => res.json())
             .then(currentSong => {
-                return currentSong.item
+                return currentSong
             })
     }
 
@@ -86,20 +86,22 @@ export default function User() {
 
                 {/* <p>{JSON.stringify(currentSong)}</p> */}
 
-                <a id="currently-listening-data-url" href={currentSong ? currentSong.external_urls.spotify : ""}>
+                <a id="currently-listening-data-url" href={currentSong ? currentSong.item.external_urls.spotify : ""}>
 
                     {currentSong ? (
                         <>
                         <div id="currently-listening-song"
-                            className="flex bg-white drop-shadow-bg w-fit rounded-lg m-auto items-center btn-anim">
+                            className={currentSong.is_playing ? "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg" : "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg opacity-70"}>
 
-                            <img src={currentSong.album.images[0].url} className="h-14 rounded-tl-lg rounded-bl-lg" />
+                            <img src={currentSong.item.album.images[0].url} className="h-14 rounded-tl-lg rounded-bl-lg" />
 
 
                             <div className="mx-4">
-                                <p className="font-bold">{currentSong.name}</p>
-                                <p className="text-black/50 text-sm">{currentSong.artists[0].name}</p>
+                                <p className="font-bold">{currentSong.item.name}</p>
+                                <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
                             </div>
+
+                            {currentSong.is_playing ? (<FaPlay className="mx-3" />) : (<FaPause className="mx-3" />)}
 
                         </div>
 
@@ -107,7 +109,7 @@ export default function User() {
                         </>
                     ) : (
                         <div id="currently-listening-song"
-                            className="flex bg-white drop-shadow-bg w-fit rounded-lg m-auto items-center btn-anim">
+                            className="flex bg-white border w-fit rounded-lg m-auto items-center btn-anim">
                             <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
                         </div>
                     )}
