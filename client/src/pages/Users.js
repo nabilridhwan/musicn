@@ -35,18 +35,26 @@ export default function Users() {
             </div>
 
             <div className="flex flex-wrap justify-center">
-                <input type="text" className="mx-10 py-5 w-full border-solid border-1 border-black/50 text-center" onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for users" />
+                <input type="text" className="mx-10 py-5 w-full md:w-1/2 border rounded-lg text-center" onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for users" />
             </div>
 
             {displayUsers.map((user, index) => (
                 <a key={index} href={"/user/" + user.app_userid}>
-                    <div className="user mx-10 my-5 py-5 flex flex-col justify-center items-center rounded-2xl bg-white drop-shadow-bg m-2 transition ease-out duration-500 hover:scale-110">
-
+                    <div className="user w-full md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow">
                         <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
-                        <p>{user.name}</p>
+
+                        <div className="ml-5">
+                        <p className="text-lg font-bold">{user.name}</p>
+                        {/* <p className="text-sm text-black/50">100 Followers on Spotify</p> */}
+                        </div>
                     </div>
                 </a>
             ))}
+
+            {
+                displayUsers.length == 0 &&
+                <p className="text-center my-10">No users found!</p>
+            }
         </div>
     )
 }
