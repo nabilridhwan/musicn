@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import {FaPause, FaPlay, FaSpotify} from "react-icons/fa"
+import { FaPause, FaPlay, FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 
 export default function User() {
@@ -46,12 +46,12 @@ export default function User() {
         return fetch(`/api/songs/${app_userid}/currently_playing`)
             .then(res => res.json())
             .then(currentSong => {
-                if(currentSong.error){
+                if (currentSong.error) {
                     return null
                 }
                 return currentSong
-            })    
-        }
+            })
+    }
 
     async function getUserTopSongs() {
         return fetch(`/api/songs/${app_userid}`)
@@ -77,10 +77,10 @@ export default function User() {
 
 
                 <a id="spotify-profile-link"
-                href={"https://open.spotify.com/user/" + user.spotify_userid}
-                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg shadow-spotify-green/50 shadow-md btn-anim">
+                    href={"https://open.spotify.com/user/" + user.spotify_userid}
+                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 btn-anim">
                     <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                    Spotify
+                    Spotify 
                 </a>
             </div>
 
@@ -93,22 +93,22 @@ export default function User() {
 
                     {currentSong ? (
                         <>
-                        <div id="currently-listening-song"
-                            className={currentSong.is_playing ? "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg" : "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg opacity-70"}>
+                            <div id="currently-listening-song"
+                                className={currentSong.is_playing ? "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg" : "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg opacity-70"}>
 
-                            <img src={currentSong.item.album.images[0].url} className="h-14 rounded-tl-lg rounded-bl-lg" />
+                                <img src={currentSong.item.album.images[0].url} className="h-14 rounded-tl-lg rounded-bl-lg" />
 
 
-                            <div className="mx-4">
-                                <p className="font-bold">{currentSong.item.name}</p>
-                                <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
+                                <div className="mx-4">
+                                    <p className="font-bold">{currentSong.item.name}</p>
+                                    <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
+                                </div>
+
+                                {currentSong.is_playing ? (<FaPlay className="mx-3" />) : (<FaPause className="mx-3" />)}
+
                             </div>
 
-                            {currentSong.is_playing ? (<FaPlay className="mx-3" />) : (<FaPause className="mx-3" />)}
-
-                        </div>
-
-                        <p className="text-sm text-center mt-3 italic text-black/30">*Songs updates every 30 seconds (beta)</p>
+                            <p className="text-sm text-center mt-3 italic text-black/30">*Songs updates every 30 seconds (beta)</p>
                         </>
                     ) : (
                         <div id="currently-listening-song"
@@ -123,36 +123,39 @@ export default function User() {
 
             </div>
 
-            <h4 className="text-center font-bold my-4">Top songs of the month</h4>
 
             {topSongs && (
-                <div id="top-tracks" className="flex flex-wrap">
-                    {topSongs.map((
-                        {
-                            name,
-                            artists,
-                            external_urls: { spotify: url },
-                            album: { images: [bigImage] }
-                        }, index
-                    ) => (<div key={index} className="group z-0 lg:w-1/5 w-1/2 md:w-1/3 btn-anim hover:z-50">
+                <>
 
-                        <img src={bigImage.url} className="w-fit h-auto" />
+                    <h4 className="text-center font-bold my-4">Top songs of the month</h4>
+                    <div id="top-tracks" className="flex flex-wrap">
+                        {topSongs.map((
+                            {
+                                name,
+                                artists,
+                                external_urls: { spotify: url },
+                                album: { images: [bigImage] }
+                            }, index
+                        ) => (<div key={index} className="group z-0 hover:border hover:drop-shadow-lg lg:w-1/5 w-1/2 md:w-1/3 btn-anim hover:z-50">
 
-                        <a href={url}>
-                            <div className="hidden group-hover:flex group-hover:flex-col group-hover:drop-shadow-bg absolute top-0 left-0 bg-black/50 w-full h-full justify-center items-center">
+                            <img src={bigImage.url} className="w-fit h-auto" />
 
-                                <h1 className="text-white text-center font-bold">{name}</h1>
-                                <p className="text-white text-sm text-center">{artists[0].name}</p>
+                            <a href={url}>
+                                <div className="hidden group-hover:flex group-hover:flex-col group-hover:drop-shadow-bg absolute top-0 left-0 bg-black/50 w-full h-full justify-center items-center">
 
-                            </div>
+                                    <h1 className="text-white text-center font-bold">{name}</h1>
+                                    <p className="text-white text-sm text-center">{artists[0].name}</p>
 
-                        </a>
+                                </div>
 
-                    </div>))}
+                            </a>
+
+                        </div>))}
 
 
 
-                </div>
+                    </div>
+                </>
             )}
         </div>
     )
