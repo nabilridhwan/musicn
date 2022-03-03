@@ -50,6 +50,8 @@ export default function User() {
                     return null
                 }
                 return currentSong
+            }).catch(error => {
+                setCurrentSong(-1)
             })
     }
 
@@ -80,7 +82,7 @@ export default function User() {
                     href={"https://open.spotify.com/user/" + user.spotify_userid}
                     className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 btn-anim">
                     <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                    Spotify 
+                    Spotify
                 </a>
             </div>
 
@@ -108,7 +110,6 @@ export default function User() {
 
                             </div>
 
-                            <p className="text-sm text-center mt-3 italic text-black/30">*Songs updates every 30 seconds (beta)</p>
                         </>
                     ) : (
                         <div id="currently-listening-song"
@@ -116,6 +117,8 @@ export default function User() {
                             <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
                         </div>
                     )}
+
+                            <p className="text-sm text-center mt-3 italic text-black/30">*Songs updates every 30 seconds (beta)</p>
 
 
 
@@ -128,7 +131,7 @@ export default function User() {
                 <>
 
                     <h4 className="text-center font-bold my-4">Top songs of the month</h4>
-                    <div id="top-tracks" className="flex flex-wrap">
+                    <div id="top-tracks" className="flex flex-wrap items-stretch">
                         {topSongs.map((
                             {
                                 name,
@@ -136,15 +139,22 @@ export default function User() {
                                 external_urls: { spotify: url },
                                 album: { images: [bigImage] }
                             }, index
-                        ) => (<div key={index} className="group z-0 hover:border hover:drop-shadow-lg lg:w-1/5 w-1/2 md:w-1/3 btn-anim hover:z-50">
+                        ) => (<div key={index} className="z-0 hover:drop-shadow-lg lg:w-1/5 w-1/2 md:w-1/3 btn-anim hover:z-50 rounded-lg">
 
-                            <img src={bigImage.url} className="w-fit h-auto" />
 
                             <a href={url}>
-                                <div className="hidden group-hover:flex group-hover:flex-col group-hover:drop-shadow-bg absolute top-0 left-0 bg-black/50 w-full h-full justify-center items-center">
+                                <div className="bg-white">
 
-                                    <h1 className="text-white text-center font-bold">{name}</h1>
-                                    <p className="text-white text-sm text-center">{artists[0].name}</p>
+
+                                    <img src={bigImage.url} className="w-fit h-auto" />
+
+                                    <div className="py-5">
+
+
+                                        <h1 className="text-black text-center font-bold">{name}</h1>
+                                        <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+
+                                    </div>
 
                                 </div>
 

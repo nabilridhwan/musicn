@@ -1,4 +1,4 @@
-# Spotifyer
+# Musicn 
 ### Share with your friends your currently listening and top songs on Spotify!
 
 > Powered by Supabase, Express, Node JS, React and Tailwind CSS
