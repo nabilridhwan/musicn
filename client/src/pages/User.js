@@ -24,14 +24,6 @@ export default function User() {
             setTopSongs(top_tracks)
         })();
 
-        const i = setInterval(async () => {
-            let currently_playing = await getUserCurrentlyPlaying();
-            setCurrentSong(currently_playing)
-        }, 30000)
-
-        return () => {
-            clearInterval(i)
-        }
     }, [])
 
     async function getUserProfile() {
@@ -96,7 +88,7 @@ export default function User() {
                     {currentSong ? (
                         <>
                             <div id="currently-listening-song"
-                                className={currentSong.is_playing ? "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg" : "flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg opacity-70"}>
+                                className={"flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg"}>
 
                                 <img src={currentSong.item.album.images[0].url} className="h-14 rounded-tl-lg rounded-bl-lg" />
 
@@ -105,8 +97,6 @@ export default function User() {
                                     <p className="font-bold">{currentSong.item.name}</p>
                                     <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
                                 </div>
-
-                                {currentSong.is_playing ? (<FaPlay className="mx-3" />) : (<FaPause className="mx-3" />)}
 
                             </div>
 

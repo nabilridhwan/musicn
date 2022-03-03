@@ -6,7 +6,7 @@
 @layer components {
 
     body{
-        @apply font-inter
+        @apply font-inter;
     }
 
     .btn-anim {
