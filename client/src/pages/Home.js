@@ -4,7 +4,8 @@ const SHOW_DIALOG = true;
 const SCOPE = "user-read-private user-read-email user-top-read user-read-currently-playing"
 const CLIENT_ID = "e849dc093c46431e99a380047315750d"
 const REDIRECT_URI = "http://localhost:4000/api/auth/callback"
-const URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
+// const URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
+const URL = `/api/auth`
 
 export default function Home() {
     return (
