@@ -72,7 +72,7 @@ export default function User() {
 
                 <a id="spotify-profile-link"
                     href={"https://open.spotify.com/user/" + user.spotify_userid}
-                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 btn-anim">
+                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
                     <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
                     Spotify
                 </a>
@@ -88,9 +88,9 @@ export default function User() {
                     {currentSong ? (
                         <>
                             <div id="currently-listening-song"
-                                className={"flex bg-white border w-fit rounded-lg m-auto items-center btn-anim hover:drop-shadow-lg"}>
+                                className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
 
-                                <img src={currentSong.item.album.images[0].url} className="h-14 rounded-tl-lg rounded-bl-lg" />
+                                <img src={currentSong.item.album.images[0].url} className="h-14" />
 
 
                                 <div className="mx-4">
@@ -103,14 +103,10 @@ export default function User() {
                         </>
                     ) : (
                         <div id="currently-listening-song"
-                            className="flex bg-white border w-fit rounded-lg m-auto items-center btn-anim">
+                            className="flex bg-white border w-fit lg m-auto items-center btn-anim">
                             <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
                         </div>
                     )}
-
-                            <p className="text-sm text-center mt-3 italic text-black/30">*Songs updates every 30 seconds (beta)</p>
-
-
 
                 </a>
 
@@ -129,26 +125,31 @@ export default function User() {
                                 external_urls: { spotify: url },
                                 album: { images: [bigImage] }
                             }, index
-                        ) => (<div key={index} className="z-0 hover:drop-shadow-lg lg:w-1/5 w-1/2 md:w-1/3 btn-anim hover:z-50 rounded-lg">
+                        ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
 
 
-                            <a href={url}>
-                                <div className="bg-white">
+                            <div className="bg-white">
 
 
-                                    <img src={bigImage.url} className="w-fit h-auto" />
+                                <img src={bigImage.url} className="w-fit h-auto" />
 
-                                    <div className="py-5">
+                                <div className="py-7">
 
 
-                                        <h1 className="text-black text-center font-bold">{name}</h1>
-                                        <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+                                    <h1 className="text-black text-center font-bold">{name}</h1>
+                                    <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
 
-                                    </div>
+                                    <a id="spotify-profile-link"
+                                        href={url}
+                                        className="flex mt-4 mx-auto w-fit justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                                        <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                                        Spotify
+                                    </a>
 
                                 </div>
 
-                            </a>
+                            </div>
+
 
                         </div>))}
 
