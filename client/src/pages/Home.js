@@ -23,11 +23,11 @@ export default function Home() {
                 </h1>
 
                 <h3 className="my-4 text-lg">
-                    With <span className="font-bold">Musicn</span>, you have your own Spotify profile page which shows the song you're listening to along with your top songs of the month! Copy the link and send it to your friends (or maybe, paste it in your Instagram's bio!)
+                    With <span className="font-bold">Musicn</span>, you have your own Spotify profile page which shows <strike>the song you're listening to along with</strike> your top songs of the month! Copy the link and send it to your friends (or maybe, paste it in your Instagram's bio!)
                 </h3>
 
                 <p className="italic" >
-                    Please note that Musicn is currently in beta and is only working for beta testers. Please contact me if you want to be part of the Beta Testing program!
+                    Due to circumstances, Musicn is currently in beta. Features may change overtime 
                 </p>
 
                 <p className="my-5">
