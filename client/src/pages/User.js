@@ -61,7 +61,7 @@ export default function User() {
 
             <NavigationBar />
 
-            <div className="jumbotron my-10 flex flex-col items-center">
+            <div className="my-10 flex items-center justify-center">
 
                 {user.profile_pic_url ?
 
@@ -69,22 +69,26 @@ export default function User() {
 
                     :
                     <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
-                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
-                            </div>
+                        <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                    </div>
                 }
 
-                <h2 className="text-3xl font-bold">{user.name}</h2>
-                <p className="text-sm text-black/50" id="follower-count-text">
-                    {user.follower_count ? user.follower_count : 0} followers
-                </p>
+                <div className="ml-4">
+
+                    <h2 className="text-3xl font-bold">{user.name}</h2>
+                    <p className="text-sm text-black/50" id="follower-count-text">
+                        {user.follower_count ? user.follower_count : 0} followers on Spotify
+                    </p>
 
 
-                <a id="spotify-profile-link"
-                    href={"https://open.spotify.com/user/" + user.spotify_userid}
-                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                    <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                    Spotify
-                </a>
+                    <a id="spotify-profile-link"
+                        href={"https://open.spotify.com/user/" + user.spotify_userid}
+                        className="flex mt-2 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                        <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                        Spotify
+                    </a>
+                </div>
+
             </div>
 
             <div className="currently-listening my-20">
