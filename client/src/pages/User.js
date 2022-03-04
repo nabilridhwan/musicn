@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { FaPause, FaPlay, FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 
@@ -10,6 +10,7 @@ export default function User() {
     const [user, setUser] = useState({})
     const [currentSong, setCurrentSong] = useState(null)
     const [topSongs, setTopSongs] = useState(null)
+    const navigate = useNavigate() 
 
 
     useEffect(() => {
@@ -31,6 +32,8 @@ export default function User() {
             .then(res => res.json())
             .then(user => {
                 return user
+            }).catch(err => {
+                navigate("/users")
             })
     }
 
@@ -48,7 +51,7 @@ export default function User() {
     }
 
     async function getUserTopSongs() {
-        return fetch(`/api/songs/${app_userid}`)
+        return fetch(`/api/songs/${app_userid}/top_songs`)
             .then(res => res.json())
             .then(topSongs => {
                 return topSongs.items
@@ -64,9 +67,9 @@ export default function User() {
 
                 <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
 
-                <h2 className="text-3xl font-bold">{user.name}</h2>
+                <h2 className="text-3xl font-bold">{user && user.name}</h2>
                 <p className="text-sm text-black/50" id="follower-count-text">
-                    {user.follower_count ? user.follower_count : 0} followers
+                    @{user.username}
                 </p>
 
 

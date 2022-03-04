@@ -9,6 +9,7 @@ export default function NavigationBar(){
             <ul className="ml-10 flex">
                 <li className="mx-3"><Link to="/">Home</Link></li>
                 <li className="mx-3"><Link to="/users">Users</Link></li>
+                <li className="mx-3"><Link to="/login">Login</Link></li>
             </ul>
             </div>
         </nav>

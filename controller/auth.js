@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const randomstring = require("randomstring");
-const User = require("../models/User");
+const User = require("../models/SpotifyUser");
 
 require("dotenv").config()
 

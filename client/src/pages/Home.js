@@ -4,10 +4,13 @@ const SHOW_DIALOG = true;
 const SCOPE = "user-read-private user-read-email user-top-read user-read-currently-playing"
 const CLIENT_ID = "e849dc093c46431e99a380047315750d"
 const REDIRECT_URI = "http://localhost:4000/api/auth/callback"
-let URL = `/api/auth`
+// let URL = `/api/auth`
+let URL = ``
 
 if (process.env.NODE_ENV !== 'production') {
-    URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
+
+    URL = ``
+    // URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
 }
 
 export default function Home() {
@@ -27,18 +30,20 @@ export default function Home() {
                 </h3>
 
                 <p className="italic" >
-                    Please note that Musicn is currently in beta and is only working for beta testers. Please contact me if you want to be part of the Beta Testing program!
+                    Sign-ups for Musicn is now closed.
                 </p>
+
+                <a href={URL} className="block bg-spotify-green/50 shadow-lg shadow-spotify-green/50 w-fit m-auto p-4 rounded-lg my-20 text-white font-bold">
+                    Sign Ups are now disabled
+                </a>
+
+
 
                 <p className="my-5">
                     This little web application is made by <a href="https://github.com/nabilridhwan" className="underline font-bold">Nabil Ridhwan</a>.
                     And is made possible using Node.js, Express, Tailwind CSS, Supabase and Spotify's API. <a href="https://github.com/nabilridhwan/spotifyer" className="underline font-bold">Musicn</a> is open-sourced and will always be!
 
                 </p>
-
-                <a href={URL} className="block bg-spotify-green shadow-lg shadow-spotify-green/50 w-fit m-auto p-4 rounded-lg my-20 text-white font-bold btn-anim">
-                    Get Started
-                </a>
 
             </div>
         </div>

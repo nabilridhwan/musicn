@@ -1,0 +1,122 @@
+const express = require("express");
+const jwt = require("jsonwebtoken");
+const isCookieAvailable = require("../middlewares/isCookieAvailable");
+const router = express.Router();
+const User = require("../models/AppUser");
+const Passwords = require("../utils/Passwords")
+
+router.post("/signup", (req, res) => {
+
+    const {
+        username,
+        password
+    } = req.body;
+
+    User.getUserByUsername(username)
+        .then(users => {
+            if (users.length > 0) {
+                return res.status(409).json({
+                    message: "User already exists!"
+                });
+            } else {
+                Passwords.generateHash(password)
+                    .then(hash => {
+                        User.insertUser({username, password: hash})
+                            .then(user => {
+                                res.json({
+                                    message: "User created successfully!",
+                                });
+                            })
+                            .catch(error => {
+                                console.log(error)
+                                res.status(500).json(error);
+                            })
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        res.status(500).json(error);
+                    })
+            }
+        })
+
+})
+
+router.post("/login", (req, res) => {
+    // Get the username and password
+    const {
+        username,
+        password
+    } = req.body;
+
+    console.log(username, password);
+
+    // Verify the username and password
+    User.getUserByUsername(username)
+        .then(user => {
+            if (user.length == 0) {
+                res.status(404).json({
+                    message: "User not found"
+                })
+            } else {
+
+                Passwords.compareHash(password, user[0].password)
+                    .then(isMatch => {
+                        if (isMatch) {
+                            const token = jwt.sign({
+                                user_id: user[0].user_id,
+                                username: user[0].username
+                            }, process.env.JWT_KEY, {
+                                expiresIn: "1h"
+                            })
+
+                            // Return cookie
+                            res.cookie("jwt", token)
+
+                            // Return response
+                            res.status(200).json({
+                                message: "Login successful",
+                                token: token,
+                                username: username
+                            })
+                        } else {
+                            res.status(401).json({
+                                message: "Invalid credentials"
+                            })
+                        }
+                    })
+
+            }
+        }).catch(err => {
+            return res.status(500).json({
+                message: "Login unsuccessful",
+            })
+        })
+})
+
+router.put("/", isCookieAvailable, (req, res) => {
+    console.log(req.cookies)
+    jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
+        if(err){
+            return res.status(401).json({
+                message: "Invalid token"
+            })
+        }else{
+            const {user_id} = decoded;
+
+            const {username} = req.body;
+
+            User.changeUsername(username, user_id)
+            .then(user => {
+                res.json({message: "Username Updated"})
+            }).catch(err => {
+                if(err.code == 23505){
+                    return res.status(409).json({message: "Username already exists!"})
+                }else{
+                return res.status(500).json(err)
+                }
+            })
+        }
+    })
+})
+
+module.exports = router;

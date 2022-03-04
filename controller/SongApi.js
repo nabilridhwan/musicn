@@ -1,15 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const User = require("../models/User");
+const SpotifyUser = require("../models/SpotifyUser");
 const UserUtils = require("../utils/User");
 
-router.get("/:id", (req, res) => {
+router.get("/:id/top_songs", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    User.getUserByAppUserID(req.params.id)
+    SpotifyUser.getUserByAppUserID(req.params.id)
         .then(user => {
+            console.log(user)
             if (!user || user.length == 0) {
                 return res.sendStatus(404);
             } else {
@@ -33,6 +34,9 @@ router.get("/:id", (req, res) => {
                     return res.status(500).json(error)
                 })
             }
+        }).catch(err => {
+            console.log(err)
+            return res.status(500).json(err)
         })
 })
 
@@ -40,7 +44,7 @@ router.get("/:id/currently_playing", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    User.getUserByAppUserID(req.params.id)
+    SpotifyUser.getUserByAppUserID(req.params.id)
         .then(user => {
             if (!user || user.length == 0) {
                 return res.sendStatus(404);
