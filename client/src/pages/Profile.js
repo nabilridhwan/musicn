@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
-
-
 const cookie = new Cookies();
 
 export default function Profile() {
 
     const [user, setUser] = useState({})
+    const [error, setError] = useState("")
     let navigate = useNavigate();
 
     const [username, setUsername] = useState("");
@@ -27,6 +26,7 @@ export default function Profile() {
     }, [])
 
     async function getUserProfile() {
+        setError("")
         return fetch(`/api/me`, {
             credentials: "include"
         })
@@ -41,7 +41,7 @@ export default function Profile() {
                 console.log(user)
                 return user
             }).catch(err => {
-                console.log(err)
+                setError("Something went wrong while fetching your profile")
             })
     }
 
@@ -55,9 +55,22 @@ export default function Profile() {
             body: JSON.stringify({
                 username: username
             })
-        }).then(res => res.json())
+        }).then(res => {
+            if (res.ok) {
+                return res.json()
+            } else {
+                throw res
+            }
+        })
             .then(user => {
                 navigate("/user/" + username)
+            }).catch(err => {
+                if (err.status == 409) {
+                    setError("Username already exists")
+                } else {
+                    setError("Something went wrong while updating your profile")
+                }
+                console.log(err)
             })
     }
 
@@ -81,16 +94,38 @@ export default function Profile() {
                     @{user.username}
                 </p>
 
+                <Link to={"/user/" + user.username} id="spotify-profile-link"
+                    href={"https://open.spotify.com/user/" + user.spotify_userid}
+                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
+                    Go to profile page
+                </Link>
+
+                {!user.refresh_token && <a id="spotify-profile-link"
+                    href="http://localhost:4000/api/auth"
+                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                    <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                    Link your Spotify
+                </a>}
+
 
 
             </div>
+
+            <p className="text-red-500 text-center">
+                {error}
+            </p>
 
             <h1 className="text-center text-2xl font-bold">
                 Edit Profile
             </h1>
 
-            <input type="text" className="border rounded-lg w-full text-center" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
+            <h3 className="text-center font-bold">Username</h3>
+            <div className="flex flex-wrap justify-center">
 
+                <p>https://musicnapp.herokuapp.com/user/</p>
+                <input type="text" className="border rounded-lg border-black/50" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
+
+            </div>
             {username != user.username && <button className="border rounded-lg w-full text-center" onClick={() => {
                 handleChangeUsername()
             }}>
@@ -98,7 +133,7 @@ export default function Profile() {
 
             <button onClick={handleLogout} id="spotify-profile-link"
                 href={"https://open.spotify.com/user/" + user.spotify_userid}
-                className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
+                className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-red-500 text-white rounded-lg hover:shadow-md hover:shadow-red-500 transition ease-out duration-500">
                 Log Out
             </button>
 

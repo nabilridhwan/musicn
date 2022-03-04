@@ -5,7 +5,7 @@ async function getUserByUsername(username){
     let {
         data: users,
         error
-    } = await supabase.from(tableName).select("*").match({username})
+    } = await supabase.from("user_view").select("*").match({username})
 
     if (error) {
         throw error

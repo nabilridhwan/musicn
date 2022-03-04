@@ -12,7 +12,6 @@ async function getAllUsers() {
     if (error) {
         throw error
     } else {
-        console.log(users)
         return users
     }
 }
@@ -82,6 +81,20 @@ async function getUserByEmail(email) {
     }
 }
 
+async function updateSpotifyUser(newStuff, id){
+    const {
+        data,
+        error
+    } = await supabase.from(tableName).update(newStuff
+    ).match({id: id})
+
+    if (error) {
+        throw error
+    } else {
+        return data
+    }
+}
+
 async function insertUser({
     email,
     name,
@@ -117,5 +130,6 @@ module.exports = {
     getUserByEmail,
     getUserByAppUserID,
     getUserByEmailAndPassword,
-    getUserByUserID
+    getUserByUserID,
+    updateSpotifyUser
 }

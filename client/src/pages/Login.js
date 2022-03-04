@@ -37,7 +37,7 @@ export default function Login() {
             }
         })
             .then(data => {
-                navigate("/user/" + data.username)
+                navigate("/profile")
             }).catch(err => {
                 console.log("Error while logging in")
                 console.log(err)

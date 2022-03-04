@@ -11,6 +11,7 @@ export default function Users() {
         fetch("/api/user")
             .then(res => res.json())
             .then(users => {
+                users = users.filter(user => user.refresh_token)
                 setUsers(users)
                 setDisplayUsers(users)
             })

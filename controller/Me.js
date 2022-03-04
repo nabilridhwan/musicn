@@ -43,7 +43,7 @@ router.put("/", isCookieAvailable, (req, res) => {
                 return res.json(user);
             }).catch(e => {
                 console.log(e)
-                return res.status(500).send(e)
+                return res.status(409).send(e)
             })
         }
     })

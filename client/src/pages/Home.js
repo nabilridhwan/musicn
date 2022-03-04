@@ -1,18 +1,5 @@
 import NavigationBar from "../components/NavigationBar";
 
-const SHOW_DIALOG = true;
-const SCOPE = "user-read-private user-read-email user-top-read user-read-currently-playing"
-const CLIENT_ID = "e849dc093c46431e99a380047315750d"
-const REDIRECT_URI = "http://localhost:4000/api/auth/callback"
-// let URL = `/api/auth`
-let URL = ``
-
-if (process.env.NODE_ENV !== 'production') {
-
-    URL = ``
-    // URL = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
-}
-
 export default function Home() {
 
     return (
@@ -29,12 +16,8 @@ export default function Home() {
                     With <span className="font-bold">Musicn</span>, you have your own Spotify profile page which shows the song you're listening to along with your top songs of the month! Copy the link and send it to your friends (or maybe, paste it in your Instagram's bio!)
                 </h3>
 
-                <p className="italic" >
-                    Sign-ups for Musicn is now closed.
-                </p>
-
-                <a href={URL} className="block bg-spotify-green/50 shadow-lg shadow-spotify-green/50 w-fit m-auto p-4 rounded-lg my-20 text-white font-bold">
-                    Sign Ups are now disabled
+                <a href="/signup" className="block bg-spotify-green shadow-lg shadow-spotify-green/50 w-fit m-auto p-4 rounded-lg my-20 text-white font-bold">
+                    Get Started
                 </a>
 
 
