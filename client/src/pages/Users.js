@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import NavigationBar from "../components/NavigationBar"
 
+import {FaUser} from "react-icons/fa"
+
 export default function Users() {
 
     const [users, setUsers] = useState([])
@@ -42,8 +44,12 @@ export default function Users() {
                 <a key={index} href={"/user/" + user.app_userid}>
                     <div className="user w-full md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow-lg">
 
-                        {user.profile_pic_url &&
+                        {user.profile_pic_url ? 
                             <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
+                            :
+                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                            </div>
                         }
 
                         <div className="ml-5">

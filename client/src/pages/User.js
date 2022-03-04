@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { FaPause, FaPlay, FaSpotify } from "react-icons/fa"
+import { FaUser, FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 
 export default function User() {
@@ -63,9 +63,14 @@ export default function User() {
 
             <div className="jumbotron my-10 flex flex-col items-center">
 
-                {user.profile_pic_url &&
+                {user.profile_pic_url ?
 
                     <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+
+                    :
+                    <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                            </div>
                 }
 
                 <h2 className="text-3xl font-bold">{user.name}</h2>
