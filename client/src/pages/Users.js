@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
 
 export default function Users() {
@@ -33,6 +34,8 @@ export default function Users() {
             <div className="jumbotron my-24">
                 <h1>Users</h1>
                 <h3>Users of Musicn</h3>
+
+                <p>Is your profile not showing? <Link className="underline" to="/profilenotshowing">Click here</Link> to find out more!</p>
             </div>
 
             <div className="flex flex-wrap justify-center">
