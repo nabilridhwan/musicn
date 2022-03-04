@@ -17,8 +17,8 @@ export default function User() {
             let profile = await getUserProfile();
             setUser(profile)
 
-            let currently_playing = await getUserCurrentlyPlaying();
-            setCurrentSong(currently_playing)
+            // let currently_playing = await getUserCurrentlyPlaying();
+            // setCurrentSong(currently_playing)
 
             let top_tracks = await getUserTopSongs();
             setTopSongs(top_tracks)
@@ -78,10 +78,8 @@ export default function User() {
                 </a>
             </div>
 
-            <div className="currently-listening my-20">
+            {/* <div className="currently-listening my-20">
                 <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
-
-                {/* <p>{JSON.stringify(currentSong)}</p> */}
 
                 <a id="currently-listening-data-url" href={currentSong ? currentSong.item.external_urls.spotify : ""}>
 
@@ -110,10 +108,10 @@ export default function User() {
 
                 </a>
 
-            </div>
+            </div> */}
 
 
-            {topSongs && (
+            {topSongs && topSongs.length > 0 ? (
                 <>
 
                     <h4 className="text-center font-bold my-4">Top songs of the month</h4>
@@ -157,6 +155,8 @@ export default function User() {
 
                     </div>
                 </>
+            ): (
+                <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
             )}
         </div>
     )

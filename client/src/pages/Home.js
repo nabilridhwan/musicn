@@ -1,7 +1,7 @@
 import NavigationBar from "../components/NavigationBar";
 
 const SHOW_DIALOG = true;
-const SCOPE = "user-read-private user-read-email user-top-read user-read-currently-playing"
+const SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played"
 const CLIENT_ID = "e849dc093c46431e99a380047315750d"
 const REDIRECT_URI = "http://localhost:4000/api/auth/callback"
 let URL = `/api/auth`

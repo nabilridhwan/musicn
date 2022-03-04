@@ -6,7 +6,7 @@ const User = require("../models/User");
 
 require("dotenv").config()
 
-const SCOPE = "user-read-private user-read-email user-top-read user-read-currently-playing"
+const SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played"
 const SHOW_DIALOG = true;
 
 router.get("/", (req, res) => {
