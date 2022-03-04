@@ -62,7 +62,10 @@ export default function User() {
 
             <div className="jumbotron my-10 flex flex-col items-center">
 
-                <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+                {user.profile_pic_url &&
+
+                    <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+                }
 
                 <h2 className="text-3xl font-bold">{user.name}</h2>
                 <p className="text-sm text-black/50" id="follower-count-text">
@@ -155,7 +158,7 @@ export default function User() {
 
                     </div>
                 </>
-            ): (
+            ) : (
                 <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
             )}
         </div>
