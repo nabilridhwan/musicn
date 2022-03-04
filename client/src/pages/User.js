@@ -17,8 +17,8 @@ export default function User() {
             let profile = await getUserProfile();
             setUser(profile)
 
-            // let currently_playing = await getUserCurrentlyPlaying();
-            // setCurrentSong(currently_playing)
+            let currently_playing = await getUserCurrentlyPlaying();
+            setCurrentSong(currently_playing)
 
             let top_tracks = await getUserTopSongs();
             setTopSongs(top_tracks)
@@ -36,14 +36,15 @@ export default function User() {
 
     async function getUserCurrentlyPlaying() {
         return fetch(`/api/songs/${app_userid}/currently_playing`)
-            .then(res => res.json())
+            .then(res => {
+                if (res.ok) return res.json()
+                else throw res
+            })
             .then(currentSong => {
-                if (currentSong.error) {
-                    return null
-                }
+                if (currentSong == "") return null
                 return currentSong
             }).catch(error => {
-                setCurrentSong(-1)
+                return null
             })
     }
 
@@ -81,37 +82,36 @@ export default function User() {
                 </a>
             </div>
 
-            {/* <div className="currently-listening my-20">
+            <div className="currently-listening my-20">
                 <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
 
-                <a id="currently-listening-data-url" href={currentSong ? currentSong.item.external_urls.spotify : ""}>
 
-                    {currentSong ? (
-                        <>
-                            <div id="currently-listening-song"
-                                className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
+                {currentSong ? (
 
-                                <img src={currentSong.item.album.images[0].url} className="h-14" />
+                    <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
+                        <div id="currently-listening-song"
+                            className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
 
+                            <img src={currentSong.item.album.images[0].url} className="h-14" />
 
-                                <div className="mx-4">
-                                    <p className="font-bold">{currentSong.item.name}</p>
-                                    <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
-                                </div>
-
+                            <div className="mx-4">
+                                <p className="font-bold">{currentSong.item.name}</p>
+                                <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
                             </div>
 
-                        </>
-                    ) : (
-                        <div id="currently-listening-song"
-                            className="flex bg-white border w-fit lg m-auto items-center btn-anim">
-                            <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
                         </div>
-                    )}
+                    </a>
 
-                </a>
+                ) : (
+                    <div id="currently-listening-song"
+                        className="flex bg-white border w-fit lg m-auto items-center">
 
-            </div> */}
+                        <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
+                    </div>
+                )}
+
+
+            </div>
 
 
             {topSongs && topSongs.length > 0 ? (
