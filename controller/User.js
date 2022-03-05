@@ -6,9 +6,16 @@ const UserUtils = require("../utils/User");
 const jwt = require("jsonwebtoken");
 
 router.get("/", (req, res) => {
+    if(req.query.q){
+       SpotifyUser.getUserByAppUserID(req.query.q).then(users => {
+           return res.json(users);
+       }) 
+    }else{
+
     SpotifyUser.getAllUsers().then(users => {
-        res.json(users)
+        return res.json(users)
     })
+    }
 })
 
 router.get("/:id", (req, res) => {

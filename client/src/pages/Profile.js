@@ -75,7 +75,10 @@ export default function Profile() {
             }).catch(err => {
                 if (err.status == 409) {
                     setError("Username already exists")
-                } else {
+                }else if(err.status == 400){
+                    setError("Usernames can only contain a-z, underscore, periods and numbers");
+                }
+                 else {
                     setError("Something went wrong while updating your profile")
                 }
                 console.log(err)

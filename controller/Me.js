@@ -8,7 +8,7 @@ const SpotifyUser = require("../models/SpotifyUser");
 const jwt = require("jsonwebtoken");
 const User = require("../models/AppUser");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
-
+const isUsernameForbidden = require("../utils/isUsernameForbidden");
 router.get("/", isCookieAvailable, (req, res) => {
     const {
         jwt: token
@@ -19,9 +19,9 @@ router.get("/", isCookieAvailable, (req, res) => {
             return res.sendStatus(403);
         } else {
             SpotifyUser.getUserByUserID(decoded.user_id)
-            .then(user => {
-                return res.json(user)
-            })
+                .then(user => {
+                    return res.json(user)
+                })
         }
     })
 })
@@ -36,15 +36,22 @@ router.put("/", isCookieAvailable, (req, res) => {
         if (err) {
             return res.sendStatus(403);
         } else {
+
+            if (isUsernameForbidden(req.body.username)) {
+                return res.status(400).json({
+                    message: "Usernames can only contain a-z, underscore, periods and numbers"
+                })
+            }
+
             User.updateUser(req.body, decoded.user_id)
-            .then(user => {
-                console.log("Body : " + JSON.stringify(req.body))
-                console.log(user)
-                return res.json(user);
-            }).catch(e => {
-                console.log(e)
-                return res.status(409).send(e)
-            })
+                .then(user => {
+                    console.log("Body : " + JSON.stringify(req.body))
+                    console.log(user)
+                    return res.json(user);
+                }).catch(e => {
+                    console.log(e)
+                    return res.status(409).send(e)
+                })
         }
     })
 })

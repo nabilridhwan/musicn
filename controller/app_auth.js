@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
 const router = express.Router();
 const User = require("../models/AppUser");
+const isUsernameForbidden = require("../utils/isUsernameForbidden");
 const Passwords = require("../utils/Passwords")
 
 router.post("/signup", (req, res) => {
@@ -12,6 +13,10 @@ router.post("/signup", (req, res) => {
         username,
         password
     } = req.body;
+
+    if(isUsernameForbidden(username)){
+        return res.status(400).json({message: "Usernames can only contain a-z, underscore, periods and numbers"})
+    }
 
     email = encodeURI(email);
     username = encodeURI(username);
