@@ -78,7 +78,7 @@ router.get("/:id/recently_played", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    User.getUserByAppUserID(req.params.id)
+    SpotifyUser.getUserByAppUserID(req.params.id)
         .then(user => {
             if (!user || user.length == 0) {
                 return res.sendStatus(404);
@@ -98,9 +98,11 @@ router.get("/:id/recently_played", (req, res) => {
                     }).then(response => {
                         return res.json(response.data)
                     }).catch(error => {
+                        console.log("Error while getting recently played")
                         return res.status(500).json(error.response.data)
                     })
                 }).catch(error => {
+                    console.log("Error while getting access token")
                     return res.status(500).json(error)
                 })
             }

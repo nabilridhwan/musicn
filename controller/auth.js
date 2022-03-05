@@ -68,6 +68,8 @@ router.get("/callback", isCookieAvailable, (req, res) => {
 
                 if(images.length == 0){
                     images = null
+                }else{
+                    images = images[0].url
                 }
 
                 let saveBody = {
