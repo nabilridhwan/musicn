@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FaUser, FaSpotify } from "react-icons/fa"
+import { FaUser, FaSpotify, FaShare, FaShareAlt } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
 
@@ -13,6 +13,8 @@ export default function User() {
     const [recentlyPlayed, setRecentlyPlayed] = useState(null)
     const [topSongs, setTopSongs] = useState(null)
     const navigate = useNavigate() 
+    const [shareButtonText, setShareButtonText] = useState("Share with your friends!")
+                
 
 
     useEffect(() => {
@@ -76,6 +78,20 @@ export default function User() {
             .then(topSongs => {
                 return topSongs.items
             })
+    }
+
+    async function handleShare(){
+        try{
+
+        await navigator.share({
+            url: window.location.href,
+            title: "Musicn",
+            text: "Check out my top songs of the month!"
+        })
+
+        }catch(e){
+            console.log(e)
+        }
     }
 
     return (
@@ -252,6 +268,13 @@ export default function User() {
             ) : (
                 <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
             )}
+            <div className="fixed bottom-0 w-full flex justify-center items-center">
+                <button onClick={handleShare} className="bg-blue-500 transition ease-out duration-500 rounded-lg p-3 mb-5 flex items-center btn-anim shadow-lg shadow-blue-500/50 text-white">
+
+<FaShareAlt className="mr-2" />
+{shareButtonText}
+                </button>
+            </div>
         </div>
     )
 }
