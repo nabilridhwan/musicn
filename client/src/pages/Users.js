@@ -3,8 +3,6 @@ import { Link } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
 import { FaUser } from "react-icons/fa"
 
-import {FaUser} from "react-icons/fa"
-
 export default function Users() {
 
     const [users, setUsers] = useState([])

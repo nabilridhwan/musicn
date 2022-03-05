@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FaPause, FaPlay, FaSpotify } from "react-icons/fa"
+import { FaUser, FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
 
