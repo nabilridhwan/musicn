@@ -99,7 +99,7 @@ export default function User() {
 
                     <h2 className="text-3xl font-bold">{user.name}</h2>
                     <p className="text-sm text-black/50" id="follower-count-text">
-                        @{user.username}
+                        {user.follower_count ? user.follower_count : 0} followers on Spotify
                     </p>
 
 
