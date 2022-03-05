@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { FaSpotify } from "react-icons/fa"
+import { FaExclamationTriangle, FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
 const cookie = new Cookies();
@@ -76,10 +76,10 @@ export default function Profile() {
 
     function handleLogout() {
         fetch("/api/auth/app/logout")
-        .then(res => res.json())
-        .then(data => {
-            navigate("/")
-        })
+            .then(res => res.json())
+            .then(data => {
+                navigate("/")
+            })
     }
 
     return (
@@ -87,8 +87,7 @@ export default function Profile() {
 
             <NavigationBar />
 
-            <div className="jumbotron my-10 flex flex-col items-center">
-                <h1>Profile</h1>
+            <div className="my-10 flex flex-col items-center">
 
                 <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
 
@@ -105,18 +104,26 @@ export default function Profile() {
 
                 {!user.refresh_token && (
 
-                    <div className="mt-6">
+                    <div className="mt-6 flex-col md:flex-row bg-white border border-black/20 drop-shadow-lg p-10 rounded-2xl w-2/3">
+                        <FaExclamationTriangle className="text-red-500 text-4xl" />
 
-                        <p className="font-bold">
-                            You must link your Spotify account for your profile to display on the Users page
-                        </p>
+                        <div className="mt-2">
 
-                        <a id="spotify-profile-link"
-                            href="http://localhost:4000/api/auth"
-                            className="flex justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                            Link your Spotify
-                        </a>
+                            <p className="font-bold text-2xl text-left">
+                                Link your Spotify Account
+                            </p>
+
+                            <p className="text-left text-black/50">
+                                Your friends won’t be able to see your Spotify statistics unless you link your Spotify account!
+                            </p>
+
+                            <a id="spotify-profile-link"
+                                href="http://localhost:4000/api/auth"
+                                className="flex mt-5 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                                <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                                Link your Spotify
+                            </a>
+                        </div>
 
                     </div>
                 )}
@@ -125,31 +132,34 @@ export default function Profile() {
 
             </div>
 
-            <p className="text-red-500 text-center">
-                {error}
-            </p>
+            <div className="container">
 
-            <h1 className="text-center text-2xl font-bold">
-                Edit Profile
-            </h1>
 
-            <h3 className="text-center font-bold">Username</h3>
-            <div className="flex flex-wrap justify-center">
+                <p className="text-red-500 text-center">
+                    {error}
+                </p>
 
-                <p>https://musicnapp.herokuapp.com/user/</p>
-                <input type="text" className="border rounded-lg border-black/50" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
+                <h1 className="text-center text-2xl font-bold">
+                    Edit Profile
+                </h1>
 
+                <label htmlFor="username">
+                    Username
+                </label>
+
+                <input type="text" required id="username" placeholder="Username" value={username} className="block w-full" onChange={e => setUsername(e.target.value)} />
+
+                {username != user.username && <button className="border rounded-lg w-full text-center bg-brand-color py-3" onClick={() => {
+                    handleChangeUsername()
+                }}>
+                    Save Username</button>}
+
+                <button onClick={handleLogout} id="spotify-profile-link"
+                    href={"https://open.spotify.com/user/" + user.spotify_userid}
+                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-red-500 text-white rounded-lg hover:shadow-md hover:shadow-red-500 transition ease-out duration-500">
+                    Log Out
+                </button>
             </div>
-            {username != user.username && <button className="border rounded-lg w-full text-center" onClick={() => {
-                handleChangeUsername()
-            }}>
-                Save Username</button>}
-
-            <button onClick={handleLogout} id="spotify-profile-link"
-                href={"https://open.spotify.com/user/" + user.spotify_userid}
-                className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-red-500 text-white rounded-lg hover:shadow-md hover:shadow-red-500 transition ease-out duration-500">
-                Log Out
-            </button>
 
 
         </div>
