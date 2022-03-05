@@ -5,7 +5,7 @@ async function getAllUsers() {
     let {
         data: users,
         error
-    } = await supabase.from("user_view").select(`
+    } = await supabase.from("public_user_view").select(`
         *
     `)
 
@@ -16,7 +16,7 @@ async function getAllUsers() {
     }
 }
 
-async function getUserByUserID(userid){
+async function getUserByUserID(userid) {
 
     console.log(userid)
 
@@ -36,7 +36,7 @@ async function getUserByUserID(userid){
     }
 }
 
-async function getUserByAppUserID(app_userID) {
+async function getUserByAppUserIDWithToken(app_userID) {
 
     let {
         data: users,
@@ -54,11 +54,32 @@ async function getUserByAppUserID(app_userID) {
     }
 }
 
+async function getUserByAppUserID(app_userID) {
+
+    let {
+        data: users,
+        error
+    } = await supabase.from("public_user_view").select(
+        `
+        *
+        `
+    ).eq("username", app_userID)
+
+    if (error) {
+        throw error
+    } else {
+        return users
+    }
+}
+
 async function getUserByEmailAndPassword(email, password) {
     let {
         data: users,
         error
-    } = await supabase.from(tableName).select("*").match({email: email, password: password})
+    } = await supabase.from(tableName).select("*").match({
+        email: email,
+        password: password
+    })
 
     if (error) {
         throw error
@@ -81,12 +102,13 @@ async function getUserByEmail(email) {
     }
 }
 
-async function updateSpotifyUser(newStuff, id){
+async function updateSpotifyUser(newStuff, id) {
     const {
         data,
         error
-    } = await supabase.from(tableName).update(newStuff
-    ).match({id: id})
+    } = await supabase.from(tableName).update(newStuff).match({
+        id: id
+    })
 
     if (error) {
         throw error
@@ -131,5 +153,6 @@ module.exports = {
     getUserByAppUserID,
     getUserByEmailAndPassword,
     getUserByUserID,
-    updateSpotifyUser
+    updateSpotifyUser,
+    getUserByAppUserIDWithToken
 }

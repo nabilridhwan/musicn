@@ -31,7 +31,6 @@ export default function User() {
         return fetch(`/api/user/${app_userid}`)
             .then(res => res.json())
             .then(user => {
-                if(!user.refresh_token) navigate("/users")
                 return user
             }).catch(err => {
                 navigate("/users")
