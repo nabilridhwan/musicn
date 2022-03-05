@@ -78,16 +78,17 @@ router.get("/:id/recently_played", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    SpotifyUser.getUserByAppUserID(req.params.id)
+    SpotifyUser.getUserByAppUserIDWithToken(req.params.id)
         .then(user => {
             if (!user || user.length == 0) {
                 return res.sendStatus(404);
             } else {
                 UserUtils.getAccessToken(user[0].refresh_token).then(data => {
-
                     const {
                         access_token
                     } = data;
+
+                    console.log("access_token: " + access_token)
 
                     axios({
                         method: "GET",
