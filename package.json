@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "tailwind": "npx tailwind -i public/src/main.css -o public/main.css --watch",
+    "dev": "nodemon; npm start --prefix client",
     "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
@@ -23,10 +23,14 @@
   "dependencies": {
     "@supabase/supabase-js": "^1.30.7",
     "axios": "^0.26.0",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.4.0",
     "randomstring": "^1.2.2",
+    "relative-date": "^1.1.3",
     "spotify-web-api-js": "^1.5.2"
   }
 }

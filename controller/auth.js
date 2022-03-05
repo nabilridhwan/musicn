@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const randomstring = require("randomstring");
-const User = require("../models/User");
+const User = require("../models/SpotifyUser");
+const AppUser = require("../models/AppUser");
+const isCookieAvailable = require("../middlewares/isCookieAvailable");
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config()
 
@@ -14,89 +16,107 @@ router.get("/", (req, res) => {
 })
 
 
-router.get("/callback", (req, res) => {
+router.get("/callback", isCookieAvailable, (req, res) => {
     if (req.query.error) {
         // Error has occurred 
         return res.sendStatus(500);
     }
 
-    const {
-        code
-    } = req.query;
+    // Decode jwt
+    jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
 
-    const formData = new URLSearchParams();
-    formData.append("grant_type", "authorization_code")
-    formData.append("code", code)
-    formData.append("redirect_uri", process.env.REDIRECT_URI)
 
-    axios({
-        method: "POST",
-        url: "https://accounts.spotify.com/api/token",
-        data: formData,
-        headers: {
-            "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString("base64")}`,
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-    }).then(tokenResponse => {
-        // Save the access token in database
-        // Get user email
+        if(err) return res.status(500).send("Error decoding token")
 
-        axios.get("https://api.spotify.com/v1/me", {
+        const {
+            code
+        } = req.query;
+
+        const formData = new URLSearchParams();
+        formData.append("grant_type", "authorization_code")
+        formData.append("code", code)
+        formData.append("redirect_uri", process.env.REDIRECT_URI)
+
+        axios({
+            method: "POST",
+            url: "https://accounts.spotify.com/api/token",
+            data: formData,
             headers: {
-                "Authorization": `Bearer ${tokenResponse.data.access_token}`
+                "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString("base64")}`,
+                "Content-Type": "application/x-www-form-urlencoded"
             }
-        }).then(userResponse => {
+        }).then(tokenResponse => {
+            // Save the access token in database
+            // Get user email
 
-            let app_userid = randomstring.generate(10);
-
-            const {
-                email,
-                display_name,
-                country,
-                images,
-                id,
-                followers: {
-                    total: follower_count
+            axios.get("https://api.spotify.com/v1/me", {
+                headers: {
+                    "Authorization": `Bearer ${tokenResponse.data.access_token}`
                 }
-            } = userResponse.data;
+            }).then(userResponse => {
 
-            let saveBody = {
-                email: email,
-                name: display_name,
-                app_userid: app_userid,
-                spotify_userid: id,
-                country: country,
-                images: images,
-                refresh_token: tokenResponse.data.refresh_token,
-                follower_count: follower_count
-            }
+                console.log(userResponse)
 
-            // Check if user exists or not
-            User.getUserByEmail(email).then(user => {
-                if (user.length == 0) {
-                    User.insertUser(saveBody).then(user => {
-                        return res.redirect(`/user/${user.app_userid}`)
-                    }).catch(error => {
-                        // TODO: Error handling
-                        return res.status(500).json(error)
-                    })
-                } else {
-                    return res.redirect(`${process.env.FRONTEND_URL}/user/${user[0].app_userid}`)
+
+                let {
+                    email,
+                    display_name,
+                    country,
+                    images,
+                    id,
+                } = userResponse.data;
+
+                if(images.length == 0){
+                    images = null
+                }else{
+                    images = images[0].url
                 }
+
+                let saveBody = {
+                    email: email,
+                    name: display_name,
+                    country: country,
+                    spotify_userid: id,
+                    profile_pic_url: images,
+                    refresh_token: tokenResponse.data.refresh_token,
+                    user_id: decoded.user_id
+                }
+
+                // Check if user exists or not
+                User.getUserByEmail(email).then(user => {
+                    console.log("users: " + JSON.stringify(user))
+                    if (user.length == 0) {
+                        User.insertUser(saveBody).then(user => {
+                            return res.redirect(`${process.env.FRONTEND_URL}/profile`)
+                        }).catch(error => {
+                            return res.status(500).json(error)
+                        })
+                    } else {
+                        console.log(`Account exists already. Updating user ${user[0].user_id}`)
+                        User.updateSpotifyUser(saveBody, user[0].id).then(user => {
+                            return res.redirect(`${process.env.FRONTEND_URL}/profile`)
+                        }).catch(error => {
+                            console.log("Error updating user")
+                            console.log(error)
+                            return res.status(500).json(error)
+                        })
+                    }
+                }).catch(error => {
+                    console.log(error)
+                    return res.status(500).json(error)
+                })
+
+
+
             }).catch(error => {
-                return res.status(500).json(error)
+                console.log(error)
+                return res.send("There is a problem registering your account. Please try again later!")
             })
 
-
-
         }).catch(error => {
-            console.log(error)
-            return res.send("There is a problem registering your account. Please try again later!")
+            console.log("An error occured")
+            return res.status(500).send(error)
         })
-
-    }).catch(error => {
-        console.log("An error occured")
-        return res.status(500).send(error)
     })
 })
 

@@ -5,23 +5,39 @@
 
 @layer components {
 
-    body{
+    body {
         @apply font-inter;
+    }
+
+    .container {
+        @apply w-4/5 md:w-1/2 mx-auto;
+    }
+
+    .error {
+        @apply font-bold text-center text-red-500;
+    }
+
+    label {
+        @apply block mb-2;
+    }
+
+    input {
+        @apply border-2 border-black/20 rounded-lg p-2 px-4 mb-5;
     }
 
     .btn-anim {
         @apply transition ease-out hover:scale-110 duration-300;
     }
 
-    .jumbotron{
-        @apply text-center m-auto w-4/5 md:w-1/2 ;
+    .jumbotron {
+        @apply text-center m-auto w-4/5 md:w-1/2;
     }
 
-    .jumbotron h1{
+    .jumbotron h1 {
         @apply text-6xl font-extrabold;
     }
 
-    .jumbotron h3{
+    .jumbotron h3 {
         @apply text-lg my-4;
     }
 }

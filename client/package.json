@@ -13,6 +13,7 @@
     "react-scripts": "5.0.0",
     "relative-date": "^1.1.3",
     "spotifyer": "file:..",
+    "universal-cookie": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

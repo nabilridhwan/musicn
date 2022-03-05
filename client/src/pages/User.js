@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { FaUser, FaSpotify, FaShare, FaShareAlt } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
+import relativeDate from "relative-date";
 
 export default function User() {
 
@@ -9,7 +10,9 @@ export default function User() {
     const app_userid = params.id;
     const [user, setUser] = useState({})
     const [currentSong, setCurrentSong] = useState(null)
+    const [recentlyPlayed, setRecentlyPlayed] = useState(null)
     const [topSongs, setTopSongs] = useState(null)
+    const navigate = useNavigate() 
     const [shareButtonText, setShareButtonText] = useState("Share with your friends!")
                 
 
@@ -22,17 +25,36 @@ export default function User() {
             let currently_playing = await getUserCurrentlyPlaying();
             setCurrentSong(currently_playing)
 
+            let recently_played = await getUserRecentlyPlayed();
+            setRecentlyPlayed(recently_played)
+
             let top_tracks = await getUserTopSongs();
             setTopSongs(top_tracks)
         })();
 
     }, [])
 
+    async function getUserRecentlyPlayed() {
+        return fetch(`/api/songs/${app_userid}/recently_played`)
+            .then(res => {
+                if (res.ok) return res.json()
+                else throw res
+            })
+            .then(recentlyPlayedSongs => {
+                if (!recentlyPlayedSongs || recentlyPlayedSongs.items.length == 0) return null
+                return recentlyPlayedSongs.items
+            }).catch(error => {
+                return null
+            })
+    }
+
     async function getUserProfile() {
         return fetch(`/api/user/${app_userid}`)
             .then(res => res.json())
             .then(user => {
                 return user
+            }).catch(err => {
+                navigate("/users")
             })
     }
 
@@ -51,7 +73,7 @@ export default function User() {
     }
 
     async function getUserTopSongs() {
-        return fetch(`/api/songs/${app_userid}`)
+        return fetch(`/api/songs/${app_userid}/top_songs`)
             .then(res => res.json())
             .then(topSongs => {
                 return topSongs.items
@@ -77,7 +99,7 @@ export default function User() {
 
             <NavigationBar />
 
-            <div className="jumbotron my-10 flex flex-col items-center">
+            <div className="my-10 flex items-center justify-center">
 
                 {user.profile_pic_url ?
 
@@ -85,22 +107,26 @@ export default function User() {
 
                     :
                     <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
-                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
-                            </div>
+                        <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                    </div>
                 }
 
-                <h2 className="text-3xl font-bold">{user.name}</h2>
-                <p className="text-sm text-black/50" id="follower-count-text">
-                    {user.follower_count ? user.follower_count : 0} followers
-                </p>
+                <div className="ml-4">
+
+                    <h2 className="text-3xl font-bold">{user.name}</h2>
+                    <p className="text-sm text-black/50" id="follower-count-text">
+                        @{user.username}
+                    </p>
 
 
-                <a id="spotify-profile-link"
-                    href={"https://open.spotify.com/user/" + user.spotify_userid}
-                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                    <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                    Spotify
-                </a>
+                    <a id="spotify-profile-link"
+                        href={"https://open.spotify.com/user/" + user.spotify_userid}
+                        className="flex mt-2 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                        <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                        Spotify
+                    </a>
+                </div>
+
             </div>
 
             <div className="currently-listening my-20">
@@ -150,7 +176,7 @@ export default function User() {
                         ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
 
 
-                            <div className="bg-white">
+                            <div className="bg-white h-auto">
 
 
                                 <img src={bigImage.url} className="w-fit h-auto" />
@@ -161,12 +187,15 @@ export default function User() {
                                     <h1 className="text-black text-center font-bold">{name}</h1>
                                     <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
 
-                                    <a id="spotify-profile-link"
-                                        href={url}
-                                        className="flex mt-4 mx-auto w-fit justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                                        <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                                        Spotify
-                                    </a>
+                                    <div>
+
+
+                                        <a id="spotify-profile-link"
+                                            href={url}
+                                            className="flex mt-4 mx-auto w-fit justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white " aria-hidden="true"></FaSpotify>
+                                        </a>
+                                    </div>
 
                                 </div>
 
@@ -183,6 +212,62 @@ export default function User() {
                 <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
             )}
 
+            {recentlyPlayed ? (
+                <>
+
+                    <h4 className="text-center font-bold my-4">Recently Played Songs</h4>
+                    <div id="top-tracks" className="flex flex-wrap items-stretch">
+                        {recentlyPlayed.map((
+                            {
+                                track: {
+
+                                    name,
+                                    artists,
+                                    external_urls: { spotify: url },
+                                    album: { images: [bigImage] }
+
+                                },
+                                played_at
+                            }, index
+                        ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
+
+
+                            <div className="bg-white h-auto">
+
+
+                                <img src={bigImage.url} className="w-fit h-auto" />
+
+                                <div className="py-7">
+
+
+                                    <p className="text-center text-black/50">{relativeDate(new Date(played_at))}</p>
+                                    <h1 className="text-black text-center font-bold">{name}</h1>
+                                    <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+
+                                    <div>
+
+
+                                        <a id="spotify-profile-link"
+                                            href={url}
+                                            className="flex mt-4 mx-auto w-fit justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white " aria-hidden="true"></FaSpotify>
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>))}
+
+
+
+                    </div>
+                </>
+            ) : (
+                <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
+            )}
             <div className="fixed bottom-0 w-full flex justify-center items-center">
                 <button onClick={handleShare} className="bg-blue-500 transition ease-out duration-500 rounded-lg p-3 mb-5 flex items-center btn-anim shadow-lg shadow-blue-500/50 text-white">
 

@@ -6,6 +6,8 @@ module.exports = {
     extend: {
       display: ["group-hover"],
       colors: {
+        "brand-color": "#33EBB6",
+        "brand-text-color": "#323232",
         "spotify-green": "#1DB954",
       },
       dropShadow: {
