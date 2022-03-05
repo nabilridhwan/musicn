@@ -79,8 +79,10 @@ router.post("/login", (req, res) => {
                                 expiresIn: "1h"
                             })
 
-                            // Return cookie
-                            res.cookie("jwt", token)
+                            // Return cookie with maxAge of 30 mins
+                            res.cookie("jwt", token, {
+                                maxAge: 1800000 
+                            })
 
                             // Return response
                             res.status(200).json({
