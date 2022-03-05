@@ -12,7 +12,6 @@ export default function Users() {
         fetch("/api/user")
             .then(res => res.json())
             .then(users => {
-                users = users.filter(user => user.refresh_token)
                 setUsers(users)
                 setDisplayUsers(users)
             })
@@ -35,7 +34,7 @@ export default function Users() {
                 <h1>Users</h1>
                 <h3>Users of Musicn</h3>
 
-                <p>Is your profile not showing? <Link className="underline" to="/profilenotshowing">Click here</Link> to find out more!</p>
+                <p>Is your profile not showing? <Link className="underline" to="/error/1">Click here</Link> to find out more!</p>
             </div>
 
             <div className="flex flex-wrap justify-center">
@@ -43,8 +42,10 @@ export default function Users() {
             </div>
 
             {displayUsers && displayUsers.length != 0 ? displayUsers.map((user, index) => (
-                <a key={index} href={"/user/" + user.username}>
+                <a key={index} href={user.spotify_userid ? "/user/" + user.username : "#"}>
                     <div className="user w-full md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow-lg">
+
+
                         <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
 
                         <div className="ml-5">
@@ -52,6 +53,12 @@ export default function Users() {
                             <p className="text-sm text-black/50">
                                 @{user.username}
                             </p>
+
+                            {!user.spotify_userid && (
+                                <p className="text-sm text-black/30">
+                                    Spotify account not linked
+                                </p>
+                            )}
                         </div>
                     </div>
                 </a>

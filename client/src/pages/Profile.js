@@ -100,12 +100,23 @@ export default function Profile() {
                     Go to profile page
                 </Link>
 
-                {!user.refresh_token && <a id="spotify-profile-link"
-                    href="http://localhost:4000/api/auth"
-                    className="flex mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                    <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                    Link your Spotify
-                </a>}
+                {!user.refresh_token && (
+
+                    <div className="mt-6">
+
+                        <p className="font-bold">
+                            You must link your Spotify account for your profile to display on the Users page
+                        </p>
+
+                        <a id="spotify-profile-link"
+                            href="http://localhost:4000/api/auth"
+                            className="flex justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                            Link your Spotify
+                        </a>
+
+                    </div>
+                )}
 
 
 

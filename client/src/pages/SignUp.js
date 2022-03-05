@@ -8,6 +8,7 @@ const cookie = new Cookies();
 
 export default function SignUp() {
 
+    const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
@@ -21,6 +22,7 @@ export default function SignUp() {
     }, [])
 
     async function handleSignUp() {
+        console.log("Function called once")
 
         // Empty out the error first
         setError("")
@@ -34,6 +36,7 @@ export default function SignUp() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
+                    email: email,
                     username: username,
                     password: password
                 })
@@ -41,12 +44,10 @@ export default function SignUp() {
                 if (!res.ok) {
                     throw res
                 } else {
-                    return res.json()
+                    navigate("/login")
                 }
             })
-                .then(data => {
-                    console.log(data)
-                }).catch(err => {
+                .catch(err => {
                     if (err.status == 409) {
                         setError("User already exists!")
                     }else{
@@ -84,13 +85,15 @@ export default function SignUp() {
             <form onSubmit={handleSubmit}>
 
 
-                <input type="text" id="username" placeholder="Username" className="block border my-3 mx-auto" onChange={e => setUsername(e.target.value)} />
+                <input type="email" id="email" required placeholder="Email" className="block border my-3 mx-auto" onChange={e => setEmail(e.target.value)} />
 
-                <input type="password" id="password" placeholder="Password" className="block border my-3 mx-auto" onChange={e => setPassword(e.target.value)} />
+                <input type="text" id="username" required placeholder="Username" className="block border my-3 mx-auto" onChange={e => setUsername(e.target.value)} />
 
-                <input type="password" id="confirm-password" placeholder="Confirm Password" className="block border my-3 mx-auto" onChange={e => setConfirmPassword(e.target.value)} />
+                <input type="password" id="password" required placeholder="Password" className="block border my-3 mx-auto" onChange={e => setPassword(e.target.value)} />
 
-                <button onClick={handleSignUp} id="spotify-profile-link"
+                <input type="password" id="confirm-password" required placeholder="Confirm Password" className="block border my-3 mx-auto" onChange={e => setConfirmPassword(e.target.value)} />
+
+                <button id="spotify-profile-link"
                     className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
                     Sign Up
                 </button>

@@ -8,8 +8,9 @@ const cookie = new Cookies();
 
 export default function Login() {
 
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,14 +20,14 @@ export default function Login() {
     }, [])
 
     async function handleLogin() {
-        console.log(username, password)
+        setError("");
         fetch("/api/auth/app/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username: username,
+                email: email,
                 password: password
             })
         }).then(res => {
@@ -39,12 +40,17 @@ export default function Login() {
             .then(data => {
                 navigate("/profile")
             }).catch(err => {
-                console.log("Error while logging in")
-                console.log(err)
+                if (err.status === 401) {
+                    setError("Invalid email or password")
+                } else if (err.status == 404) {
+                    setError("User not found")
+                } else {
+                    setError("Something went wrong")
+                }
             })
     }
 
-    function handleSubmit(e){
+    function handleSubmit(e) {
         e.preventDefault();
         handleLogin();
     }
@@ -58,13 +64,17 @@ export default function Login() {
                 <h1>Login</h1>
             </div>
 
+            <p className="text-red-500 text-center">
+                {error}
+            </p>
+
             <form onSubmit={handleSubmit}>
 
 
-                <input type="text" id="username" placeholder="Username" className="block border my-3 mx-auto" onChange={e => setUsername(e.target.value)} />
-                <input type="password" id="password" placeholder="Password" className="block border my-3 mx-auto" onChange={e => setPassword(e.target.value)} />
+                <input type="email" required id="email" placeholder="Email" className="block border my-3 mx-auto" onChange={e => setEmail(e.target.value)} />
+                <input type="password" required id="password" placeholder="Password" className="block border my-3 mx-auto" onChange={e => setPassword(e.target.value)} />
 
-                <button onClick={handleLogin} id="spotify-profile-link"
+                <button id="spotify-profile-link"
                     className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
                     Log In
                 </button>

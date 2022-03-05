@@ -7,13 +7,19 @@ const Passwords = require("../utils/Passwords")
 
 router.post("/signup", (req, res) => {
 
-    const {
+    let {
+        email,
         username,
         password
     } = req.body;
 
-    User.getUserByUsername(username)
+    email = encodeURI(email);
+    username = encodeURI(username);
+    password = encodeURI(password);
+
+    User.getUserIfExist(username, email)
         .then(users => {
+            console.log(users)
             if (users.length > 0) {
                 return res.status(409).json({
                     message: "User already exists!"
@@ -21,7 +27,7 @@ router.post("/signup", (req, res) => {
             } else {
                 Passwords.generateHash(password)
                     .then(hash => {
-                        User.insertUser({username, password: hash})
+                        User.insertUser({username, password: hash, email})
                             .then(user => {
                                 res.json({
                                     message: "User created successfully!",
@@ -46,15 +52,16 @@ router.post("/signup", (req, res) => {
 
 router.post("/login", (req, res) => {
     // Get the username and password
-    const {
-        username,
+    let {
+        email,
         password
     } = req.body;
 
-    console.log(username, password);
+    email = encodeURI(email);
+    password = encodeURI(password);
 
     // Verify the username and password
-    User.getUserByUsername(username)
+    User.getUserByEmail(email)
         .then(user => {
             if (user.length == 0) {
                 res.status(404).json({
@@ -79,7 +86,7 @@ router.post("/login", (req, res) => {
                             res.status(200).json({
                                 message: "Login successful",
                                 token: token,
-                                username: username
+                                username: user[0].username 
                             })
                         } else {
                             res.status(401).json({

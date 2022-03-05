@@ -15,10 +15,12 @@ const songApiRoutes = require("./controller/SongApi")
 const userApiRoutes = require("./controller/User")
 const appAuthRoutes = require("./controller/app_auth")
 const meRoutes = require("./controller/Me")
+const errorRoutes = require("./controller/Error")
 
 // Frontend routes
 
 // Backend routes
+app.use("/api/error/", errorRoutes);
 app.use("/api/auth/", authRoutes)
 app.use("/api/me/", meRoutes)
 app.use("/api/auth/app", appAuthRoutes)
