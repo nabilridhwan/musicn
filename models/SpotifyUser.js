@@ -120,11 +120,11 @@ async function updateSpotifyUser(newStuff, id) {
 async function insertUser({
     email,
     name,
-    app_userid,
     spotify_userid,
     country,
     profile_pic_url,
-    refresh_token
+    refresh_token,
+    user_id
 }) {
     const {
         data,
@@ -132,11 +132,11 @@ async function insertUser({
     } = await supabase.from(tableName).insert([{
         email: email,
         name: name,
-        app_userid: app_userid,
         spotify_userid: spotify_userid,
         country: country,
         profile_pic_url: profile_pic_url,
-        refresh_token: refresh_token
+        refresh_token: refresh_token,
+        user_id: user_id
     }])
 
     if (error) {

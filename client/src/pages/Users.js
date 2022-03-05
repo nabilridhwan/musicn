@@ -13,6 +13,7 @@ export default function Users() {
         fetch("/api/user")
             .then(res => res.json())
             .then(users => {
+                console.table(users)
                 setUsers(users)
                 setDisplayUsers(users)
             })

@@ -55,8 +55,10 @@ router.get("/callback", isCookieAvailable, (req, res) => {
                 }
             }).then(userResponse => {
 
+                console.log(userResponse)
 
-                const {
+
+                let {
                     email,
                     display_name,
                     country,
@@ -64,11 +66,16 @@ router.get("/callback", isCookieAvailable, (req, res) => {
                     id,
                 } = userResponse.data;
 
+                if(images.length == 0){
+                    images = null
+                }
+
                 let saveBody = {
                     email: email,
                     name: display_name,
+                    country: country,
                     spotify_userid: id,
-                    profile_pic_url: images[0].url,
+                    profile_pic_url: images,
                     refresh_token: tokenResponse.data.refresh_token,
                     user_id: decoded.user_id
                 }
