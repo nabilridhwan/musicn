@@ -50,7 +50,7 @@ export default function SignUp() {
                 .catch(err => {
                     if (err.status == 409) {
                         setError("User already exists!")
-                    }else{
+                    } else {
                         setError("Something went wrong")
                     }
                 })
@@ -74,30 +74,40 @@ export default function SignUp() {
                 </h1>
             </div>
 
-            <p className="text-center italic text-lg">
-                This is pretty awkward but please remember your password! You can't change it after <span className="font-bold">(for now)</span>
+            <p className="text-lg text-center">
+                Sign up to create an account
             </p>
 
-            <p className="text-center text-red-500">
-                {error}
-            </p>
-
-            <form onSubmit={handleSubmit}>
+            <div className="container">
 
 
-                <input type="email" id="email" required placeholder="Email" className="block border my-3 mx-auto" onChange={e => setEmail(e.target.value)} />
+                <p className="error mt-10">
+                    {error}
+                </p>
 
-                <input type="text" id="username" required placeholder="Username" className="block border my-3 mx-auto" onChange={e => setUsername(e.target.value)} />
+                <form onSubmit={handleSubmit}>
 
-                <input type="password" id="password" required placeholder="Password" className="block border my-3 mx-auto" onChange={e => setPassword(e.target.value)} />
 
-                <input type="password" id="confirm-password" required placeholder="Confirm Password" className="block border my-3 mx-auto" onChange={e => setConfirmPassword(e.target.value)} />
+                    <label htmlFor="email">Email</label>
+                    <input type="email" id="email" required placeholder="Email" className="block w-full" onChange={e => setEmail(e.target.value)} />
 
-                <button id="spotify-profile-link"
-                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
-                    Sign Up
-                </button>
-            </form>
+                    <label htmlFor="username">Username</label>
+                    <input type="text" id="username" required placeholder="Username" className="block w-full" onChange={e => setUsername(e.target.value)} />
+
+                    <label htmlFor="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+
+                    <label htmlFor="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" required placeholder="Re-enter your password" className="block w-full" onChange={e => setConfirmPassword(e.target.value)} />
+
+                    <button 
+                        className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
+                        Sign Up
+                    </button>
+                </form>
+
+                <p className="text-center">Have an account? <a href="/login">Login</a></p>
+            </div>
 
         </div>
     )

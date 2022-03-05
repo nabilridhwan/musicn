@@ -75,8 +75,11 @@ export default function Profile() {
     }
 
     function handleLogout() {
-        cookie.remove("jwt")
-        navigate("/");
+        fetch("/api/auth/app/logout")
+        .then(res => res.json())
+        .then(data => {
+            navigate("/")
+        })
     }
 
     return (

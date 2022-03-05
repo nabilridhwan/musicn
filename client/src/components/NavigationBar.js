@@ -1,29 +1,65 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie";
 const cookie = new Cookies();
 
-export default function NavigationBar(){
-    return(
-        <nav className="mx-5 my-2">
-            <div className="flex items-center">
+export default function NavigationBar() {
 
-            <p className="font-bold text-center my-3">Musicn</p>
-            <ul className="ml-10 flex">
-                <li className="mx-3"><Link to="/">Home</Link></li>
-                <li className="mx-3"><Link to="/users">Users</Link></li>
+    let [hasToken, setHasToken] = useState(false);
+    let [pfp, setPfp] = useState("");
+    let [username, setUsername] = useState("");
 
-                {cookie.get("jwt") ? (
-                    <>
-                        <li className="mx-3"><Link to="/profile">Profile</Link></li>
-                    </>
-                ) : (
-                    <>
-                <li className="mx-3"><Link to="/login">Login</Link></li>
-                <li className="mx-3"><Link to="/signup">Sign Up</Link></li>
-                </>
-                )}
+    useEffect(() => {
+        if (cookie.get("jwt")) {
+            setHasToken(true)
+
+            fetch('/api/me', {
+                method: "GET",
+                credentials: "include"
+            }).then(res => res.json())
+                .then(([user]) => {
+                    setUsername(user.username)
+                    setPfp(user.profile_pic_url)
+                })
+        }
+
+    }, [])
+    return (
+        <nav className="mx-5 my-6">
+            <ul className="space-x-6">
+                <li className="inline font-bold">
+                    <Link to={"/"}>
+                        Musicn
+                    </Link>
+                </li>
+                <li className="inline"><Link to="/">Home</Link></li>
+                <li className="inline"><Link to="/users">Users</Link></li>
+
+                <div className="float-right space-x-6">
+                    {cookie.get("jwt") ? (
+                        <>
+                            <li className="inline">
+                                <Link to="/profile" className="flex justify-center items-center">
+                                    {pfp && <img src={pfp} className="w-8 h-8 rounded-full" />}
+                                    <span className="ml-2">
+                                        {username}
+                                    </span>
+
+                                </Link>
+                            </li>
+                        </>
+                    ) : (
+                        <>
+                            <li className="inline"><Link to="/login">Login</Link></li>
+                            <li className="inline"><Link to="/signup">Sign Up</Link></li>
+                        </>
+                    )}
+                </div>
+
+
             </ul>
-            </div>
+
+
         </nav>
     )
 }

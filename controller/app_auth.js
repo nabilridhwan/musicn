@@ -27,7 +27,11 @@ router.post("/signup", (req, res) => {
             } else {
                 Passwords.generateHash(password)
                     .then(hash => {
-                        User.insertUser({username, password: hash, email})
+                        User.insertUser({
+                                username,
+                                password: hash,
+                                email
+                            })
                             .then(user => {
                                 res.json({
                                     message: "User created successfully!",
@@ -81,14 +85,14 @@ router.post("/login", (req, res) => {
 
                             // Return cookie with maxAge of 30 mins
                             res.cookie("jwt", token, {
-                                maxAge: 1800000 
+                                maxAge: 1800000
                             })
 
                             // Return response
                             res.status(200).json({
                                 message: "Login successful",
                                 token: token,
-                                username: user[0].username 
+                                username: user[0].username
                             })
                         } else {
                             res.status(401).json({
@@ -105,28 +109,43 @@ router.post("/login", (req, res) => {
         })
 })
 
+router.get("/logout", (req, res) => {
+    res.clearCookie("jwt");
+    res.status(200).json({
+        message: "Cookie deleted!"
+    })
+})
+
 router.put("/", isCookieAvailable, (req, res) => {
     console.log(req.cookies)
     jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
-        if(err){
+        if (err) {
             return res.status(401).json({
                 message: "Invalid token"
             })
-        }else{
-            const {user_id} = decoded;
+        } else {
+            const {
+                user_id
+            } = decoded;
 
-            const {username} = req.body;
+            const {
+                username
+            } = req.body;
 
             User.changeUsername(username, user_id)
-            .then(user => {
-                res.json({message: "Username Updated"})
-            }).catch(err => {
-                if(err.code == 23505){
-                    return res.status(409).json({message: "Username already exists!"})
-                }else{
-                return res.status(500).json(err)
-                }
-            })
+                .then(user => {
+                    res.json({
+                        message: "Username Updated"
+                    })
+                }).catch(err => {
+                    if (err.code == 23505) {
+                        return res.status(409).json({
+                            message: "Username already exists!"
+                        })
+                    } else {
+                        return res.status(500).json(err)
+                    }
+                })
         }
     })
 })

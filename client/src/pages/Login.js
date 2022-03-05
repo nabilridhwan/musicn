@@ -56,29 +56,41 @@ export default function Login() {
     }
 
     return (
-        <div>
+        <div >
 
             <NavigationBar />
 
-            <div className="jumbotron my-10 flex flex-col items-center">
-                <h1>Login</h1>
+
+            <div className="container">
+
+                <div className="jumbotron my-10 flex flex-col items-center">
+                    <h1>Login</h1>
+
+                    <p className="mt-2 text-lg">
+                        Log in into your Musicn account
+                    </p>
+                </div>
+
+                <p className="error">
+                    {error}
+                </p>
+
+                <form onSubmit={handleSubmit}>
+
+
+                    <label htmlFor="email">Email</label>
+                    <input type="email" required id="email" placeholder="johndoe@email.com" className="block w-full" onChange={e => setEmail(e.target.value)} />
+
+                    <label htmlFor="password">Password</label>
+                    <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+
+                    <button
+                        className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
+                        Log In
+                    </button>
+                </form>
+
             </div>
-
-            <p className="text-red-500 text-center">
-                {error}
-            </p>
-
-            <form onSubmit={handleSubmit}>
-
-
-                <input type="email" required id="email" placeholder="Email" className="block border my-3 mx-auto" onChange={e => setEmail(e.target.value)} />
-                <input type="password" required id="password" placeholder="Password" className="block border my-3 mx-auto" onChange={e => setPassword(e.target.value)} />
-
-                <button id="spotify-profile-link"
-                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
-                    Log In
-                </button>
-            </form>
 
         </div>
     )
