@@ -5,6 +5,12 @@ import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
 const cookie = new Cookies();
 
+let reauth_url = "/api/auth";
+
+if (process.env.NODE_ENV != "production") {
+    reauth_url = "http://localhost:4000/api/auth";
+}
+
 export default function Profile() {
 
     const [user, setUser] = useState({})
@@ -97,10 +103,14 @@ export default function Profile() {
                 </p>
 
                 <Link to={"/user/" + user.username} id="spotify-profile-link"
-                    href={"https://open.spotify.com/user/" + user.spotify_userid}
                     className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
                     Go to profile page
                 </Link>
+
+                <a href={reauth_url} id="spotify-profile-link"
+                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                    Reauthenticate Spotify Account (If you have errors!)
+                </a>
 
                 {!user.refresh_token && (
 
