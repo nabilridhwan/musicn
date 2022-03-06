@@ -118,11 +118,15 @@ export default function Profile() {
                             @{user.username}
                         </p>
 
-                        <Link to={"/user/" + user.username} id="spotify-profile-link"
-                            className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
-                            Go to profile page
-                        </Link>
+                        {user.refresh_token &&
+                            (
+                                <Link to={"/user/" + user.username} id="spotify-profile-link"
+                                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
+                                    Go to profile page
+                                </Link>
+                            )
 
+                        }
 
                         {!user.refresh_token ? (
 
