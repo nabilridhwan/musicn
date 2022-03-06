@@ -11,16 +11,25 @@ export default function NavigationBar() {
 
     useEffect(() => {
         setHasToken(false);
-        if (cookie.get("jwt")) {
-            setHasToken(true)
+        let profile_pic_url = localStorage.getItem("profile_pic_url")
+        console.log(profile_pic_url)
 
-            fetch('/api/me', {
-                method: "GET",
-                credentials: "include"
-            }).then(res => res.json())
-                .then(([user]) => {
-                    setPfp(user.profile_pic_url)
-                })
+        if (!profile_pic_url) {
+            if (cookie.get("jwt")) {
+                setHasToken(true)
+
+                fetch('/api/me', {
+                    method: "GET",
+                    credentials: "include"
+                }).then(res => res.json())
+                    .then(([user]) => {
+                        setPfp(user.profile_pic_url)
+                        localStorage.setItem("profile_pic_url", user.profile_pic_url)
+                    })
+            }
+        }else{
+            setHasToken(true)
+            setPfp(profile_pic_url)
         }
 
     }, [])
