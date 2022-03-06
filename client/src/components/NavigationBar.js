@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
 import Cookies from "universal-cookie";
 const cookie = new Cookies();
 
@@ -40,7 +41,14 @@ export default function NavigationBar() {
                         <>
                             <li className="inline">
                                 <Link to="/profile" className="flex justify-center items-center">
-                                    {pfp && <img src={pfp} className="w-8 h-8 rounded-full" />}
+
+                                    {pfp ?
+                                        <img className="w-8 h-8 rounded-full" src={pfp} alt="profile picture" />
+                                        :
+                                        <div className="h-8 w-8 flex justify-center items-center bg-spotify-green rounded-full">
+                                            <FaUser className="fa fa-user text-sm text-center text-white/90" aria-hidden="true"></FaUser>
+                                        </div>
+                                    }
                                     <span className="ml-2">
                                         {username}
                                     </span>

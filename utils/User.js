@@ -10,8 +10,6 @@ const User = {
             formData.append("grant_type", "refresh_token")
             formData.append("refresh_token", refresh_token)
 
-
-            // TODO: Fix token issue
             axios({
                 method: "POST",
                 url: "https://accounts.spotify.com/api/token",
