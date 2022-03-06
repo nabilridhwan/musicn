@@ -54,7 +54,7 @@ export default function Users() {
                 <h1>Users</h1>
                 <h3>Users of Musicn</h3>
 
-                <p>Is your profile not showing? <Link className="underline" to="/error/1">Click here</Link> to find out more!</p>
+                {/* <p>Is your profile not showing? <Link className="underline" to="/error/1">Click here</Link> to find out more!</p> */}
             </div>
 
             {/* <div className="flex flex-wrap justify-center">

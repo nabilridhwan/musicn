@@ -8,9 +8,9 @@ export default function NavigationBar() {
 
     let [hasToken, setHasToken] = useState(false);
     let [pfp, setPfp] = useState("");
-    let [username, setUsername] = useState("");
 
     useEffect(() => {
+        setHasToken(false);
         if (cookie.get("jwt")) {
             setHasToken(true)
 
@@ -19,7 +19,6 @@ export default function NavigationBar() {
                 credentials: "include"
             }).then(res => res.json())
                 .then(([user]) => {
-                    setUsername(user.username)
                     setPfp(user.profile_pic_url)
                 })
         }
@@ -37,7 +36,7 @@ export default function NavigationBar() {
                 <li className="inline"><Link to="/users">Users</Link></li>
 
                 <div className="float-right space-x-6">
-                    {cookie.get("jwt") ? (
+                    {hasToken ? (
                         <>
                             <li className="inline">
                                 <Link to="/profile" className="flex justify-center items-center">
@@ -49,9 +48,6 @@ export default function NavigationBar() {
                                             <FaUser className="fa fa-user text-sm text-center text-white/90" aria-hidden="true"></FaUser>
                                         </div>
                                     }
-                                    <span className="ml-2">
-                                        {username}
-                                    </span>
 
                                 </Link>
                             </li>
