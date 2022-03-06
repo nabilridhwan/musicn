@@ -89,6 +89,7 @@ export default function Profile() {
         fetch("/api/auth/app/logout")
             .then(res => res.json())
             .then(data => {
+                localStorage.clear();
                 navigate("/")
             })
     }
