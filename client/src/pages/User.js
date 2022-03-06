@@ -22,9 +22,7 @@ export default function User() {
     const [recentSongsLoaded, setRecentSongsLoaded] = useState(false);
     const [userLoaded, setUserLoaded] = useState(false);
 
-
-
-
+    const [currentlyPlayingText, setCurrentlyPlayingText] = useState("I'm not listening to anything right now");
 
     useEffect(() => {
         (async () => {
@@ -95,7 +93,8 @@ export default function User() {
                 if (currentSong == "") return null
                 return currentSong
             }).catch(error => {
-                return null
+                setCurrentlyPlayingText("Error getting currently playing song. Reauthenticate your Spotify account from the Profile page.")
+                console.log("Can't get currently playing")
             })
     }
 
@@ -183,7 +182,9 @@ export default function User() {
                         <div id="currently-listening-song"
                             className="flex bg-white border w-fit lg m-auto items-center">
 
-                            <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
+                            <p className='p-4 text-black/50 italic'>
+                               {currentlyPlayingText} 
+                                </p>
                         </div>
                     )
                 )}
