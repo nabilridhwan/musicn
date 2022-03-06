@@ -76,7 +76,8 @@ export default function Profile() {
                 if (err.status == 409) {
                     setError("Username already exists")
                 } else if (err.status == 400) {
-                    setError("Usernames can only contain a-z, underscore, periods and numbers");
+
+                    setError("Usernames can only contain lowercase letters, underscores, periods and numbers");
                 }
                 else {
                     setError("Something went wrong while updating your profile")

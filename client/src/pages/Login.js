@@ -41,7 +41,7 @@ export default function Login() {
                 navigate("/profile")
             }).catch(err => {
                 if (err.status === 401) {
-                    setError("Invalid email or password")
+                    setError("Invalid email, username or password")
                 } else if (err.status == 404) {
                     setError("User not found")
                 } else {
@@ -78,8 +78,8 @@ export default function Login() {
                 <form onSubmit={handleSubmit}>
 
 
-                    <label htmlFor="email">Email</label>
-                    <input type="email" required id="email" placeholder="johndoe@email.com" className="block w-full" onChange={e => setEmail(e.target.value)} />
+                    <label htmlFor="email">Email or Username</label>
+                    <input type="text" required id="email" placeholder="Email or Username" className="block w-full" onChange={e => setEmail(e.target.value)} />
 
                     <label htmlFor="password">Password</label>
                     <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
