@@ -12,7 +12,6 @@ export default function NavigationBar() {
     useEffect(() => {
         setHasToken(false);
         let profile_pic_url = localStorage.getItem("profile_pic_url")
-        console.log(profile_pic_url)
 
         if (!profile_pic_url) {
             if (cookie.get("jwt")) {
@@ -23,11 +22,14 @@ export default function NavigationBar() {
                     credentials: "include"
                 }).then(res => res.json())
                     .then(([user]) => {
-                        setPfp(user.profile_pic_url)
-                        localStorage.setItem("profile_pic_url", user.profile_pic_url)
+
+                        if (user.profile_pic_url) {
+                            localStorage.setItem("profile_pic_url", user.profile_pic_url)
+                            setPfp(user.profile_pic_url)
+                        }
                     })
             }
-        }else{
+        } else {
             setHasToken(true)
             setPfp(profile_pic_url)
         }
