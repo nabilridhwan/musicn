@@ -46,10 +46,9 @@ export default function Profile() {
                 }
             })
             .then(user => {
-                console.log(user)
                 return user
             }).catch(err => {
-                setError("Something went wrong while fetching your profile")
+                handleLogout();
             })
     }
 

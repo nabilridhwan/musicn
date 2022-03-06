@@ -21,6 +21,9 @@ router.get("/", isCookieAvailable, (req, res) => {
             
             UserView.getUserByUserID(decoded.user_id)
                 .then(user => {
+                    if(user.length == 0){
+                        return res.sendStatus(404)
+                    }
                     return res.json(user)
                 })
         }
