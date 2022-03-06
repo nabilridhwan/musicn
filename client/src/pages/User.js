@@ -158,24 +158,26 @@ export default function User() {
             }
 
             <div className="currently-listening my-20">
-                <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
 
-                {playingLoaded ? (
+                {playingLoaded && (
                     currentSong ? (
+                        <>
 
-                        <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
-                            <div id="currently-listening-song"
-                                className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
+                            <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
+                            <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
+                                <div id="currently-listening-song"
+                                    className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
 
-                                <img src={currentSong.item.album.images[0].url} className="h-14" />
+                                    <img src={currentSong.item.album.images[0].url} className="h-14" />
 
-                                <div className="mx-4">
-                                    <p className="font-bold">{currentSong.item.name}</p>
-                                    <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
+                                    <div className="mx-4">
+                                        <p className="font-bold">{currentSong.item.name}</p>
+                                        <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
+                                    </div>
+
                                 </div>
-
-                            </div>
-                        </a>
+                            </a>
+                        </>
 
                     ) : (
                         <div id="currently-listening-song"
@@ -184,14 +186,6 @@ export default function User() {
                             <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
                         </div>
                     )
-                ) : (
-                    <div id="currently-listening-song"
-                        className="flex bg-white border w-fit lg m-auto items-center">
-
-                        <p className='p-4 text-black/50 italic'>
-                            Loading
-                        </p>
-                    </div>
                 )}
 
 
