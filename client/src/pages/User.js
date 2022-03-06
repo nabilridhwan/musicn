@@ -33,21 +33,30 @@ export default function User() {
             setUser(profile)
             setUserLoaded(true);
 
+        })();
+        (async () => {
             setPlayingLoaded(false)
             let currently_playing = await getUserCurrentlyPlaying();
             setCurrentSong(currently_playing)
             setPlayingLoaded(true);
 
+        })();
+
+        (async () => {
             setTopSongsLoaded(false)
             let top_tracks = await getUserTopSongs();
             setTopSongs(top_tracks)
             setTopSongsLoaded(true)
+        })();
 
+        (async () => {
             setRecentSongsLoaded(false)
             let recently_played = await getUserRecentlyPlayed();
             setRecentlyPlayed(recently_played)
             setRecentSongsLoaded(true)
         })();
+
+
 
     }, [])
 
@@ -69,7 +78,7 @@ export default function User() {
         return fetch(`/api/user/${app_userid}`)
             .then(res => res.json())
             .then(user => {
-                if(!user.spotify_userid) throw "User does not have a spotify account"
+                if (!user.spotify_userid) throw "User does not have a spotify account"
                 return user
             }).catch(err => {
                 navigate("/users")
@@ -139,7 +148,7 @@ export default function User() {
                                 @{user.username}
                             </p>
 
-                            <SpotifyButton  href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile"/>
+                            <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" />
 
 
                         </div>
@@ -220,7 +229,7 @@ export default function User() {
 
                                         <div>
 
-                                        <SpotifyButton href={url} text="Spotify" />
+                                            <SpotifyButton href={url} text="Spotify" />
 
                                         </div>
 
@@ -278,7 +287,7 @@ export default function User() {
                                         <div>
 
 
-                                        <SpotifyButton href={url} text="Spotify" />
+                                            <SpotifyButton href={url} text="Spotify" />
 
 
                                         </div>
