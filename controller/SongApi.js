@@ -22,7 +22,7 @@ router.get("/:id/top_songs", (req, res) => {
 
                     axios({
                         method: "GET",
-                        url: `https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=short_term`,
+                        url: `https://api.spotify.com/v1/me/top/tracks?limit=15&time_range=short_term`,
                         headers: {
                             "Authorization": `Bearer ${access_token}`
                         }
@@ -93,7 +93,7 @@ router.get("/:id/recently_played", (req, res) => {
 
                     axios({
                         method: "GET",
-                        url: `https://api.spotify.com/v1/me/player/recently-played`,
+                        url: `https://api.spotify.com/v1/me/player/recently-played?limit=10`,
                         headers: {
                             "Authorization": `Bearer ${access_token}`
                         }
