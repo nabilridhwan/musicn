@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { FaExclamationTriangle, FaSpotify } from "react-icons/fa"
+import { FaExclamationTriangle, FaSpotify, FaUser } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
-const cookie = new Cookies();
 
 let reauth_url = "/api/auth";
 
@@ -25,6 +24,7 @@ export default function Profile() {
             window.location.href = "/login";
         }
         (async () => {
+            setLoaded(false);
             let profile = await getUserProfile();
             setUser(profile[0])
             setUsername(profile[0].username)
@@ -75,10 +75,10 @@ export default function Profile() {
             }).catch(err => {
                 if (err.status == 409) {
                     setError("Username already exists")
-                }else if(err.status == 400){
+                } else if (err.status == 400) {
                     setError("Usernames can only contain a-z, underscore, periods and numbers");
                 }
-                 else {
+                else {
                     setError("Something went wrong while updating your profile")
                 }
                 console.log(err)
@@ -104,7 +104,13 @@ export default function Profile() {
                 <>
                     <div className="my-10 flex flex-col items-center">
 
-                        <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+                        {user.profile_pic_url ?
+                            <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
+                            :
+                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                            </div>
+                        }
 
                         <h2 className="text-3xl font-bold">{user && user.name}</h2>
                         <p className="text-sm text-black/50" id="follower-count-text">
@@ -119,7 +125,7 @@ export default function Profile() {
 
                         {!user.refresh_token ? (
 
-                            <div className="mt-6 flex-col md:flex-row bg-white border border-black/20 drop-shadow-lg p-10 rounded-2xl w-2/3">
+                            <div className="mt-6 flex-col md:flex-row bg-white border border-black/20 drop-shadow-lg p-10 rounded-2xl w-3/4">
                                 <FaExclamationTriangle className="text-red-500 text-4xl" />
 
                                 <div className="mt-2">

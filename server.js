@@ -20,10 +20,13 @@ const errorRoutes = require("./controller/Error")
 // Frontend routes
 
 // Backend routes
-app.use("/api/error/", errorRoutes);
+
+// Auth routes
 app.use("/api/auth/", authRoutes)
-app.use("/api/me/", meRoutes)
 app.use("/api/auth/app", appAuthRoutes)
+
+app.use("/api/error/", errorRoutes);
+app.use("/api/me/", meRoutes)
 app.use("/api/songs", songApiRoutes)
 app.use("/api/user", userApiRoutes)
 

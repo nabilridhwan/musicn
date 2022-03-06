@@ -1,12 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const User = require("../models/SpotifyUser");
+const SpotifyUser = require("../models/SpotifyUser");
 const AppUser = require("../models/AppUser");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
 const jwt = require("jsonwebtoken");
-
-require("dotenv").config()
 
 const SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played user-read-currently-playing"
 const SHOW_DIALOG = true;
@@ -26,7 +24,7 @@ router.get("/callback", isCookieAvailable, (req, res) => {
     jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
 
 
-        if(err) return res.status(500).send("Error decoding token")
+        if (err) return res.status(500).send("Error decoding token")
 
         const {
             code
@@ -66,9 +64,9 @@ router.get("/callback", isCookieAvailable, (req, res) => {
                     id,
                 } = userResponse.data;
 
-                if(images.length == 0){
+                if (images.length == 0) {
                     images = null
-                }else{
+                } else {
                     images = images[0].url
                 }
 
@@ -83,17 +81,19 @@ router.get("/callback", isCookieAvailable, (req, res) => {
                 }
 
                 // Check if user exists or not
-                User.getUserByEmail(email).then(user => {
+                SpotifyUser.getUserByEmail(email).then(user => {
+
                     console.log("users: " + JSON.stringify(user))
                     if (user.length == 0) {
-                        User.insertUser(saveBody).then(user => {
+                        SpotifyUser.insertUser(saveBody).then(user => {
                             return res.redirect(`${process.env.FRONTEND_URL}/profile`)
                         }).catch(error => {
                             return res.status(500).json(error)
                         })
                     } else {
                         console.log(`Account exists already. Updating user ${user[0].user_id}`)
-                        User.updateSpotifyUser(saveBody, user[0].id).then(user => {
+
+                        SpotifyUser.updateSpotifyUser(saveBody, user[0].id).then(user => {
                             return res.redirect(`${process.env.FRONTEND_URL}/profile`)
                         }).catch(error => {
                             console.log("Error updating user")

@@ -3,12 +3,13 @@ const router = express.Router();
 const axios = require("axios");
 const SpotifyUser = require("../models/SpotifyUser");
 const UserUtils = require("../utils/User");
+const UserView = require("../models/UserView");
 
 router.get("/:id/top_songs", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    SpotifyUser.getUserByAppUserIDWithToken(req.params.id)
+    UserView.getUserByUsername(req.params.id)
         .then(user => {
             console.log(user)
             if (!user || user.length == 0) {
@@ -44,7 +45,7 @@ router.get("/:id/currently_playing", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    SpotifyUser.getUserByAppUserIDWithToken(req.params.id)
+    UserView.getUserByUsername(req.params.id)
         .then(user => {
             if (!user || user.length == 0) {
                 return res.sendStatus(404);
@@ -78,7 +79,7 @@ router.get("/:id/recently_played", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
-    SpotifyUser.getUserByAppUserIDWithToken(req.params.id)
+    UserView.getUserByUsername(req.params.id)
         .then(user => {
             if (!user || user.length == 0) {
                 return res.sendStatus(404);

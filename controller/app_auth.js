@@ -2,7 +2,8 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
 const router = express.Router();
-const User = require("../models/AppUser");
+const AppUser = require("../models/AppUser");
+const UserView = require("../models/UserView");
 const isUsernameForbidden = require("../utils/isUsernameForbidden");
 const Passwords = require("../utils/Passwords")
 
@@ -22,7 +23,8 @@ router.post("/signup", (req, res) => {
     username = encodeURI(username);
     password = encodeURI(password);
 
-    User.getUserIfExist(username, email)
+    
+    UserView.getUserIfExist(username, email)
         .then(users => {
             console.log(users)
             if (users.length > 0) {
@@ -32,7 +34,7 @@ router.post("/signup", (req, res) => {
             } else {
                 Passwords.generateHash(password)
                     .then(hash => {
-                        User.insertUser({
+                        AppUser.insertUser({
                                 username,
                                 password: hash,
                                 email
@@ -70,7 +72,7 @@ router.post("/login", (req, res) => {
     password = encodeURI(password);
 
     // Verify the username and password
-    User.getUserByEmail(email)
+    UserView.getUserByEmail(email)
         .then(user => {
             if (user.length == 0) {
                 res.status(404).json({
@@ -137,7 +139,7 @@ router.put("/", isCookieAvailable, (req, res) => {
                 username
             } = req.body;
 
-            User.changeUsername(username, user_id)
+            AppUser.changeUsername(username, user_id)
                 .then(user => {
                     res.json({
                         message: "Username Updated"

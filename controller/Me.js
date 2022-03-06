@@ -1,14 +1,14 @@
-const {
-    default: axios
-} = require("axios");
 const express = require("express");
 const router = express.Router();
 
-const SpotifyUser = require("../models/SpotifyUser");
 const jwt = require("jsonwebtoken");
 const User = require("../models/AppUser");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
 const isUsernameForbidden = require("../utils/isUsernameForbidden");
+
+
+const UserView = require("../models/UserView");
+
 router.get("/", isCookieAvailable, (req, res) => {
     const {
         jwt: token
@@ -18,7 +18,8 @@ router.get("/", isCookieAvailable, (req, res) => {
         if (err) {
             return res.sendStatus(403);
         } else {
-            SpotifyUser.getUserByUserID(decoded.user_id)
+            
+            UserView.getUserByUserID(decoded.user_id)
                 .then(user => {
                     return res.json(user)
                 })
