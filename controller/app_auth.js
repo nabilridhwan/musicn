@@ -15,15 +15,17 @@ router.post("/signup", (req, res) => {
         password
     } = req.body;
 
-    if(isUsernameForbidden(username)){
-        return res.status(400).json({message: "Usernames can only contain a-z, underscore, periods and numbers"})
+    if (isUsernameForbidden(username)) {
+        return res.status(400).json({
+            message: "Usernames can only contain a-z, underscore, periods and numbers"
+        })
     }
 
     email = encodeURI(email);
     username = encodeURI(username);
     password = encodeURI(password);
 
-    
+
     UserView.getUserByEmailOrUsername(username, email)
         .then(users => {
             console.log(users)
@@ -40,9 +42,27 @@ router.post("/signup", (req, res) => {
                                 email
                             })
                             .then(user => {
-                                res.json({
-                                    message: "User created successfully!",
-                                });
+
+                                user = user[0]
+
+                                const token = jwt.sign({
+                                    user_id: user.user_id,
+                                    username: user.username
+                                }, process.env.JWT_KEY, {
+                                    expiresIn: "1h"
+                                })
+
+                                // Return cookie with maxAge of 30 mins
+                                res.cookie("jwt", token, {
+                                    maxAge: 1800000
+                                })
+
+                                // Return response
+                                res.status(200).json({
+                                    message: "Sign up successful",
+                                    token: token,
+                                    username: user.username
+                                })
                             })
                             .catch(error => {
                                 console.log(error)

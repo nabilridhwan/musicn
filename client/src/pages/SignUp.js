@@ -44,7 +44,7 @@ export default function SignUp() {
                 if (!res.ok) {
                     throw res
                 } else {
-                    navigate("/login")
+                    navigate("/profile")
                 }
             })
                 .catch(err => {
