@@ -24,7 +24,7 @@ router.post("/signup", (req, res) => {
     password = encodeURI(password);
 
     
-    UserView.getUserIfExist(username, email)
+    UserView.getUserByEmailOrUsername(username, email)
         .then(users => {
             console.log(users)
             if (users.length > 0) {
@@ -72,7 +72,7 @@ router.post("/login", (req, res) => {
     password = encodeURI(password);
 
     // Verify the username and password
-    UserView.getUserByEmail(email)
+    UserView.getUserByEmailOrUsername(email, email)
         .then(user => {
             if (user.length == 0) {
                 res.status(404).json({

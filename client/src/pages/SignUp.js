@@ -51,7 +51,7 @@ export default function SignUp() {
                     if (err.status == 409) {
                         setError("User already exists!")
                     }else if(err.status == 400){
-                    setError("Usernames can only contain a-z, underscore, periods and numbers");
+                    setError("Usernames can only contain lowercase letters, underscores, periods and numbers");
                 } else {
                         setError("Something went wrong")
                     }

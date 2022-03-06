@@ -4,7 +4,8 @@ const tableName = "user_view";
 const UserView = {
 
     // Used in sign up 
-    getUserIfExist: async (username, email) => {
+    getUserByEmailOrUsername: async (username, email) => {
+
         let {
             data: users,
             error
