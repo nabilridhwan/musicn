@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { FaUser, FaSpotify, FaShare, FaShareAlt } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
+import SpotifyButton from "../components/SpotifyButton";
 
 export default function User() {
 
@@ -12,24 +13,40 @@ export default function User() {
     const [currentSong, setCurrentSong] = useState(null)
     const [recentlyPlayed, setRecentlyPlayed] = useState(null)
     const [topSongs, setTopSongs] = useState(null)
-    const navigate = useNavigate() 
+    const navigate = useNavigate()
     const [shareButtonText, setShareButtonText] = useState("Share with your friends!")
-                
+
+    // Boolean for loading 
+    const [playingLoaded, setPlayingLoaded] = useState(false);
+    const [topSongsLoaded, setTopSongsLoaded] = useState(false);
+    const [recentSongsLoaded, setRecentSongsLoaded] = useState(false);
+    const [userLoaded, setUserLoaded] = useState(false);
+
+
+
 
 
     useEffect(() => {
         (async () => {
+            setUserLoaded(false);
             let profile = await getUserProfile();
             setUser(profile)
+            setUserLoaded(true);
 
+            setPlayingLoaded(false)
             let currently_playing = await getUserCurrentlyPlaying();
             setCurrentSong(currently_playing)
+            setPlayingLoaded(true);
 
-            let recently_played = await getUserRecentlyPlayed();
-            setRecentlyPlayed(recently_played)
-
+            setTopSongsLoaded(false)
             let top_tracks = await getUserTopSongs();
             setTopSongs(top_tracks)
+            setTopSongsLoaded(true)
+
+            setRecentSongsLoaded(false)
+            let recently_played = await getUserRecentlyPlayed();
+            setRecentlyPlayed(recently_played)
+            setRecentSongsLoaded(true)
         })();
 
     }, [])
@@ -52,6 +69,7 @@ export default function User() {
         return fetch(`/api/user/${app_userid}`)
             .then(res => res.json())
             .then(user => {
+                if(!user.spotify_userid) throw "User does not have a spotify account"
                 return user
             }).catch(err => {
                 navigate("/users")
@@ -80,16 +98,16 @@ export default function User() {
             })
     }
 
-    async function handleShare(){
-        try{
+    async function handleShare() {
+        try {
 
-        await navigator.share({
-            url: window.location.href,
-            title: "Musicn",
-            text: "Check out my top songs of the month!"
-        })
+            await navigator.share({
+                url: window.location.href,
+                title: "Musicn",
+                text: "Check out my top songs of the month!"
+            })
 
-        }catch(e){
+        } catch (e) {
             console.log(e)
         }
     }
@@ -99,182 +117,198 @@ export default function User() {
 
             <NavigationBar />
 
-            <div className="my-10 flex items-center justify-center">
 
-                {user.profile_pic_url ?
+            {
+                userLoaded && (
+                    <div className="my-10 flex items-center justify-center">
 
-                    <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+                        {user.profile_pic_url ?
 
-                    :
-                    <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
-                        <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                            <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+
+                            :
+                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                            </div>
+                        }
+
+                        <div className="ml-4">
+
+                            <h2 className="text-3xl font-bold">{user.name}</h2>
+                            <p className="text-sm text-black/50" id="follower-count-text">
+                                @{user.username}
+                            </p>
+
+                            <SpotifyButton  href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile"/>
+
+
+                        </div>
+
                     </div>
-                }
-
-                <div className="ml-4">
-
-                    <h2 className="text-3xl font-bold">{user.name}</h2>
-                    <p className="text-sm text-black/50" id="follower-count-text">
-                        @{user.username}
-                    </p>
-
-
-                    <a id="spotify-profile-link"
-                        href={"https://open.spotify.com/user/" + user.spotify_userid}
-                        className="flex mt-2 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                        <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                        Spotify
-                    </a>
-                </div>
-
-            </div>
+                )
+            }
 
             <div className="currently-listening my-20">
                 <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
 
+                {playingLoaded ? (
+                    currentSong ? (
 
-                {currentSong ? (
+                        <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
+                            <div id="currently-listening-song"
+                                className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
 
-                    <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
-                        <div id="currently-listening-song"
-                            className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
+                                <img src={currentSong.item.album.images[0].url} className="h-14" />
 
-                            <img src={currentSong.item.album.images[0].url} className="h-14" />
+                                <div className="mx-4">
+                                    <p className="font-bold">{currentSong.item.name}</p>
+                                    <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
+                                </div>
 
-                            <div className="mx-4">
-                                <p className="font-bold">{currentSong.item.name}</p>
-                                <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
                             </div>
+                        </a>
 
+                    ) : (
+                        <div id="currently-listening-song"
+                            className="flex bg-white border w-fit lg m-auto items-center">
+
+                            <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
                         </div>
-                    </a>
-
+                    )
                 ) : (
                     <div id="currently-listening-song"
                         className="flex bg-white border w-fit lg m-auto items-center">
 
-                        <p className='p-4 text-black/50 italic'>I'm not listening to anything right now</p>
+                        <p className='p-4 text-black/50 italic'>
+                            Loading
+                        </p>
                     </div>
                 )}
 
 
+
+
             </div>
 
 
-            {topSongs && topSongs.length > 0 ? (
-                <>
+            {topSongsLoaded && (
+                topSongs && topSongs.length > 0 ? (
+                    <>
 
-                    <h4 className="text-center font-bold my-4">Top songs of the month</h4>
-                    <div id="top-tracks" className="flex flex-wrap items-stretch">
-                        {topSongs.map((
-                            {
-                                name,
-                                artists,
-                                external_urls: { spotify: url },
-                                album: { images: [bigImage] }
-                            }, index
-                        ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
-
-
-                            <div className="bg-white h-auto">
-
-
-                                <img src={bigImage.url} className="w-fit h-auto" />
-
-                                <div className="py-7">
-
-
-                                    <h1 className="text-black text-center font-bold">{name}</h1>
-                                    <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
-
-                                    <div>
-
-
-                                        <a id="spotify-profile-link"
-                                            href={url}
-                                            className="flex mt-4 mx-auto w-fit justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white " aria-hidden="true"></FaSpotify>
-                                        </a>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                        </div>))}
-
-
-
-                    </div>
-                </>
-            ) : (
-                <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
-            )}
-
-            {recentlyPlayed ? (
-                <>
-
-                    <h4 className="text-center font-bold my-4">Recently Played Songs</h4>
-                    <div id="top-tracks" className="flex flex-wrap items-stretch">
-                        {recentlyPlayed.map((
-                            {
-                                track: {
-
+                        <h4 className="text-center font-bold my-4">Top songs of the month</h4>
+                        <div id="top-tracks" className="flex flex-wrap items-stretch">
+                            {topSongs.map((
+                                {
                                     name,
                                     artists,
                                     external_urls: { spotify: url },
                                     album: { images: [bigImage] }
-
-                                },
-                                played_at
-                            }, index
-                        ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
+                                }, index
+                            ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
 
 
-                            <div className="bg-white h-auto">
+                                <div className="bg-white h-auto">
 
 
-                                <img src={bigImage.url} className="w-fit h-auto" />
+                                    <img src={bigImage.url} className="w-fit h-auto" />
 
-                                <div className="py-7">
-
-
-                                    <p className="text-center text-black/50">{relativeDate(new Date(played_at))}</p>
-                                    <h1 className="text-black text-center font-bold">{name}</h1>
-                                    <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
-
-                                    <div>
+                                    <div className="py-7">
 
 
-                                        <a id="spotify-profile-link"
-                                            href={url}
-                                            className="flex mt-4 mx-auto w-fit justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white " aria-hidden="true"></FaSpotify>
-                                        </a>
+                                        <h1 className="text-black text-center font-bold">{name}</h1>
+                                        <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+
+                                        <div>
+
+                                        <SpotifyButton href={url} text="Spotify" />
+
+                                        </div>
+
                                     </div>
 
                                 </div>
 
-                            </div>
 
-
-                        </div>))}
+                            </div>))}
 
 
 
-                    </div>
-                </>
-            ) : (
-                <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
+                        </div>
+                    </>
+                ) : (
+                    <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
+                )
             )}
+
+
+
+            {recentSongsLoaded && (
+                recentlyPlayed ? (
+                    <>
+
+                        <h4 className="text-center font-bold my-4">Recently Played Songs</h4>
+                        <div id="top-tracks" className="flex flex-wrap items-stretch">
+                            {recentlyPlayed.map((
+                                {
+                                    track: {
+
+                                        name,
+                                        artists,
+                                        external_urls: { spotify: url },
+                                        album: { images: [bigImage] }
+
+                                    },
+                                    played_at
+                                }, index
+                            ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
+
+
+                                <div className="bg-white h-auto">
+
+
+                                    <img src={bigImage.url} className="w-fit h-auto" />
+
+                                    <div className="py-7">
+
+
+                                        <p className="text-center text-black/50">{relativeDate(new Date(played_at))}</p>
+                                        <h1 className="text-black text-center font-bold">{name}</h1>
+                                        <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+
+                                        <div>
+
+
+                                        <SpotifyButton href={url} text="Spotify" />
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>))}
+
+
+
+                        </div>
+                    </>
+                ) : (
+                    <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
+                )
+            )}
+
+
+            {/* Share button */}
             <div className="fixed bottom-0 w-full flex justify-center items-center">
                 <button onClick={handleShare} className="bg-blue-500 transition ease-out duration-500 rounded-lg p-3 mb-5 flex items-center btn-anim shadow-lg shadow-blue-500/50 text-white">
 
-<FaShareAlt className="mr-2" />
-{shareButtonText}
+                    <FaShareAlt className="mr-2" />
+                    {shareButtonText}
                 </button>
             </div>
         </div>
+
     )
 }
