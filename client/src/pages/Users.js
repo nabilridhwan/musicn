@@ -8,12 +8,15 @@ export default function Users() {
     const [users, setUsers] = useState([])
     const [displayUsers, setDisplayUsers] = useState([])
     const [searchQuery, setSearchQuery] = useState(null)
+    const [userLoaded, setUserLoaded] = useState(false);
 
     useEffect(() => {
         (async () => {
+            setUserLoaded(false);
             let users = await getUsers();
             setUsers(users)
             setDisplayUsers(users)
+            setUserLoaded(true);
         })();
     }, [])
 
@@ -32,7 +35,7 @@ export default function Users() {
 
     async function getUsers(query = "") {
         let url = `/api/user`
-        if(query){
+        if (query) {
             url = `/api/user?q=${query}`
         }
         return await fetch(url)
@@ -58,41 +61,49 @@ export default function Users() {
                 <input type="text" className="mx-10 py-5 w-full md:w-1/2 border rounded-lg text-center" onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for users" />
             </div> */}
 
-            {displayUsers && displayUsers.length != 0 ? displayUsers.map((user, index) => (
-                <a key={index} href={user.spotify_userid ? "/user/" + user.username : "#"}>
-                    <div className="user w-full md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow-lg">
+            {userLoaded ? (
+                displayUsers && displayUsers.length != 0 ? displayUsers.map((user, index) => (
+                    <a key={index} href={user.spotify_userid ? "/user/" + user.username : "#"}>
+                        <div className="user w-full md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow-lg">
 
-                        {user.profile_pic_url ?
-                            <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
-                            :
-                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
-                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
-                            </div>
-                        }
+                            {user.profile_pic_url ?
+                                <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
+                                :
+                                <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                    <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                                </div>
+                            }
 
-                        <div className="ml-5">
-                            <p className="text-lg font-bold">{user.name}</p>
-                            <p className="text-sm text-black/50">
-                                @{user.username}
-                            </p>
-
-                            {!user.spotify_userid && (
-                                <p className="text-sm text-black/30">
-                                    Spotify account not linked
+                            <div className="ml-5">
+                                <p className="text-lg font-bold">{user.name}</p>
+                                <p className="text-sm text-black/50">
+                                    @{user.username}
                                 </p>
-                            )}
+
+                                {!user.spotify_userid && (
+                                    <p className="text-sm text-black/30">
+                                        Spotify account not linked
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </a>
-            ))
+                    </a>
+                ))
 
-                :
-                (
+                    :
+                    (
 
-                    <p className="text-center my-10">No users found!</p>
-                )
+                        <p className="text-center my-10">No users found!</p>
+                    )
 
-            }
+            ) : (
+
+                <p className="text-center my-10">
+                    Loading
+                </p>
+            )}
+
+
 
         </div>
     )
