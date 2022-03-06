@@ -7,7 +7,7 @@ const cookie = new Cookies();
 export default function NavigationBar() {
 
     let [hasToken, setHasToken] = useState(false);
-    let [pfp, setPfp] = useState("");
+    let [pfp, setPfp] = useState(null);
 
     useEffect(() => {
         setHasToken(false);
@@ -22,16 +22,17 @@ export default function NavigationBar() {
                     credentials: "include"
                 }).then(res => res.json())
                     .then(([user]) => {
-
-                        if (user.profile_pic_url) {
-                            localStorage.setItem("profile_pic_url", user.profile_pic_url)
-                            setPfp(user.profile_pic_url)
-                        }
+                        localStorage.setItem("profile_pic_url", user.profile_pic_url)
+                        setPfp(user.profile_pic_url)
                     })
             }
         } else {
             setHasToken(true)
-            setPfp(profile_pic_url)
+            if(profile_pic_url == "null"){
+                setPfp(null)
+            }else{
+                setPfp(profile_pic_url)
+            }
         }
 
     }, [])
