@@ -3,8 +3,8 @@
 
 > Powered by Supabase, Express, Node JS, React and Tailwind CSS
 
-## Development
-### Environment Variables
+## Development Use 
+### Environment Variables (in .env file)
 ```
 PORT=<PORT>
 CLIENT_ID=<SPOTIFY_CLIENT_ID>
@@ -14,5 +14,5 @@ FRONTEND_URL=<FRONTEND_URL>
 SUPABASE_KEY=<SUPABASE_SERVICE_KEY>
 JWT_KEY=<JWT_SECRET_KEY>
 ```
-### Files
+### React 
 `client` folder is where the React app is
