@@ -64,13 +64,13 @@ export default function Users() {
             {userLoaded ? (
                 displayUsers && displayUsers.length != 0 ? displayUsers.map((user, index) => (
                     <a key={index} href={user.spotify_userid ? "/user/" + user.username : "#"}>
-                        <div className="user w-full md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow-lg">
+                        <div className="user mx-5 md:w-1/2 md:mx-auto my-5 py-5 px-8 flex items-center rounded-lg border bg-white m-2 transition ease-out duration-500 hover:scale-105 hover:drop-shadow-lg">
 
                             {user.profile_pic_url ?
-                                <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
+                                <img className="profile_picture rounded-full w-14 h-14 m-1" src={user.profile_pic_url} alt="profile picture" />
                                 :
-                                <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
-                                    <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                                <div className="h-14 w-14 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                    <FaUser className="fa fa-user text-lg text-center text-white/90" aria-hidden="true"></FaUser>
                                 </div>
                             }
 
