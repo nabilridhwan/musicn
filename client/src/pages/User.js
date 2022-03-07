@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FaUser, FaSpotify, FaShareAlt, FaPlay, FaPause } from "react-icons/fa"
+import { FaUser, FaSpotify, FaShareAlt, FaPlay, FaPause, FaExclamation, FaStopCircle, FaPlus, FaPlusCircle } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
 import SpotifyButton from "../components/SpotifyButton";
@@ -146,6 +146,18 @@ export default function User() {
                 userLoaded && (
                     <>
 
+                        {
+                            !localStorage.getItem("profile_pic_url")
+                            &&
+                            (
+                                    <div className="py-2 flex">
+                                        <p className="flex-1 text-xs text-black/50 text-center">
+                                            Want your profile too? <a className="underline" href="/">Click here</a>
+                                        </p>
+                                    </div>
+                            )
+                        }
+
                         <div className="my-10 flex items-center justify-center">
 
                             {user.profile_pic_url ?
@@ -172,9 +184,6 @@ export default function User() {
 
                         </div>
 
-                        <p className="text-xs text-black/40 text-center mt-5">
-                            Want your profile too? <a className="underline" href="/signup">Click here</a>
-                        </p>
 
                     </>
                 )
