@@ -9,6 +9,34 @@
         @apply font-inter;
     }
 
+    .privacy-policy h1{
+        @apply text-3xl font-extrabold my-2;
+    }
+
+    .privacy-policy h2{
+        @apply text-2xl font-bold my-2 ml-3;
+    }
+
+    .privacy-policy h3{
+        @apply text-xl font-bold my-2 ml-5;
+    }
+
+    .privacy-policy p{
+        @apply leading-relaxed;
+    }
+
+    .privacy-policy a{
+        @apply underline;
+    }
+
+    .privacy-policy ul{
+        @apply ml-10 list-disc;
+    }
+
+    .privacy-policy li{
+        @apply my-1;
+    }
+
     .container {
         @apply w-4/5 md:w-1/2 mx-auto;
     }

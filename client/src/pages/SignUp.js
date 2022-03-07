@@ -50,9 +50,9 @@ export default function SignUp() {
                 .catch(err => {
                     if (err.status == 409) {
                         setError("User already exists!")
-                    }else if(err.status == 400){
-                    setError("Usernames can only contain lowercase letters, underscores, periods and numbers");
-                } else {
+                    } else if (err.status == 400) {
+                        setError("Usernames can only contain lowercase letters, underscores, periods and numbers");
+                    } else {
                         setError("Something went wrong")
                     }
                 })
@@ -102,13 +102,19 @@ export default function SignUp() {
                     <label htmlFor="confirm-password">Confirm Password</label>
                     <input type="password" id="confirm-password" required placeholder="Re-enter your password" className="block w-full" onChange={e => setConfirmPassword(e.target.value)} />
 
-                    <button 
+                    <p className="text-center text-sm text-black/50">
+                        By Signing up, you agree to <a className="underline " href="/privacy-policy">
+                            Musicn's Privacy Policy
+                        </a>
+                    </p>
+
+                    <button
                         className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
                         Sign Up
                     </button>
                 </form>
 
-                <p className="text-center">Have an account? <a href="/login">Login</a></p>
+                <p className="text-center">Have an account? <a href="/login" className="underline">Login</a></p>
             </div>
 
         </div>
