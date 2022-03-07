@@ -264,33 +264,27 @@ export default function User() {
                                     },
                                     played_at
                                 }, index
-                            ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
+                            ) => (<div key={index} className="w-full hover:drop-shadow-lg transition ease-out duration-500">
+
+                                <a href={url} className="flex flex-col md:flex-row mx-5 my-2 bg-white border items-center">
 
 
-                                <div className="bg-white h-auto">
 
 
-                                    <img src={bigImage.url} className="w-fit h-auto" />
+                                    <img src={bigImage.url} className="md:w-16 md:h-16" />
 
-                                    <div className="py-7">
-
-
-                                        <p className="text-center text-black/50">{relativeDate(new Date(played_at))}</p>
-                                        <h1 className="text-black text-center font-bold">{name}</h1>
-                                        <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
-
-                                        <div>
-
-
-                                            <SpotifyButton href={url} text="Spotify" />
-
-
-                                        </div>
-
+                                    <div className="flex-1 my-5 md:my-0 md:ml-3" >
+                                        <h1 className="text-center md:text-left text-black font-bold">{name}</h1>
+                                        <p className="text-center md:text-left text-black/50 text-sm">{artists.map(a => a.name).join(", ")}</p>
                                     </div>
 
-                                </div>
 
+
+                                    <div className="text-center my-3 md:my-0 text-sm md:text-left md:ml-auto md:mr-3">
+                                        <p className="text-black/50">{relativeDate(new Date(played_at))}</p>
+                                        </div>
+
+                                    </a>
 
                             </div>))}
 
