@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FaUser, FaSpotify, FaShare, FaShareAlt } from "react-icons/fa"
+import { FaUser, FaSpotify, FaShareAlt } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
 import SpotifyButton from "../components/SpotifyButton";
@@ -167,7 +167,7 @@ export default function User() {
             <div className="currently-listening my-20 flex-col justify-center">
 
                 {playingLoaded && (
-                    currentSong ? (
+                    currentSong && currentSong.currently_playing_type == "track" ? (
                         <>
 
                             <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
