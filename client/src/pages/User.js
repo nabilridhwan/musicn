@@ -57,6 +57,17 @@ export default function User() {
             setRecentlyPlayed(recently_played)
             setRecentSongsLoaded(true)
         })();
+
+        const currentlyPlayingInterval = setInterval(() => {
+            (async () => {
+                let currently_playing = await getUserCurrentlyPlaying();
+                setCurrentSong(currently_playing)
+            })();
+        }, 30000);
+
+        return () => {
+            clearInterval(currentlyPlayingInterval);
+        }
     }, [])
 
     async function getUserRecentlyPlayed() {
@@ -133,31 +144,39 @@ export default function User() {
 
             {
                 userLoaded && (
-                    <div className="my-10 flex items-center justify-center">
+                    <>
 
-                        {user.profile_pic_url ?
+                        <div className="my-10 flex items-center justify-center">
 
-                            <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+                            {user.profile_pic_url ?
 
-                            :
-                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
-                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                                <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+
+                                :
+                                <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                    <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                                </div>
+                            }
+
+                            <div className="ml-4">
+
+                                <h2 className="text-3xl font-bold">{user.name}</h2>
+                                <p className="text-sm text-black/50" id="follower-count-text">
+                                    @{user.username}
+                                </p>
+
+                                <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" />
+
+
                             </div>
-                        }
-
-                        <div className="ml-4">
-
-                            <h2 className="text-3xl font-bold">{user.name}</h2>
-                            <p className="text-sm text-black/50" id="follower-count-text">
-                                @{user.username}
-                            </p>
-
-                            <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" />
-
 
                         </div>
 
-                    </div>
+                        <p className="text-xs text-black/40 text-center mt-5">
+                            Want your profile too? <a className="underline" href="/signup">Click here</a>
+                        </p>
+
+                    </>
                 )
             }
 
@@ -168,19 +187,40 @@ export default function User() {
                         <>
 
                             <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
-                            <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
-                                <div id="currently-listening-song"
-                                    className={`flex bg-white border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing ? "hover:drop-shadow-xl drop-shadow-bg" : "hover:drop-shadow-lg")}`}>
+                            <div id="currently-listening-song">
 
+                                <a className={`flex bg-white border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing ? "hover:drop-shadow-xl drop-shadow-lg" : "hover:drop-shadow-lg")}`} href={currentSong.item.external_urls.spotify}>
                                     <img src={currentSong.item.album.images[0].url} className="h-14" />
 
                                     <div className="mx-4">
-                                        <p className="font-bold">{currentSong.item.name}</p>
+                                        <p className="font-bold">
+
+                                            {/* Below block will show when the md breakpoint is hit */}
+                                            <span className="hidden md:block">
+                                                {currentSong.item.name}
+                                            </span>
+
+                                            {/* Below block will hide when the md breakpoint is hit */}
+                                            <span className="block md:hidden">
+                                                {currentSong.item.name.length > 30 ? (
+                                                    currentSong.item.name.substring(0, 30) + "..."
+                                                ) : (
+                                                    currentSong.item.name
+                                                )}
+                                            </span>
+                                        </p>
                                         <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
                                     </div>
 
-                                </div>
-                            </a>
+
+                                </a>
+                            </div>
+
+                            <p className="text-sm text-black/40 text-center mt-5">
+                                The song updates in intervals of 30 seconds (beta)
+                            </p>
+
+
                         </>
 
                     ) : (
@@ -200,107 +240,111 @@ export default function User() {
             </div>
 
 
-            {topSongsLoaded && (
-                topSongs && topSongs.length > 0 ? (
-                    <>
+            {
+                topSongsLoaded && (
+                    topSongs && topSongs.length > 0 ? (
+                        <>
 
-                        <h4 className="text-center font-bold my-4">Top songs of the month</h4>
-                        <div id="top-tracks" className="flex flex-wrap items-stretch">
-                            {topSongs.map((
-                                {
-                                    name,
-                                    artists,
-                                    external_urls: { spotify: url },
-                                    album: { images: [bigImage] }
-                                }, index
-                            ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
-
-
-                                <div className="bg-white h-auto">
+                            <h4 className="text-center font-bold my-4">Top songs of the month</h4>
+                            <div id="top-tracks" className="flex flex-wrap items-stretch">
+                                {topSongs.map((
+                                    {
+                                        name,
+                                        artists,
+                                        external_urls: { spotify: url },
+                                        album: { images: [bigImage] }
+                                    }, index
+                                ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
 
 
-                                    <img src={bigImage.url} className="w-fit h-auto" />
-
-                                    <div className="py-7">
+                                    <div className="bg-white h-auto">
 
 
-                                        <h1 className="text-black text-center font-bold">{name}</h1>
-                                        <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+                                        <img src={bigImage.url} className="w-fit h-auto" />
 
-                                        <div>
+                                        <div className="py-7">
 
-                                            <SpotifyButton href={url} text="Spotify" />
+
+                                            <h1 className="text-black text-center font-bold">{name}</h1>
+                                            <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+
+                                            <div>
+
+                                                <SpotifyButton href={url} text="Spotify" />
+
+                                            </div>
 
                                         </div>
 
                                     </div>
 
-                                </div>
 
-
-                            </div>))}
+                                </div>))}
 
 
 
-                        </div>
-                    </>
-                ) : (
-                    <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
+                    )
                 )
-            )}
+            }
 
 
 
-            {recentSongsLoaded && (
-                recentlyPlayed ? (
-                    <>
+            {
+                recentSongsLoaded && (
+                    recentlyPlayed ? (
+                        <>
 
-                        <h4 className="text-center font-bold my-4">Recently Played Songs</h4>
-                        <div id="top-tracks" className="flex flex-wrap items-stretch">
-                            {recentlyPlayed.map((
-                                {
-                                    track: {
+                            <h4 className="text-center font-bold my-4">Recently Played Songs</h4>
+                            <div id="top-tracks" className="flex flex-wrap items-stretch">
+                                {recentlyPlayed.map((
+                                    {
+                                        track: {
 
-                                        name,
-                                        artists,
-                                        external_urls: { spotify: url },
-                                        album: { images: [bigImage] }
+                                            name,
+                                            artists,
+                                            external_urls: { spotify: url },
+                                            album: { images: [bigImage] }
 
-                                    },
-                                    played_at
-                                }, index
-                            ) => (<div key={index} className="w-full hover:drop-shadow-lg transition ease-out duration-500">
+                                        },
+                                        played_at
+                                    }, index
+                                ) => (<div key={index} className="w-full hover:drop-shadow-lg transition ease-out duration-500">
 
-                                <a href={url} className="flex flex-col md:flex-row mx-5 my-2 bg-white border items-center">
-
-
-
-
-                                    <img src={bigImage.url} className="md:w-16 md:h-16" />
-
-                                    <div className="flex-1 my-5 md:my-0 md:ml-3" >
-                                        <h1 className="text-center md:text-left text-black font-bold">{name}</h1>
-                                        <p className="text-center md:text-left text-black/50 text-sm">{artists.map(a => a.name).join(", ")}</p>
-                                    </div>
+                                    <a href={url} className="flex flex-col md:flex-row mx-5 my-2 bg-white border items-center">
 
 
 
-                                    <div className="text-center my-3 md:my-0 text-sm md:text-left md:ml-auto md:mr-3">
-                                        <p className="text-black/50">{relativeDate(new Date(played_at))}</p>
-                                    </div>
 
-                                </a>
+                                        <img src={bigImage.url} className="md:w-16 md:h-16" />
 
-                            </div>))}
+                                        <div className="flex-1 my-5 md:my-0 md:ml-3" >
+                                            <h1 className="text-center md:text-left text-black font-bold">{name}</h1>
+                                            <p className="text-center md:text-left text-black/50 text-sm">{artists.map(a => a.name).join(", ")}</p>
+                                        </div>
 
 
 
-                        </div>
-                    </>
-                ) : (
-                    <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
+                                        <div className="text-center my-3 md:my-0 text-sm md:text-left md:ml-auto md:mr-3">
+                                            <p className="text-black/50">{relativeDate(new Date(played_at))}</p>
+                                        </div>
+
+                                    </a>
+
+                                </div>))}
+
+
+
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
+                    )
                 )
-            )}
+            }
 
 
             {/* Share button */}
@@ -311,7 +355,7 @@ export default function User() {
                     {shareButtonText}
                 </button>
             </div>
-        </div>
+        </div >
 
     )
 }
