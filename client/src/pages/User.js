@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FaUser, FaSpotify, FaShareAlt } from "react-icons/fa"
+import { FaUser, FaSpotify, FaShareAlt, FaPlay, FaPause } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
 import SpotifyButton from "../components/SpotifyButton";
@@ -57,9 +57,6 @@ export default function User() {
             setRecentlyPlayed(recently_played)
             setRecentSongsLoaded(true)
         })();
-
-
-
     }, [])
 
     async function getUserRecentlyPlayed() {
@@ -173,7 +170,7 @@ export default function User() {
                             <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
                             <a id="currently-listening-data-url" href={currentSong.item.external_urls.spotify}>
                                 <div id="currently-listening-song"
-                                    className={"flex bg-white border w-fit m-auto transition ease-out items-center hover:drop-shadow-lg"}>
+                                    className={`flex bg-white border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing ? "hover:drop-shadow-xl drop-shadow-bg" : "hover:drop-shadow-lg")}`}>
 
                                     <img src={currentSong.item.album.images[0].url} className="h-14" />
 
