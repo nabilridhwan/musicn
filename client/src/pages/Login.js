@@ -9,14 +9,19 @@ export default function Login() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const [loaded, setLoaded] = useState(false);
+
     useEffect(() => {
+        setLoaded(false);
         // Check if the user is logged in
         fetch("/api/me", {
             credentials: "include"
         }).then(res => {
-            if(res.ok){
+            if (res.ok) {
                 navigate("/profile")
             }
+        }).then(_ => {
+            setLoaded(true)
         })
     }, [])
 
@@ -63,36 +68,39 @@ export default function Login() {
             <NavigationBar />
 
 
-            <div className="container">
+            {loaded && (
 
-                <div className="jumbotron my-10 flex flex-col items-center">
-                    <h1>Login</h1>
 
-                    <p className="mt-2 text-lg">
-                        Log in into your Musicn account
+                <div className="container">
+                    <div className="jumbotron my-10 flex flex-col items-center">
+                        <h1>Login</h1>
+
+                        <p className="mt-2 text-lg">
+                            Log in into your Musicn account
+                        </p>
+                    </div>
+
+                    <p className="error">
+                        {error}
                     </p>
+
+                    <form onSubmit={handleSubmit}>
+
+
+                        <label htmlFor="email">Email or Username</label>
+                        <input type="text" required id="email" placeholder="Email or Username" className="block w-full" onChange={e => setEmail(e.target.value)} />
+
+                        <label htmlFor="password">Password</label>
+                        <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+
+                        <button
+                            className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
+                            Log In
+                        </button>
+                    </form>
+
                 </div>
-
-                <p className="error">
-                    {error}
-                </p>
-
-                <form onSubmit={handleSubmit}>
-
-
-                    <label htmlFor="email">Email or Username</label>
-                    <input type="text" required id="email" placeholder="Email or Username" className="block w-full" onChange={e => setEmail(e.target.value)} />
-
-                    <label htmlFor="password">Password</label>
-                    <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
-
-                    <button
-                        className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
-                        Log In
-                    </button>
-                </form>
-
-            </div>
+            )}
 
         </div>
     )

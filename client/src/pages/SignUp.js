@@ -11,6 +11,9 @@ export default function SignUp() {
     const [error, setError] = useState("")
     const navigate = useNavigate();
 
+
+    const [loaded, setLoaded] = useState(false);
+
     useEffect(() => {
 
         // Check if the user is logged in
@@ -20,6 +23,8 @@ export default function SignUp() {
             if (res.ok) {
                 navigate("/profile")
             }
+        }).then(_ => {
+            setLoaded(true)
         })
     }, [])
 
@@ -46,8 +51,13 @@ export default function SignUp() {
                 if (!res.ok) {
                     throw res
                 } else {
-                    navigate("/profile")
+                    return res.json()
                 }
+            }).then(data => {
+
+                localStorage.setItem("profile_pic_url", data.profile_pic_url)
+                navigate("/profile")
+
             })
                 .catch(err => {
                     if (err.status == 409) {
@@ -72,52 +82,56 @@ export default function SignUp() {
 
             <NavigationBar />
 
-            <div className="jumbotron my-10 flex flex-col items-center">
-                <h1>
-                    Sign Up
-                </h1>
-            </div>
+            {loaded && (
+                <>
+                    <div className="jumbotron my-10 flex flex-col items-center">
+                        <h1>
+                            Sign Up
+                        </h1>
+                    </div>
 
-            <p className="text-lg text-center">
-                Sign up to create an account
-            </p>
-
-            <div className="container">
-
-
-                <p className="error mt-10">
-                    {error}
-                </p>
-
-                <form onSubmit={handleSubmit}>
-
-
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" required placeholder="Email" className="block w-full" onChange={e => setEmail(e.target.value)} />
-
-                    <label htmlFor="username">Username</label>
-                    <input type="text" id="username" required placeholder="Username" className="block w-full" onChange={e => setUsername(e.target.value)} />
-
-                    <label htmlFor="password">Password</label>
-                    <input type="password" id="password" required placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
-
-                    <label htmlFor="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" required placeholder="Re-enter your password" className="block w-full" onChange={e => setConfirmPassword(e.target.value)} />
-
-                    <p className="text-center text-sm text-black/50">
-                        By Signing up, you agree to <a className="underline " href="/privacy-policy">
-                            Musicn's Privacy Policy
-                        </a>
+                    <p className="text-lg text-center">
+                        Sign up to create an account
                     </p>
 
-                    <button
-                        className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
-                        Sign Up
-                    </button>
-                </form>
+                    <div className="container">
 
-                <p className="text-center">Have an account? <a href="/login" className="underline">Login</a></p>
-            </div>
+
+                        <p className="error mt-10">
+                            {error}
+                        </p>
+
+                        <form onSubmit={handleSubmit}>
+
+
+                            <label htmlFor="email">Email</label>
+                            <input type="email" id="email" required placeholder="Email" className="block w-full" onChange={e => setEmail(e.target.value)} />
+
+                            <label htmlFor="username">Username</label>
+                            <input type="text" id="username" required placeholder="Username" className="block w-full" onChange={e => setUsername(e.target.value)} />
+
+                            <label htmlFor="password">Password</label>
+                            <input type="password" id="password" required placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+
+                            <label htmlFor="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" required placeholder="Re-enter your password" className="block w-full" onChange={e => setConfirmPassword(e.target.value)} />
+
+                            <p className="text-center text-sm text-black/50">
+                                By Signing up, you agree to <a className="underline " href="/privacy-policy">
+                                    Musicn's Privacy Policy
+                                </a>
+                            </p>
+
+                            <button
+                                className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
+                                Sign Up
+                            </button>
+                        </form>
+
+                        <p className="text-center">Have an account? <a href="/login" className="underline">Login</a></p>
+                    </div>
+                </>
+            )}
 
         </div>
     )
