@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { FaPause, FaPlay, FaSpotify } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
-import Cookies from "universal-cookie";
-
-const cookie = new Cookies();
 
 export default function Login() {
 
@@ -14,9 +10,14 @@ export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (cookie.get("jwt")) {
-            navigate("/profile")
-        }
+        // Check if the user is logged in
+        fetch("/api/me", {
+            credentials: "include"
+        }).then(res => {
+            if(res.ok){
+                navigate("/profile")
+            }
+        })
     }, [])
 
     async function handleLogin() {
@@ -38,6 +39,7 @@ export default function Login() {
             }
         })
             .then(data => {
+                localStorage.setItem("profile_pic_url", data.profile_pic_url)
                 navigate("/profile")
             }).catch(err => {
                 if (err.status === 401) {
