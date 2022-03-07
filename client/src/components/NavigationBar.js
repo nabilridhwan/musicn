@@ -6,33 +6,8 @@ const cookie = new Cookies();
 
 export default function NavigationBar() {
 
-    let [hasToken, setHasToken] = useState(false);
-    let [pfp, setPfp] = useState(null);
+    let [profilePicUrl, setProfilePicUrl] = useState(localStorage.getItem("profile_pic_url"));
 
-    useEffect(() => {
-        setHasToken(false);
-        let profile_pic_url = localStorage.getItem("profile_pic_url")
-
-        if (cookie.get("jwt")) {
-            setHasToken(true)
-            if (profile_pic_url && profile_pic_url != "null") {
-                setPfp(profile_pic_url)
-            } else {
-                fetch('/api/me', {
-                    method: "GET",
-                    credentials: "include"
-                }).then(res => res.json())
-                    .then(([user]) => {
-                        localStorage.setItem("profile_pic_url", user.profile_pic_url)
-                        setPfp(user.profile_pic_url)
-                    })
-            }
-        } else {
-            localStorage.clear()
-            setPfp(null)
-        }
-
-    }, [])
     return (
         <nav className="mx-5 my-6">
             <ul className="space-x-6">
@@ -44,20 +19,13 @@ export default function NavigationBar() {
                 <li className="inline"><Link to="/">Home</Link></li>
                 <li className="inline"><Link to="/users">Users</Link></li>
 
+
                 <div className="float-right space-x-6">
-                    {hasToken ? (
+                    {profilePicUrl ? (
                         <>
                             <li className="inline">
-                                <Link to="/profile" className="flex justify-center items-center">
-
-                                    {pfp ?
-                                        <img className="w-8 h-8 rounded-full" src={pfp} alt="profile picture" />
-                                        :
-                                        <div className="h-8 w-8 flex justify-center items-center bg-spotify-green rounded-full">
-                                            <FaUser className="fa fa-user text-sm text-center text-white/90" aria-hidden="true"></FaUser>
-                                        </div>
-                                    }
-
+                                <Link to="/profile">
+                                    Profile
                                 </Link>
                             </li>
                         </>
