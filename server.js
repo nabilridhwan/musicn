@@ -2,11 +2,14 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const requestMethods = require("./middlewares/requestMethods");
 require("dotenv").config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(requestMethods)
 
 app.use(express.static("client/build"))
 

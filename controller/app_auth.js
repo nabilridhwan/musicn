@@ -54,14 +54,17 @@ router.post("/signup", (req, res) => {
 
                                 // Return cookie with maxAge of 30 mins
                                 res.cookie("jwt", token, {
-                                    maxAge: 1800000
+                                    maxAge: 1800000,
+                                    httpOnly: true,
+                                    secure: process.env.NODE_ENV !== "development",
+                                    sameSite: process.env.NODE_ENV !== "development"
                                 })
 
                                 // Return response
                                 res.status(200).json({
                                     message: "Sign up successful",
                                     token: token,
-                                    username: user.username
+                                    username: user.username,
                                 })
                             })
                             .catch(error => {
@@ -112,7 +115,10 @@ router.post("/login", (req, res) => {
 
                             // Return cookie with maxAge of 30 mins
                             res.cookie("jwt", token, {
-                                maxAge: 1800000
+                                maxAge: 1800000,
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV !== "development",
+                                sameSite: process.env.NODE_ENV !== "development"
                             })
 
                             // Return response

@@ -20,9 +20,6 @@ export default function Profile() {
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        if (document.cookie.length == 0) {
-            window.location.href = "/login";
-        }
         (async () => {
             setLoaded(false);
             let profile = await getUserProfile();
