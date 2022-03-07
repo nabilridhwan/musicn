@@ -22,7 +22,11 @@ export default function User() {
     const [recentSongsLoaded, setRecentSongsLoaded] = useState(false);
     const [userLoaded, setUserLoaded] = useState(false);
 
-    const [currentlyPlayingText, setCurrentlyPlayingText] = useState("I'm not listening to anything right now");
+    const [currentlyPlayingText, setCurrentlyPlayingText] = useState(
+        <p className="p-4 text-black/50 italic">
+            I'm not listening to anything right now
+        </p>
+    );
 
     useEffect(() => {
         (async () => {
@@ -93,8 +97,12 @@ export default function User() {
                 if (currentSong == "") return null
                 return currentSong
             }).catch(error => {
-                setCurrentlyPlayingText("Error getting currently playing song. Reauthenticate your Spotify account from the Profile page.")
-                console.log("Can't get currently playing")
+                setCurrentlyPlayingText(
+                    <p className="p-4 text-black/50 italic">
+                        Error getting currently playing song. Click <a className="underline" href="/error/3">here</a> for more info.
+                    </p>
+                )
+
             })
     }
 
@@ -156,7 +164,7 @@ export default function User() {
                 )
             }
 
-            <div className="currently-listening my-20">
+            <div className="currently-listening my-20 flex-col justify-center">
 
                 {playingLoaded && (
                     currentSong ? (
@@ -179,12 +187,12 @@ export default function User() {
                         </>
 
                     ) : (
-                        <div id="currently-listening-song"
-                            className="flex bg-white border w-fit lg m-auto items-center">
+                        <div className="w-fit mx-auto">
 
-                            <p className='p-4 text-black/50 italic'>
-                               {currentlyPlayingText} 
-                                </p>
+                            <div className="bg-white border mx-5">
+
+                                {currentlyPlayingText}
+                            </div>
                         </div>
                     )
                 )}
@@ -282,9 +290,9 @@ export default function User() {
 
                                     <div className="text-center my-3 md:my-0 text-sm md:text-left md:ml-auto md:mr-3">
                                         <p className="text-black/50">{relativeDate(new Date(played_at))}</p>
-                                        </div>
+                                    </div>
 
-                                    </a>
+                                </a>
 
                             </div>))}
 
