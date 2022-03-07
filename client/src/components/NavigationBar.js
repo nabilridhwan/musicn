@@ -13,10 +13,11 @@ export default function NavigationBar() {
         setHasToken(false);
         let profile_pic_url = localStorage.getItem("profile_pic_url")
 
-        if (!profile_pic_url) {
-            if (cookie.get("jwt")) {
-                setHasToken(true)
-
+        if (cookie.get("jwt")) {
+            setHasToken(true)
+            if (profile_pic_url && profile_pic_url != "null") {
+                setPfp(profile_pic_url)
+            } else {
                 fetch('/api/me', {
                     method: "GET",
                     credentials: "include"
@@ -27,12 +28,8 @@ export default function NavigationBar() {
                     })
             }
         } else {
-            setHasToken(true)
-            if(profile_pic_url == "null"){
-                setPfp(null)
-            }else{
-                setPfp(profile_pic_url)
-            }
+            localStorage.clear()
+            setPfp(null)
         }
 
     }, [])
