@@ -63,8 +63,8 @@ router.post("/signup", (req, res) => {
                                 // Return response
                                 res.status(200).json({
                                     message: "Sign up successful",
-                                    token: token,
                                     username: user.username,
+                                profile_pic_url: user.profile_pic_url
                                 })
                             })
                             .catch(error => {
@@ -124,8 +124,8 @@ router.post("/login", (req, res) => {
                             // Return response
                             res.status(200).json({
                                 message: "Login successful",
-                                token: token,
-                                username: user[0].username
+                                username: user[0].username,
+                                profile_pic_url: user[0].profile_pic_url
                             })
                         } else {
                             res.status(401).json({
