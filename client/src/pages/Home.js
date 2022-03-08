@@ -24,7 +24,7 @@ export default function Home() {
 
                 <p className="my-20">
                     This little web application is made by <a href="https://github.com/nabilridhwan" className="underline font-bold">Nabil Ridhwan</a>.
-                    And is made possible using Node.js, Express, Tailwind CSS, Supabase, React and Spotify's API. <a href="https://github.com/nabilridhwan/spotifyer" className="underline font-bold">Musicn</a> is open-sourced and will always be!
+                    And is made possible using Node.js, Express, Tailwind CSS, Supabase, React and Spotify's API. Musicn is <a href="https://github.com/nabilridhwan/musicn" className="underline font-bold">open-source</a> and will always be!
 
                 </p>
 
