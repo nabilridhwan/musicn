@@ -1,8 +1,23 @@
 const supabase = require("../utils/db");
 const tableName = "spotify_users";
+const client = require("../utils/dbConfig")
 
 const SpotifyUser = {
     getUserByEmail: async (email) => {
+
+
+        try {
+
+            let res = await client.query(
+                `
+                SELECT * FROM spotify_users WHERE email = '${email}'; 
+                `
+            )
+            return res.rows
+        } catch (e) {
+            throw e
+        }
+
 
         let {
             data: users,
@@ -20,17 +35,35 @@ const SpotifyUser = {
     updateSpotifyUser: async (newStuff, id) => {
 
         const {
-            data,
-            error
-        } = await supabase.from(tableName).update(newStuff).match({
-            id: id
-        })
+            email,
+            name,
+            country,
+            spotify_userid,
+            profile_pic_url,
+            refresh_token,
+        } = newStuff
 
-        if (error) {
-            throw error
-        } else {
-            return data
+
+
+        try {
+
+            let res = await client.query(
+                `
+                UPDATE spotify_users
+                SET email = '${email}',
+                name = '${name}',
+                country = '${country}',
+                spotify_userid = '${spotify_userid}',
+                profile_pic_url = '${profile_pic_url}',
+                refresh_token = '${refresh_token}'
+                WHERE id = ${id};
+                `
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
+
 
     },
 
@@ -44,25 +77,17 @@ const SpotifyUser = {
         user_id
     }) => {
 
-        const {
-            data,
-            error
-        } = await supabase.from(tableName).insert([{
-            email: email,
-            name: name,
-            spotify_userid: spotify_userid,
-            country: country,
-            profile_pic_url: profile_pic_url,
-            refresh_token: refresh_token,
-            user_id: user_id
-        }])
+        try {
 
-        if (error) {
-            throw error
-        } else {
-            return data
+            let res = await client.query(
+                `
+                INSERT INTO spotify_users (email, name, spotify_userid, country, profile_pic_url, refresh_token, user_id) VALUES ('${email}', '${name}', '${spotify_userid}', '${country}', '${profile_pic_url}', '${refresh_token}', '${user_id}') RETURNING id, email, name, country, spotify_userid, profile_pic_url, refresh_token, user_id;
+                `
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
-
     }
 
 }

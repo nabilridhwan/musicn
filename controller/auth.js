@@ -53,9 +53,6 @@ router.get("/callback", isCookieAvailable, (req, res) => {
                 }
             }).then(userResponse => {
 
-                console.log(userResponse)
-
-
                 let {
                     email,
                     display_name,
@@ -82,16 +79,15 @@ router.get("/callback", isCookieAvailable, (req, res) => {
 
                 // Check if user exists or not
                 SpotifyUser.getUserByEmail(email).then(user => {
-
-                    console.log("users: " + JSON.stringify(user))
                     if (user.length == 0) {
+                        console.log("Inserting new Spotify User")
                         SpotifyUser.insertUser(saveBody).then(user => {
                             return res.redirect(`${process.env.FRONTEND_URL}/profile`)
                         }).catch(error => {
                             return res.status(500).json(error)
                         })
                     } else {
-                        console.log(`Account exists already. Updating user ${user[0].user_id}`)
+                        console.log(`Account exists already. Updating user.`)
 
                         SpotifyUser.updateSpotifyUser(saveBody, user[0].id).then(user => {
                             return res.redirect(`${process.env.FRONTEND_URL}/profile`)

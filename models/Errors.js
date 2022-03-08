@@ -1,17 +1,20 @@
-const supabase = require("../utils/db");
-const tableName = "errors";
+const client = require("../utils/dbConfig")
 
 async function getErrorByCode(code) {
-    let {
-        data: users,
-        error
-    } = await supabase.from(tableName).select("*").match({"id": code})
 
-    if (error) {
-        throw error
-    } else {
-        return users
-    }
+        try {
+
+            let res = await client.query(
+                `
+                SELECT *
+                FROM "errors"
+                WHERE id = ${code};`
+            )
+            return res.rows
+        } catch (e) {
+            throw e
+        }
+
 }
 
 module.exports = {
