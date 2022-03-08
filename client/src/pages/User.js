@@ -259,8 +259,8 @@ export default function User() {
             <div className="flex justify-evenly">
 
 
-                {sections.map(section => (
-                    <div onClick={() => setCurrentActiveSection(section)} className="flex flex-col items-center cursor-pointer">
+                {sections.map((section, key)=> (
+                    <div key={key} onClick={() => setCurrentActiveSection(section)} className="flex flex-col items-center cursor-pointer">
                         <div>
                             <p className={`text-center transition-all ${currentActiveSection == section && "font-bold text-brand-color"}`}>
                                 {section}
