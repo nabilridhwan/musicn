@@ -14,7 +14,11 @@ export default function User() {
     const [recentlyPlayed, setRecentlyPlayed] = useState(null)
     const [topSongs, setTopSongs] = useState(null)
     const navigate = useNavigate()
-    const [shareButtonText, setShareButtonText] = useState("Share with your friends!")
+    const [shareButtonText, setShareButtonText] = useState("Share with your friends!");
+
+    const [sections, setSections] = useState(["Top Songs", "Recently Played"]);
+
+    const [currentActiveSection, setCurrentActiveSection] = useState("Top Songs");
 
     // Boolean for loading 
     const [playingLoaded, setPlayingLoaded] = useState(false);
@@ -150,11 +154,11 @@ export default function User() {
                             !localStorage.getItem("profile_pic_url")
                             &&
                             (
-                                    <div className="py-2 flex">
-                                        <p className="flex-1 text-xs text-black/50 text-center">
-                                            Want your profile too? <a className="underline" href="/">Click here</a>
-                                        </p>
-                                    </div>
+                                <div className="py-2 flex">
+                                    <p className="flex-1 text-xs text-black/50 text-center">
+                                        Want your profile too? <a className="underline" href="/">Click here</a>
+                                    </p>
+                                </div>
                             )
                         }
 
@@ -189,58 +193,61 @@ export default function User() {
                 )
             }
 
-            <div className="currently-listening my-20 flex-col justify-center">
+            <div className="currently-listening my-10 flex-col justify-center">
 
                 {playingLoaded && (
-                    currentSong && currentSong.currently_playing_type == "track" ? (
-                        <>
+                    <>
 
-                            <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
-                            <div id="currently-listening-song">
+                        <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
+                        {currentSong && currentSong.currently_playing_type == "track" ? (
+                            <>
 
-                                <a className={`flex bg-white border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing ? "hover:drop-shadow-xl drop-shadow-lg" : "hover:drop-shadow-lg")}`} href={currentSong.item.external_urls.spotify}>
-                                    <img src={currentSong.item.album.images[0].url} className="h-14" />
+                                <div id="currently-listening-song">
 
-                                    <div className="mx-4">
-                                        <p className="font-bold">
+                                    <a className={`flex bg-white border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing ? "hover:drop-shadow-xl drop-shadow-lg" : "hover:drop-shadow-lg")}`} href={currentSong.item.external_urls.spotify}>
+                                        <img src={currentSong.item.album.images[0].url} className="h-14" />
 
-                                            {/* Below block will show when the md breakpoint is hit */}
-                                            <span className="hidden md:block">
-                                                {currentSong.item.name}
-                                            </span>
+                                        <div className="mx-4">
+                                            <p className="font-bold">
 
-                                            {/* Below block will hide when the md breakpoint is hit */}
-                                            <span className="block md:hidden">
-                                                {currentSong.item.name.length > 30 ? (
-                                                    currentSong.item.name.substring(0, 30) + "..."
-                                                ) : (
-                                                    currentSong.item.name
-                                                )}
-                                            </span>
-                                        </p>
-                                        <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
-                                    </div>
+                                                {/* Below block will show when the md breakpoint is hit */}
+                                                <span className="hidden md:block">
+                                                    {currentSong.item.name}
+                                                </span>
+
+                                                {/* Below block will hide when the md breakpoint is hit */}
+                                                <span className="block md:hidden">
+                                                    {currentSong.item.name.length > 30 ? (
+                                                        currentSong.item.name.substring(0, 30) + "..."
+                                                    ) : (
+                                                        currentSong.item.name
+                                                    )}
+                                                </span>
+                                            </p>
+                                            <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
+                                        </div>
 
 
-                                </a>
+                                    </a>
+                                </div>
+
+                                <p className="text-sm text-black/40 text-center mt-5">
+                                    The song updates in intervals of 30 seconds (beta)
+                                </p>
+
+
+                            </>
+
+                        ) : (
+                            <div className="w-fit mx-auto">
+
+                                <div className="bg-white border mx-5">
+
+                                    {currentlyPlayingText}
+                                </div>
                             </div>
-
-                            <p className="text-sm text-black/40 text-center mt-5">
-                                The song updates in intervals of 30 seconds (beta)
-                            </p>
-
-
-                        </>
-
-                    ) : (
-                        <div className="w-fit mx-auto">
-
-                            <div className="bg-white border mx-5">
-
-                                {currentlyPlayingText}
-                            </div>
-                        </div>
-                    )
+                        )}
+                    </>
                 )}
 
 
@@ -248,13 +255,32 @@ export default function User() {
 
             </div>
 
+            {/* Section tab bar */}
+            <div className="flex justify-evenly">
 
-            {
+
+                {sections.map(section => (
+                    <div onClick={() => setCurrentActiveSection(section)} className="flex flex-col items-center cursor-pointer">
+                        <div>
+                            <p className={`text-center transition-all ${currentActiveSection == section && "font-bold text-brand-color"}`}>
+                                {section}
+                            </p>
+                        </div>
+
+                        <div className={`transition-all rounded-full w-1.5 h-1.5 mt-2 ${currentActiveSection == section ? "bg-brand-color" : "bg-white"}`}></div>
+                    </div>
+                ))}
+
+            </div>
+
+
+            {currentActiveSection == "Top Songs" && (
+
                 topSongsLoaded && (
                     topSongs && topSongs.length > 0 ? (
                         <>
 
-                            <h4 className="text-center font-bold my-4">Top songs of the month</h4>
+                            <h4 className="text-center text-xl font-bold my-4">Top songs of the month</h4>
                             <div id="top-tracks" className="flex flex-wrap items-stretch">
                                 {topSongs.map((
                                     {
@@ -298,16 +324,16 @@ export default function User() {
                         <p className="text-center italic">Wow this is scary! This user does not have their top songs!</p>
                     )
                 )
-            }
+            )}
 
 
 
-                 {
+            {currentActiveSection == "Recently Played" && (
                 recentSongsLoaded && (
                     recentlyPlayed ? (
                         <>
 
-                            <h4 className="text-center font-bold my-4">Recently Played Songs</h4>
+                            <h4 className="text-center font-bold text-xl my-4">Recently Played Songs</h4>
                             <div id="top-tracks" className="flex flex-wrap items-stretch">
                                 {recentlyPlayed.map((
                                     {
@@ -323,22 +349,15 @@ export default function User() {
                                     }, index
                                 ) => (<div key={index} className="w-full hover:drop-shadow-lg transition ease-out duration-500">
 
-                                    <a href={url} className="flex flex-col md:flex-row mx-5 my-2 bg-white border items-center">
+                                    <a href={url} className="flex mx-5 my-2 bg-white border items-center">
 
+                                        <img src={bigImage.url} className="w-24 h-24" />
 
+                                        <div className="ml-3" >
 
-
-                                        <img src={bigImage.url} className="md:w-16 md:h-16" />
-
-                                        <div className="flex-1 my-5 md:my-0 md:ml-3" >
-                                            <h1 className="text-center md:text-left text-black font-bold">{name}</h1>
-                                            <p className="text-center md:text-left text-black/50 text-sm">{artists.map(a => a.name).join(", ")}</p>
-                                        </div>
-
-
-
-                                        <div className="text-center my-3 md:my-0 text-sm md:text-left md:ml-auto md:mr-3">
-                                            <p className="text-black/50">{relativeDate(new Date(played_at))}</p>
+                                            <h1 className="md:text-left text-black font-bold">{name}</h1>
+                                            <p className="md:text-left text-black/50 text-sm">{artists.map(a => a.name).join(", ")}</p>
+                                            <p className="text-black/30 text-xs mt-5">{relativeDate(new Date(played_at))}</p>
                                         </div>
 
                                     </a>
@@ -353,7 +372,7 @@ export default function User() {
                         <p className="text-center italic">Wow this is scary! This user does not have their recent songs!</p>
                     )
                 )
-            }
+            )}
 
 
             {/* Share button */}
