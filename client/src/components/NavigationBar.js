@@ -6,8 +6,6 @@ const cookie = new Cookies();
 
 export default function NavigationBar() {
 
-    let [profilePicUrl, setProfilePicUrl] = useState(localStorage.getItem("profile_pic_url"));
-
     return (
         <nav className="mx-5 my-6">
             <ul className="space-x-6">
@@ -21,7 +19,7 @@ export default function NavigationBar() {
 
 
                 <div className="float-right space-x-6">
-                    {profilePicUrl ? (
+                    {document.cookie ? (
                         <>
                             <li className="inline">
                                 <Link to="/profile">

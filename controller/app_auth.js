@@ -18,7 +18,7 @@ router.post("/signup", (req, res) => {
     } = req.body;
 
     // Check email
-    if(!validator.isEmail(email)){
+    if (!validator.isEmail(email)) {
         return res.status(400).json({
             message: "Email is not valid"
         })
@@ -72,11 +72,17 @@ router.post("/signup", (req, res) => {
                                     sameSite: process.env.NODE_ENV !== "development"
                                 })
 
+                                res.cookie("loggedIn", true, {
+                                    maxAge: 1800000,
+                                    secure: process.env.NODE_ENV !== "development",
+                                    sameSite: process.env.NODE_ENV !== "development"
+                                })
+
                                 // Return response
                                 res.status(200).json({
                                     message: "Sign up successful",
                                     username: user.username,
-                                profile_pic_url: user.profile_pic_url
+                                    profile_pic_url: user.profile_pic_url
                                 })
                             })
                             .catch(error => {
@@ -133,6 +139,14 @@ router.post("/login", (req, res) => {
                                 sameSite: process.env.NODE_ENV !== "development"
                             })
 
+                            res.cookie("loggedIn", true, {
+                                maxAge: 1800000,
+                                secure: process.env.NODE_ENV !== "development",
+                                sameSite: process.env.NODE_ENV !== "development"
+                            })
+
+
+
                             // Return response
                             res.status(200).json({
                                 message: "Login successful",
@@ -156,6 +170,7 @@ router.post("/login", (req, res) => {
 
 router.get("/logout", (req, res) => {
     res.clearCookie("jwt");
+    res.clearCookie("loggedIn");
     res.status(200).json({
         message: "Cookie deleted!"
     })
