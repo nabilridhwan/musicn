@@ -1,5 +1,3 @@
-const supabase = require("../utils/db");
-const tableName = "spotify_users";
 const client = require("../utils/dbConfig")
 
 const SpotifyUser = {
@@ -16,18 +14,6 @@ const SpotifyUser = {
             return res.rows
         } catch (e) {
             throw e
-        }
-
-
-        let {
-            data: users,
-            error
-        } = await supabase.from(tableName).select("*").like('email', email)
-
-        if (error) {
-            throw error
-        } else {
-            return users
         }
 
     },

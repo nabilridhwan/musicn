@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const SpotifyUser = require("../models/SpotifyUser");
-const AppUser = require("../models/AppUser");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
 const jwt = require("jsonwebtoken");
 

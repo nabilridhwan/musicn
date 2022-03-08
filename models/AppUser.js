@@ -1,25 +1,31 @@
-const supabase = require("../utils/db");
-const tableName = "app_users";
 const client = require("../utils/dbConfig")
 
 const AppUser = {
 
-    // TODO: Update to pg instead of supabase
-    updateUser: async (newStuff, user_id) => {
+    updateUser: async ({username, email, name}, user_id) => {
+        try {
 
-        const {
-            data,
-            error
-        } = await supabase.from(tableName).update(newStuff).match({
-            user_id: user_id
-        })
+            // TODO: Make this into a single query
+            let res = await client.query(
+                `
+                UPDATE app_users
+                SET
+                username = '${username}',
+                email = '${email}'
+                WHERE app_users.user_id = ${user_id};
 
-        if (error) {
-            throw error
-        } else {
-            return data
+
+                UPDATE spotify_users
+                SET
+                name = '${name}'
+                WHERE spotify_users.user_id = ${user_id};
+                `,
+            )
+            return res.rows
+            
+        } catch (e) {
+            throw e
         }
-
     },
 
     insertUser: async ({

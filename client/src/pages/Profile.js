@@ -17,14 +17,25 @@ export default function Profile() {
     let navigate = useNavigate();
 
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [password, setPassword] = useState("");
+
+
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         (async () => {
             setLoaded(false);
+
             let profile = await getUserProfile();
-            setUser(profile[0])
-            setUsername(profile[0].username)
+            const user = profile[0]
+
+            setUser(user)
+            setUsername(user.username)
+            setEmail(user.email)
+            setDisplayName(user.name)
+
             setLoaded(true)
         })();
 
@@ -49,7 +60,10 @@ export default function Profile() {
             })
     }
 
-    async function handleChangeUsername() {
+    async function handleUpdate(e) {
+        e.preventDefault()
+
+        setError("")
         fetch(`/api/me`, {
             method: "PUT",
             credentials: "include",
@@ -57,28 +71,23 @@ export default function Profile() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username: username
+                username: username,
+                email: email,
+                name: displayName,
             })
         }).then(res => {
-            if (res.ok) {
-                return res.json()
-            } else {
+            if (!res.ok) {
                 throw res
             }
         })
-            .then(user => {
-                navigate("/user/" + username)
-            }).catch(err => {
-                if (err.status == 409) {
-                    setError("Username already exists")
-                } else if (err.status == 400) {
-
-                    setError("Usernames can only contain lowercase letters, underscores, periods and numbers");
-                }
-                else {
+            .catch(async err => {
+                let res = await err.json()
+                console.log(res)
+                if (res.message) {
+                    setError(res.message)
+                } else {
                     setError("Something went wrong while updating your profile")
                 }
-                console.log(err)
             })
     }
 
@@ -171,16 +180,30 @@ export default function Profile() {
                             Edit Profile
                         </h1>
 
-                        <label htmlFor="username">
-                            Username
-                        </label>
+                        <form onSubmit={handleUpdate}>
 
-                        <input type="text" required id="username" placeholder="Username" value={username} className="block w-full" onChange={e => setUsername(e.target.value)} />
+                            <label htmlFor="displayName">
+                                Display Name
+                            </label>
 
-                        {username != user.username && <button className="border rounded-lg w-full text-center bg-brand-color py-3" onClick={() => {
-                            handleChangeUsername()
-                        }}>
-                            Save Username</button>}
+
+                            <input type="text" name="displayName" id="displayName" placeholder="Display Name" value={displayName} className="block w-full" onChange={(e) => setDisplayName(e.target.value)} />
+
+                            <label htmlFor="email">
+                                Email
+                            </label>
+
+                            <input type="email" name="email" id="email" placeholder="Email" value={email} className="block w-full" onChange={(e) => setEmail(e.target.value)} />
+
+
+                            <label htmlFor="username">
+                                Username
+                            </label>
+
+                            <input type="text" required id="username" placeholder="Username" value={username} className="block w-full" onChange={e => setUsername(e.target.value)} />
+
+                            <button className="bg-red-500">Update Profile</button>
+                        </form>
 
                         <button onClick={handleLogout} id="spotify-profile-link"
                             href={"https://open.spotify.com/user/" + user.spotify_userid}
