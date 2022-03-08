@@ -50,7 +50,7 @@ export default function Profile() {
                 setUser(user)
                 setUsername(user.username)
                 setEmail(user.email)
-                setDisplayName(user.name)
+                setDisplayName(decodeURI(user.name))
             }).catch(err => {
                 handleLogout();
             })
@@ -117,7 +117,7 @@ export default function Profile() {
                             </div>
                         }
 
-                        <h2 className="text-3xl font-bold text-center">{user && user.name}</h2>
+                        <h2 className="text-3xl font-bold text-center">{user && decodeURI(user.name)}</h2>
                         <p className="text-sm text-black/50 text-center" id="follower-count-text">
                             @{user.username}
                         </p>

@@ -58,7 +58,7 @@ router.put("/", isCookieAvailable, (req, res) => {
     }
 
     email = encodeURI(email);
-    name = validator.escape(name);
+    name = encodeURI(name);
 
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
         if (err) {

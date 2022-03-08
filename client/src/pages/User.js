@@ -176,7 +176,7 @@ export default function User() {
 
                             <div className="ml-4">
 
-                                <h2 className="text-3xl font-bold">{user.name}</h2>
+                                <h2 className="text-3xl font-bold">{user.name && decodeURI(user.name)}</h2>
                                 <p className="text-sm text-black/50" id="follower-count-text">
                                     @{user.username}
                                 </p>

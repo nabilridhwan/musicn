@@ -75,7 +75,7 @@ export default function Users() {
                             }
 
                             <div className="ml-5">
-                                <p className="text-lg font-bold">{user.name}</p>
+                                <p className="text-lg font-bold">{user.name && decodeURI(user.name)}</p>
                                 <p className="text-sm text-black/50">
                                     @{user.username}
                                 </p>
