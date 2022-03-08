@@ -94,7 +94,7 @@ export default function Login() {
                         <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
 
                         <button
-                            className="flex w-full mx-auto mt-6 justify-center items-center px-3 py-3 bg-brand-color text-brand-text-color font-bold rounded-lg hover:shadow-md hover:shadow-brand-color/50 transition ease-out duration-500">
+                            className="btn">
                             Log In
                         </button>
                     </form>

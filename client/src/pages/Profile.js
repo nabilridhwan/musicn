@@ -28,13 +28,7 @@ export default function Profile() {
         (async () => {
             setLoaded(false);
 
-            let profile = await getUserProfile();
-            const user = profile[0]
-
-            setUser(user)
-            setUsername(user.username)
-            setEmail(user.email)
-            setDisplayName(user.name)
+            await getUserProfile();
 
             setLoaded(true)
         })();
@@ -53,8 +47,12 @@ export default function Profile() {
                     throw res
                 }
             })
-            .then(user => {
-                return user
+            .then(data => {
+                const user = data[0]
+ setUser(user)
+            setUsername(user.username)
+            setEmail(user.email)
+            setDisplayName(user.name)
             }).catch(err => {
                 handleLogout();
             })
@@ -78,6 +76,9 @@ export default function Profile() {
         }).then(res => {
             if (!res.ok) {
                 throw res
+            }else{
+                // Re-get the user profile again
+                getUserProfile();
             }
         })
             .catch(async err => {
@@ -119,8 +120,8 @@ export default function Profile() {
                             </div>
                         }
 
-                        <h2 className="text-3xl font-bold">{user && user.name}</h2>
-                        <p className="text-sm text-black/50" id="follower-count-text">
+                        <h2 className="text-3xl font-bold text-center">{user && user.name}</h2>
+                        <p className="text-sm text-black/50 text-center" id="follower-count-text">
                             @{user.username}
                         </p>
 
@@ -160,8 +161,9 @@ export default function Profile() {
                             </div>
                         ) : (
                             <a href={reauth_url} id="spotify-profile-link"
-                                className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                                Reauthenticate Spotify Account (If you have errors!)
+                                className="flex items-center btn w-fit my-6 bg-spotify-green hover:shadow-spotify-green/50 text-white">
+                                    <FaSpotify fontSize={24} className="mr-4" />
+                                Reauthenticate Spotify Account
                             </a>
                         )}
 
@@ -202,12 +204,13 @@ export default function Profile() {
 
                             <input type="text" required id="username" placeholder="Username" value={username} className="block w-full" onChange={e => setUsername(e.target.value)} />
 
-                            <button className="bg-red-500">Update Profile</button>
+                            <button className="btn">
+                                Update Profile
+                            </button>
                         </form>
 
-                        <button onClick={handleLogout} id="spotify-profile-link"
-                            href={"https://open.spotify.com/user/" + user.spotify_userid}
-                            className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-red-500 text-white rounded-lg hover:shadow-md hover:shadow-red-500 transition ease-out duration-500">
+                        <button onClick={handleLogout} 
+                            className="btn my-5 bg-red-500 hover:shadow-red-500/50">
                             Log Out
                         </button>
                     </div>

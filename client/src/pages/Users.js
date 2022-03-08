@@ -69,7 +69,7 @@ export default function Users() {
                             {user.profile_pic_url ?
                                 <img className="profile_picture rounded-full w-14 h-14 m-1" src={user.profile_pic_url} alt="profile picture" />
                                 :
-                                <div className="h-14 w-14 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                <div className="h-14 w-14 m-1 flex justify-center items-center bg-brand-color rounded-full">
                                     <FaUser className="fa fa-user text-lg text-center text-white/90" aria-hidden="true"></FaUser>
                                 </div>
                             }

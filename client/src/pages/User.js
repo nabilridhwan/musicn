@@ -165,7 +165,7 @@ export default function User() {
                                 <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
 
                                 :
-                                <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                                <div className="h-24 w-24 m-1 flex justify-center items-center bg-brand-color rounded-full">
                                     <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
                                 </div>
                             }
@@ -177,7 +177,7 @@ export default function User() {
                                     @{user.username}
                                 </p>
 
-                                <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" />
+                                <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" profileButton={true} />
 
 
                             </div>
@@ -302,7 +302,7 @@ export default function User() {
 
 
 
-            {
+                 {
                 recentSongsLoaded && (
                     recentlyPlayed ? (
                         <>

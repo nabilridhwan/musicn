@@ -16,7 +16,7 @@ export default function Home() {
                     With <span className="font-bold">Musicn</span>, you have your own Spotify profile page which shows the song you're listening to along with your top songs of the month! Copy the link and send it to your friends (or maybe, paste it in your Instagram's bio!)
                 </p>
 
-                <a href="/signup" className="block bg-brand-color shadow-lg shadow-spotify-green/50 w-fit m-auto p-4 rounded-lg my-1 text-brand-text-color font-bold">
+                <a href="/signup" className="block w-fit m-auto btn p-4 shadow-lg shadow-brand-color/50">
                     Get Started
                 </a>
 

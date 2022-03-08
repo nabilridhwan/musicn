@@ -11,7 +11,7 @@ export default function NavigationBar() {
     return (
         <nav className="mx-5 my-6">
             <ul className="space-x-6">
-                <li className="inline font-bold">
+                <li className="inline font-bold text-brand-color">
                     <Link to={"/"}>
                         Musicn
                     </Link>
