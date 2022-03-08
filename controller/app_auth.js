@@ -7,6 +7,8 @@ const UserView = require("../models/UserView");
 const isUsernameForbidden = require("../utils/isUsernameForbidden");
 const Passwords = require("../utils/Passwords")
 
+const validator = require("validator");
+
 router.post("/signup", (req, res) => {
 
     let {
@@ -15,6 +17,14 @@ router.post("/signup", (req, res) => {
         password
     } = req.body;
 
+    // Check email
+    if(!validator.isEmail(email)){
+        return res.status(400).json({
+            message: "Email is not valid"
+        })
+    }
+
+    // Check username
     if (isUsernameForbidden(username)) {
         return res.status(400).json({
             message: "Usernames can only contain a-z, underscore, periods and numbers"
@@ -43,8 +53,10 @@ router.post("/signup", (req, res) => {
                             })
                             .then(user => {
 
+                                // Get the user
                                 user = user[0]
 
+                                // Token
                                 const token = jwt.sign({
                                     user_id: user.user_id,
                                     username: user.username

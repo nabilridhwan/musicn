@@ -5,7 +5,7 @@ const PublicUserView = require("../models/PublicUserView");
 
 router.get("/", (req, res) => {
     if(req.query.q){
-       PublicUserView.getUserByUsername(req.query.q).then(users => {
+       PublicUserView.getUserByLikeUsernameOrName(req.query.q).then(users => {
            return res.json(users);
        }) 
     }else{

@@ -1,79 +1,76 @@
-const supabase = require("../utils/db");
-const tableName = "user_view";
+const client = require("../utils/dbConfig")
 
 const UserView = {
 
     // Used in sign up 
     getUserByEmailOrUsername: async (username, email) => {
 
-        let {
-            data: users,
-            error
-        } = await supabase.from(tableName).select("*").or('username.eq.' + username + ',email.eq.' + email)
+        try {
 
-        if (error) {
-            throw error
-        } else {
-            return users
+            let res = await client.query(
+                `SELECT a.*, s."name", s.country, s.profile_pic_url, s.refresh_token, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE (a.username = '${username}' OR a.email = '${email}');`,
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
+
     },
 
 
     getAllUsers: async () => {
 
-        let {
-            data: users,
-            error
-        } = await supabase.from(tableName).select("*")
+        try {
 
-        if (error) {
-            throw error
-        } else {
-            return users
+            let res = await client.query(
+                `SELECT a.*, s."name", s.country, s.profile_pic_url, s.refresh_token, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s WHERE a.user_id = s.user_id;`,
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
 
     },
 
     getUserByUserID: async (userid) => {
-        let {
-            data: users,
-            error
-        } = await supabase.from(tableName).select("*").eq("user_id", userid)
 
-        if (error) {
-            throw error
-        } else {
-            return users
+
+        try {
+
+            let res = await client.query(
+                `SELECT a.*, s."name", s.country, s.profile_pic_url, s.refresh_token, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.user_id = ${userid};`,
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
 
     },
 
     getUserByUsername: async (username) => {
 
-        let {
-            data: users,
-            error
-        } = await supabase.from(tableName).select("*").eq("username", username)
+        try {
 
-        if (error) {
-            throw error
-        } else {
-            return users
+            let res = await client.query(
+                `SELECT a.*, s."name", s.country, s.profile_pic_url, s.refresh_token, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.username = '${username}';`,
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
 
     },
 
     getUserByEmail: async (email) => {
 
-        let {
-            data: users,
-            error
-        } = await supabase.from(tableName).select("*").like('email', email)
+        try {
 
-        if (error) {
-            throw error
-        } else {
-            return users
+            let res = await client.query(
+                `SELECT a.*, s."name", s.country, s.profile_pic_url, s.refresh_token, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.email = '${email}';`,
+            )
+            return res.rows
+        } catch (e) {
+            throw e
         }
 
     }
