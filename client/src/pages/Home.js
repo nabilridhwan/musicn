@@ -13,16 +13,18 @@ export default function Home() {
                 </h1>
 
                 <p className="my-4 text-lg leading-relaxed">
-                    With <span className="font-bold">Musicn</span>, you have your own Spotify profile page which shows the song you're listening to along with your top songs of the month! Copy the link and send it to your friends (or maybe, paste it in your Instagram's bio!)
+
+                    With <span className="font-bold text-brand-color">Musicn</span>, you have your own Spotify profile page showing the song you're listening to, your top songs of the month, and recently played songs! Also, share your profile with your friends with a click of a button!
+
                 </p>
 
-                <a href="/signup" className="block w-fit m-auto btn p-4 shadow-lg shadow-brand-color/50">
+                <a href="/signup" className="block mt-10 w-fit m-auto btn p-4 shadow-lg shadow-brand-color/50">
                     Get Started
                 </a>
 
 
 
-                <p className="my-20">
+                <p className="my-20 text-sm">
                     This little web application is made by <a href="https://github.com/nabilridhwan" className="underline font-bold">Nabil Ridhwan</a>.
                     And is made possible using Node.js, Express, Tailwind CSS, Supabase, React and Spotify's API. Musicn is <a href="https://github.com/nabilridhwan/musicn" className="underline font-bold">open-source</a> and will always be!
 
