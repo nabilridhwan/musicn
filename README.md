@@ -27,8 +27,12 @@ CLIENT_ID=<SPOTIFY_CLIENT_ID>
 CLIENT_SECRET=<SPOTIFY_CLIENT_SECRET>
 REDIRECT_URI=<SPOTIFY_REDIRECT_URI>
 FRONTEND_URL=<FRONTEND_URL>
-SUPABASE_KEY=<SUPABASE_SERVICE_KEY>
 JWT_KEY=<JWT_SECRET_KEY>
+PGUSER=<postgresql_user>
+PGHOST=<postgresql_host>
+PGPASSWORD=<postgresql_password>
+PGDATABASE=<postgresql_database_name>
+PGPORT=<postgresql_port>
 ```
 ### React 
 `client` folder is where the React app is
