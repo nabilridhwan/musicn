@@ -256,22 +256,28 @@ export default function User() {
             </div>
 
             {/* Section tab bar */}
-            <div className="flex justify-evenly">
+
+            {
+                topSongsLoaded && recentSongsLoaded && (
+                    <div className="flex justify-evenly">
 
 
-                {sections.map((section, key)=> (
-                    <div key={key} onClick={() => setCurrentActiveSection(section)} className="flex flex-col items-center cursor-pointer">
-                        <div>
-                            <p className={`text-center transition-all ${currentActiveSection == section && "font-bold text-brand-color"}`}>
-                                {section}
-                            </p>
-                        </div>
+                        {sections.map((section, key) => (
+                            <div key={key} onClick={() => setCurrentActiveSection(section)} className="flex flex-col items-center cursor-pointer">
+                                <div>
+                                    <p className={`text-center transition-all ${currentActiveSection == section && "font-bold text-brand-color"}`}>
+                                        {section}
+                                    </p>
+                                </div>
 
-                        <div className={`transition-all rounded-full w-1.5 h-1.5 mt-2 ${currentActiveSection == section ? "bg-brand-color" : "bg-white"}`}></div>
+                                <div className={`transition-all rounded-full w-1.5 h-1.5 mt-2 ${currentActiveSection == section ? "bg-brand-color" : "bg-white"}`}></div>
+                            </div>
+                        ))}
+
                     </div>
-                ))}
+                )
+            }
 
-            </div>
 
 
             {currentActiveSection == "Top Songs" && (
@@ -291,15 +297,15 @@ export default function User() {
                                     }, index
                                 ) => (<div onClick={() => window.location.href = url} key={index} className="bg-white border cursor-pointer hover:shadow-lg transition ease-out duration-300">
 
-                                        <img src={bigImage.url} className="w-fit h-auto" />
+                                    <img src={bigImage.url} className="w-fit h-auto" />
 
-                                        <div className="py-4">
+                                    <div className="py-4">
 
 
-                                            <h1 className="text-black text-center font-bold">{name}</h1>
-                                            <p className="text-black/50 text-xs md:text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
+                                        <h1 className="text-black text-center font-bold">{name}</h1>
+                                        <p className="text-black/50 text-xs md:text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
 
-                                        </div>
+                                    </div>
 
                                 </div>))}
 
