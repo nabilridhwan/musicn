@@ -19,8 +19,6 @@ export default function Profile() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [displayName, setDisplayName] = useState("");
-    const [password, setPassword] = useState("");
-
 
     const [loaded, setLoaded] = useState(false);
 
@@ -49,10 +47,10 @@ export default function Profile() {
             })
             .then(data => {
                 const user = data[0]
- setUser(user)
-            setUsername(user.username)
-            setEmail(user.email)
-            setDisplayName(user.name)
+                setUser(user)
+                setUsername(user.username)
+                setEmail(user.email)
+                setDisplayName(user.name)
             }).catch(err => {
                 handleLogout();
             })
@@ -76,7 +74,7 @@ export default function Profile() {
         }).then(res => {
             if (!res.ok) {
                 throw res
-            }else{
+            } else {
                 // Re-get the user profile again
                 getUserProfile();
             }
@@ -128,7 +126,8 @@ export default function Profile() {
                         {user.refresh_token &&
                             (
                                 <Link to={"/user/" + user.username} id="spotify-profile-link"
-                                    className="flex mx-auto mt-6 justify-center items-center px-3 py-2 bg-blue-500 text-white rounded-lg hover:shadow-md hover:shadow-blue-500 transition ease-out duration-500">
+                                    className="btn w-fit mx-auto mt-5 flex items-center">
+                                        <FaUser className="mr-2" />
                                     Go to profile page
                                 </Link>
                             )
@@ -137,33 +136,35 @@ export default function Profile() {
 
                         {!user.refresh_token ? (
 
-                            <div className="mt-6 flex-col md:flex-row bg-white border border-black/20 drop-shadow-lg p-10 rounded-2xl w-3/4">
-                                <FaExclamationTriangle className="text-red-500 text-4xl" />
+                            <div className="container">
 
-                                <div className="mt-2">
+                                <div className="mt-6 flex-col md:flex-row bg-white border border-black/20 drop-shadow-lg p-10 rounded-2xl">
+                                    <FaExclamationTriangle className="text-red-500 text-4xl" />
 
-                                    <p className="font-bold text-2xl text-left">
-                                        Link your Spotify Account
-                                    </p>
+                                    <div className="mt-2">
+                                        <p className="font-bold text-2xl text-left">
+                                            Link your Spotify Account
+                                        </p>
 
-                                    <p className="text-left text-black/50">
-                                        Your friends won’t be able to see your Spotify statistics unless you link your Spotify account!
-                                    </p>
+                                        <p className="text-left text-black/50">
+                                            Your friends won’t be able to see your Spotify statistics unless you link your Spotify account!
+                                        </p>
 
-                                    <a id="spotify-profile-link"
-                                        href={reauth_url}
-                                        className="flex mt-5 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
-                                        <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
-                                        Link your Spotify
-                                    </a>
+                                        <a id="spotify-profile-link"
+                                            href={reauth_url}
+                                            className="flex mt-5 justify-center items-center px-3 py-2 bg-spotify-green text-white rounded-lg hover:shadow-md hover:shadow-spotify-green/50 transition ease-out duration-500">
+                                            <FaSpotify className="fa fa-spotify text-1xl text-center text-white mr-2" aria-hidden="true"></FaSpotify>
+                                            Link your Spotify
+                                        </a>
+                                    </div>
                                 </div>
 
                             </div>
                         ) : (
                             <a href={reauth_url} id="spotify-profile-link"
                                 className="flex items-center btn w-fit my-6 bg-spotify-green hover:shadow-spotify-green/50 text-white">
-                                    <FaSpotify fontSize={24} className="mr-4" />
-                                Reauthenticate Spotify Account
+                                <FaSpotify fontSize={24} className="mr-4" />
+                                Re-link Spotify Account
                             </a>
                         )}
 
@@ -209,7 +210,7 @@ export default function Profile() {
                             </button>
                         </form>
 
-                        <button onClick={handleLogout} 
+                        <button onClick={handleLogout}
                             className="btn my-5 bg-red-500 hover:shadow-red-500/50">
                             Log Out
                         </button>
