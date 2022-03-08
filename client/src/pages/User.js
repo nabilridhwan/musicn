@@ -281,7 +281,7 @@ export default function User() {
                         <>
 
                             <h4 className="text-center text-xl font-bold my-4">Top songs of the month</h4>
-                            <div id="top-tracks" className="flex flex-wrap items-stretch">
+                            <div id="top-tracks" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mx-2 gap-2">
                                 {topSongs.map((
                                     {
                                         name,
@@ -289,30 +289,17 @@ export default function User() {
                                         external_urls: { spotify: url },
                                         album: { images: [bigImage] }
                                     }, index
-                                ) => (<div key={index} className="lg:w-1/5 w-1/2 md:w-1/3">
-
-
-                                    <div className="bg-white h-auto">
-
+                                ) => (<div onClick={() => window.location.href = url} key={index} className="bg-white border cursor-pointer hover:shadow-lg transition ease-out duration-300">
 
                                         <img src={bigImage.url} className="w-fit h-auto" />
 
-                                        <div className="py-7">
+                                        <div className="py-4">
 
 
                                             <h1 className="text-black text-center font-bold">{name}</h1>
-                                            <p className="text-black/50 text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
-
-                                            <div>
-
-                                                <SpotifyButton href={url} text="Spotify" />
-
-                                            </div>
+                                            <p className="text-black/50 text-xs md:text-sm text-center">{artists.map(a => a.name).join(", ")}</p>
 
                                         </div>
-
-                                    </div>
-
 
                                 </div>))}
 
