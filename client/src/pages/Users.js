@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
-import { FaUser } from "react-icons/fa"
+import { FaUser, FaSearch } from "react-icons/fa"
 
 export default function Users() {
 
@@ -20,8 +20,7 @@ export default function Users() {
         })();
     }, [])
 
-    useEffect(() => {
-
+    function handleSearch() {
         (async () => {
 
             if (searchQuery) {
@@ -31,7 +30,7 @@ export default function Users() {
                 setDisplayUsers(users)
             }
         })();
-    }, [searchQuery])
+    }
 
     async function getUsers(query = "") {
         let url = `/api/user`
@@ -43,6 +42,11 @@ export default function Users() {
             .then(users => {
                 return users
             })
+    }
+
+    function handleSubmit(e){
+        e.preventDefault();
+        handleSearch();
     }
 
     return (
@@ -57,14 +61,25 @@ export default function Users() {
                 <p>Spotify account not linked? Click <Link className="underline" to="/error/4">here</Link> to find out more!</p>
             </div>
 
-            {/* <div className="flex flex-wrap justify-center">
-                <input type="text" className="mx-10 py-5 w-full md:w-1/2 border rounded-lg text-center" onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search for users" />
-            </div> */}
+            <form onSubmit={handleSubmit}>
+
+                <div className="flex flex-wrap justify-center">
+                    <input type="text" className="mx-10 w-full md:w-1/2 border rounded-lg text-center" onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by name or username" />
+
+                    <div className="container">
+                        <button className="btn">
+
+                            <FaSearch className="text-center w-fit m-auto" />
+
+                        </button>
+                    </div>
+                </div>
+            </form>
 
             {userLoaded ? (
                 displayUsers && displayUsers.length != 0 ? displayUsers.map((user, index) => (
-                        <div className="user mx-5 md:w-3/4 md:mx-auto my-5 bg-white rounded-lg border border-black/15 transition ease-out duration-300 hover:scale-105 hover:drop-shadow-lg">
-                    <a key={index} href={user.spotify_userid ? "/user/" + user.username : ""} className="w-full px-8 py-5 flex items-center">
+                    <div className="user mx-5 md:w-3/4 md:mx-auto my-5 bg-white rounded-lg border border-black/15 transition ease-out duration-300 hover:scale-105 hover:drop-shadow-lg">
+                        <a key={index} href={user.spotify_userid ? "/user/" + user.username : ""} className="w-full px-8 py-5 flex items-center">
 
                             {user.profile_pic_url ?
                                 <img className="profile_picture rounded-full w-14 h-14 m-1" src={user.profile_pic_url} alt="profile picture" />
@@ -86,8 +101,8 @@ export default function Users() {
                                     </p>
                                 )}
                             </div>
-                    </a>
-                        </div>
+                        </a>
+                    </div>
                 ))
 
                     :
