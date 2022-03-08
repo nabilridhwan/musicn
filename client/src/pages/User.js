@@ -193,19 +193,19 @@ export default function User() {
                 )
             }
 
-            <div className="currently-listening my-10 flex-col justify-center">
+            <div className="currently-listening my-14 flex-col justify-center">
 
                 {playingLoaded && (
                     <>
 
-                        <h5 className="text-center font-bold text-lg my-2 text-black/50">I'm currently listening to</h5>
+                        <h5 className="text-center font-bold text-black/70">I'm currently listening to</h5>
                         {currentSong && currentSong.currently_playing_type == "track" ? (
                             <>
 
-                                <div id="currently-listening-song">
+                                <div className="mt-2">
 
-                                    <a className={`flex bg-white border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing ? "hover:drop-shadow-xl drop-shadow-lg" : "hover:drop-shadow-lg")}`} href={currentSong.item.external_urls.spotify}>
-                                        <img src={currentSong.item.album.images[0].url} className="h-14" />
+                                    <a className={`flex bg-white rounded-lg border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing && "scale-105 drop-shadow-lg")}`} href={currentSong.item.external_urls.spotify}>
+                                        <img src={currentSong.item.album.images[0].url} className="h-14 p-1.5" />
 
                                         <div className="mx-4">
                                             <p className="font-bold">
@@ -231,8 +231,8 @@ export default function User() {
                                     </a>
                                 </div>
 
-                                <p className="text-sm text-black/40 text-center mt-5">
-                                    The song updates in intervals of 30 seconds (beta)
+                                <p className="text-xs text-black/40 text-center mt-5">
+                                    The song updates in intervals of 30 seconds.
                                 </p>
 
 
