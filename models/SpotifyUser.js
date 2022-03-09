@@ -27,6 +27,7 @@ const SpotifyUser = {
             spotify_userid,
             profile_pic_url,
             refresh_token,
+            user_id
         } = newStuff
 
 
@@ -41,7 +42,8 @@ const SpotifyUser = {
                 country = '${country}',
                 spotify_userid = '${spotify_userid}',
                 profile_pic_url = '${profile_pic_url}',
-                refresh_token = '${refresh_token}'
+                refresh_token = '${refresh_token}',
+                user_id = '${user_id}'
                 WHERE id = ${id};
                 `
             )
