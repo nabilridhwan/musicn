@@ -69,13 +69,13 @@ router.post("/signup", (req, res) => {
                                     maxAge: 1800000,
                                     httpOnly: true,
                                     secure: process.env.NODE_ENV !== "development",
-                                    sameSite: process.env.NODE_ENV !== "development"
+                                    sameSite: "lax" 
                                 })
 
                                 res.cookie("loggedIn", true, {
                                     maxAge: 1800000,
                                     secure: process.env.NODE_ENV !== "development",
-                                    sameSite: process.env.NODE_ENV !== "development"
+                                    sameSite: "lax"
                                 })
 
                                 // Return response
@@ -136,15 +136,14 @@ router.post("/login", (req, res) => {
                                 maxAge: 1800000,
                                 httpOnly: true,
                                 secure: process.env.NODE_ENV !== "development",
-                                sameSite: process.env.NODE_ENV !== "development"
+                                sameSite: "lax"
                             })
 
                             res.cookie("loggedIn", true, {
                                 maxAge: 1800000,
                                 secure: process.env.NODE_ENV !== "development",
-                                sameSite: process.env.NODE_ENV !== "development"
+                                sameSite:  "lax"
                             })
-
 
 
                             // Return response
