@@ -78,8 +78,8 @@ export default function Users() {
 
             {userLoaded ? (
                 displayUsers && displayUsers.length != 0 ? displayUsers.map((user, index) => (
-                    <div className="user mx-5 md:w-3/4 md:mx-auto my-5 bg-white rounded-lg border border-black/15 transition ease-out duration-300 hover:scale-105 hover:drop-shadow-lg">
-                        <a key={index} href={user.spotify_userid ? "/user/" + user.username : ""} className="w-full px-8 py-5 flex items-center">
+                    <div key={index} className="user mx-5 md:w-3/4 md:mx-auto my-5 bg-white rounded-lg border border-black/15 transition ease-out duration-300 hover:scale-105 hover:drop-shadow-lg">
+                        <a href={user.spotify_userid ? "/user/" + user.username : ""} className="w-full px-8 py-5 flex items-center">
 
                             {user.profile_pic_url && user.profile_pic_url != "null" ?
                                 <img className="profile_picture rounded-full w-14 h-14 m-1" src={user.profile_pic_url} alt="profile picture" />
