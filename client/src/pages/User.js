@@ -164,7 +164,7 @@ export default function User() {
 
                         <div className="my-10 flex items-center justify-center">
 
-                            {user.profile_pic_url ?
+                            {user.profile_pic_url && user.profile_pic_url != "null" ?
 
                                 <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
 

@@ -5,9 +5,11 @@ import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
 
 let reauth_url = "/api/auth";
+let unlink_url = "/api/auth/unlink";
 
 if (process.env.NODE_ENV != "production") {
     reauth_url = "http://localhost:4000/api/auth";
+    unlink_url = "http://localhost:4000/api/auth/unlink";
 }
 
 export default function Profile() {
@@ -50,7 +52,10 @@ export default function Profile() {
                 setUser(user)
                 setUsername(user.username)
                 setEmail(user.email)
-                setDisplayName(decodeURI(user.name))
+
+                if (user.name) {
+                    setDisplayName(decodeURI(user.name))
+                }
             }).catch(err => {
                 handleLogout();
             })
@@ -109,15 +114,15 @@ export default function Profile() {
                 <>
                     <div className="my-10 flex flex-col items-center">
 
-                        {user.profile_pic_url ?
+                        {user.profile_pic_url && user.profile_pic_url != "null" ?
                             <img className="profile_picture rounded-full w-24 m-1" src={user.profile_pic_url} alt="profile picture" />
                             :
-                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-spotify-green rounded-full">
+                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-brand-color rounded-full">
                                 <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
                             </div>
                         }
 
-                        <h2 className="text-3xl font-bold text-center">{user && decodeURI(user.name)}</h2>
+                        <h2 className="text-3xl font-bold text-center">{user && user.name != null && decodeURI(user.name)}</h2>
                         <p className="text-sm text-black/50 text-center" id="follower-count-text">
                             @{user.username}
                         </p>
@@ -126,7 +131,7 @@ export default function Profile() {
                             (
                                 <Link to={"/user/" + user.username} id="spotify-profile-link"
                                     className="btn w-fit mx-auto mt-5 flex items-center">
-                                        <FaUser className="mr-2" />
+                                    <FaUser className="mr-2" />
                                     Go to profile page
                                 </Link>
                             )
@@ -160,11 +165,19 @@ export default function Profile() {
 
                             </div>
                         ) : (
-                            <a href={reauth_url} id="spotify-profile-link"
-                                className="flex items-center btn w-fit my-6 bg-spotify-green hover:shadow-spotify-green/50 text-white">
-                                <FaSpotify fontSize={24} className="mr-4" />
-                                Re-link Spotify Account
-                            </a>
+                            <>
+                                <a href={reauth_url} id="spotify-profile-link"
+                                    className="flex items-center btn w-fit my-6 bg-spotify-green hover:shadow-spotify-green/50 text-white">
+                                    <FaSpotify fontSize={24} className="mr-4" />
+                                    Re-link Spotify Account
+                                </a>
+
+                                <a href={unlink_url}
+                                    className="flex items-center btn w-fit bg-red-500 hover:shadow-red/50 text-white">
+                                    <FaSpotify fontSize={24} className="mr-4" />
+                                    Unlink Spotify Account
+                                </a>
+                            </>
                         )}
 
 
@@ -188,9 +201,19 @@ export default function Profile() {
                                 Display Name
                             </label>
 
+                            {displayName && displayName != "null" ? (
 
-                            <input type="text" name="displayName" id="displayName" placeholder="Display Name" value={displayName} className="block w-full" onChange={(e) => setDisplayName(e.target.value)} />
 
+
+                                <input type="text" name="displayName" id="displayName" placeholder="Display Name" value={displayName} className="block w-full" onChange={(e) => setDisplayName(e.target.value)} />
+
+                            )
+
+                                :
+
+                                <input disabled type="text" name="displayName" id="displayName" placeholder="Display Name" value={displayName} className="block w-full" onChange={(e) => setDisplayName(e.target.value)} />
+
+                            }
                             <label htmlFor="email">
                                 Email
                             </label>
