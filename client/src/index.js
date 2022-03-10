@@ -3,16 +3,27 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { QueryClientProvider} from "react-query"
+import { ReactQueryDevtools } from 'react-query/devtools'
+import queryClient from "./utils/queryClient"
 
 import {
   BrowserRouter
 } from "react-router-dom"
 
+
+
+
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+
+    <QueryClientProvider client={queryClient}>
+
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+      <ReactQueryDevtools />
+    </QueryClientProvider >
   </React.StrictMode>,
   document.getElementById('root')
 );
