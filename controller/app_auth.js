@@ -38,7 +38,6 @@ router.post("/signup", (req, res) => {
 
     UserView.getUserByEmailOrUsername(username, email)
         .then(users => {
-            console.log(users)
             if (users.length > 0) {
                 return res.status(409).json({
                     message: "User already exists!"
