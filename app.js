@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const requestMethods = require("./middlewares/requestMethods");
 const morgan = require("morgan");
 
-require("dotenv").config();
+require("dotenv").config({path: path.join(__dirname, "../.env")});
 
 // https://www.npmjs.com/package/hpp
 app.use(hpp())
@@ -45,6 +45,4 @@ app.use("/api/user", userApiRoutes)
 
 app.get("*", (req, res) => {res.sendFile(path.join(__dirname, "./client/build/index.html"))})
 
-app.listen(process.env.PORT, () => {
-    `Server is running on port ${process.env.PORT}`
-})
+module.exports = app;

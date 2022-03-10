@@ -1,4 +1,4 @@
-const client = require("../utils/dbConfig")
+const pool = require("../utils/dbConfig")
 
 const PublicUserView = {
 
@@ -6,7 +6,7 @@ const PublicUserView = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id;`,
             )
             return res.rows
@@ -20,9 +20,10 @@ const PublicUserView = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.user_id = ${userid};`,
             )
+
             return res.rows
         } catch (e) {
             throw e
@@ -34,7 +35,7 @@ const PublicUserView = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.username = '${username}';`,
             )
             return res.rows
@@ -48,7 +49,7 @@ const PublicUserView = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid
                 FROM app_users a 
@@ -65,7 +66,7 @@ const PublicUserView = {
     getUserByEmail: async (email) => {
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid
                 FROM app_users a 

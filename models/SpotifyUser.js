@@ -1,4 +1,4 @@
-const client = require("../utils/dbConfig")
+const pool = require("../utils/dbConfig")
 
 const SpotifyUser = {
     getUserByEmail: async (email) => {
@@ -6,7 +6,7 @@ const SpotifyUser = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 SELECT * FROM spotify_users WHERE email = '${email}'; 
                 `
@@ -34,7 +34,7 @@ const SpotifyUser = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 UPDATE spotify_users
                 SET email = '${email}',
@@ -67,7 +67,7 @@ const SpotifyUser = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 INSERT INTO spotify_users (email, name, spotify_userid, country, profile_pic_url, refresh_token, user_id) VALUES ('${email}', '${name}', '${spotify_userid}', '${country}', '${profile_pic_url}', '${refresh_token}', '${user_id}') RETURNING id, email, name, country, spotify_userid, profile_pic_url, refresh_token, user_id;
                 `

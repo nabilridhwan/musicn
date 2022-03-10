@@ -1,11 +1,10 @@
 const {
-    Client
+    Pool 
 } = require('pg')
 
 
 require("dotenv").config()
 
-const client = new Client()
-client.connect()
+const pool = new Pool()
 
-module.exports = client
+module.exports = pool 

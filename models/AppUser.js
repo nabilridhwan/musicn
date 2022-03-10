@@ -1,4 +1,4 @@
-const client = require("../utils/dbConfig")
+const pool = require("../utils/dbConfig")
 
 const AppUser = {
 
@@ -6,7 +6,7 @@ const AppUser = {
         try {
 
             // TODO: Make this into a single query
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 UPDATE app_users
                 SET
@@ -37,7 +37,7 @@ const AppUser = {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `INSERT INTO app_users (username, password, email) VALUES ('${username}', '${password}', '${email}') RETURNING user_id, username;`,
             )
             return res.rows

@@ -1,10 +1,10 @@
-const client = require("../utils/dbConfig")
+const pool = require("../utils/dbConfig")
 
 async function getErrorByCode(code) {
 
         try {
 
-            let res = await client.query(
+            let res = await pool.query(
                 `
                 SELECT *
                 FROM "errors"
