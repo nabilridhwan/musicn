@@ -17,7 +17,7 @@ export default function SignUp() {
     useEffect(() => {
 
         // Check if the user is logged in
-        fetch("/api/me", {
+        fetch("/api/v1/me", {
             credentials: "include"
         }).then(res => {
             if (res.ok) {
@@ -37,7 +37,7 @@ export default function SignUp() {
         if (confirmPassword != password) {
             setError("Password does not match!")
         } else {
-            fetch("/api/auth/app/signup", {
+            fetch("/api/v1/auth/app/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

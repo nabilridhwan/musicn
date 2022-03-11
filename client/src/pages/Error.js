@@ -7,7 +7,7 @@ export default function Error() {
 
     let params = useParams();
     const { data: error, status, isError } = useQuery("error", async () => {
-        const res = await fetch(`/api/error/${params.code}`)
+        const res = await fetch(`/api/v1/error/${params.code}`)
         return res.json();
     })
 

@@ -14,7 +14,7 @@ export default function Login() {
     useEffect(() => {
         setLoaded(false);
         // Check if the user is logged in
-        fetch("/api/me", {
+        fetch("/api/v1/me", {
             credentials: "include"
         }).then(res => {
             if (res.ok) {
@@ -27,7 +27,7 @@ export default function Login() {
 
     async function handleLogin() {
         setError("");
-        fetch("/api/auth/app/login", {
+        fetch("/api/v1/auth/app/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

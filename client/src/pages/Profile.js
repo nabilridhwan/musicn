@@ -3,69 +3,47 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { FaExclamationTriangle, FaSpotify, FaUser } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
+import { useQuery } from "react-query";
+import queryClient from "../utils/queryClient";
 
-let reauth_url = "/api/auth";
-let unlink_url = "/api/auth/unlink";
+let reauth_url = "/api/v1/auth";
+let unlink_url = "/api/v1/auth/unlink";
 
 if (process.env.NODE_ENV != "production") {
-    reauth_url = "http://localhost:4000/api/auth";
-    unlink_url = "http://localhost:4000/api/auth/unlink";
+    reauth_url = "http://localhost:4000/api/v1/auth";
+    unlink_url = "http://localhost:4000/api/v1/auth/unlink";
 }
 
 export default function Profile() {
 
-    const [user, setUser] = useState({})
     const [error, setError] = useState("")
+    const [success, setSuccess] = useState("")
     let navigate = useNavigate();
+
+
+    const { data: user, status: userStatus, isFetched } = useQuery("me", () => fetch(`/api/v1/me`, { credentials: "include" }).then(res => res.json()).then(data => data[0]), {
+    })
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [displayName, setDisplayName] = useState("");
 
-    const [loaded, setLoaded] = useState(false);
-
     useEffect(() => {
-        (async () => {
-            setLoaded(false);
+        if (isFetched) {
+            console.log("Got user data")
+            setEmail(user.email)
+            setDisplayName(decodeURI(user.name))
+            setUsername(user.username)
+        }
+    }, [isFetched])
 
-            await getUserProfile();
-
-            setLoaded(true)
-        })();
-
-    }, [])
-
-    async function getUserProfile() {
-        setError("")
-        return fetch(`/api/me`, {
-            credentials: "include"
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                } else {
-                    throw res
-                }
-            })
-            .then(data => {
-                const user = data[0]
-                setUser(user)
-                setUsername(user.username)
-                setEmail(user.email)
-
-                if (user.name) {
-                    setDisplayName(decodeURI(user.name))
-                }
-            }).catch(err => {
-                handleLogout();
-            })
-    }
 
     async function handleUpdate(e) {
         e.preventDefault()
 
-        setError("")
-        fetch(`/api/me`, {
+        setSuccess("");
+        setError("");
+        fetch(`/api/v1/me`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -81,7 +59,10 @@ export default function Profile() {
                 throw res
             } else {
                 // Re-get the user profile again
-                getUserProfile();
+                // Invalidate request
+                queryClient.invalidateQueries("me")
+
+                setSuccess("Profile updated!")
             }
         })
             .catch(async err => {
@@ -96,11 +77,15 @@ export default function Profile() {
     }
 
     function handleLogout() {
-        fetch("/api/auth/app/logout")
+        fetch("/api/v1/auth/app/logout")
             .then(res => res.json())
             .then(data => {
                 navigate("/")
             })
+    }
+
+    function handleUnlink() {
+        console.error("Feature not implemented")
     }
 
     return (
@@ -110,7 +95,7 @@ export default function Profile() {
 
             <NavigationBar />
 
-            {loaded && (
+            {userStatus == "success" && (
                 <>
                     <div className="my-10 flex flex-col items-center">
 
@@ -172,11 +157,13 @@ export default function Profile() {
                                     Re-link Spotify Account
                                 </a>
 
-                                <a href={unlink_url}
-                                    className="flex items-center btn w-fit bg-red-500 hover:shadow-red/50 text-white">
+                                <button href={unlink_url}
+                                    onClick={handleUnlink}
+                                    disabled
+                                    className="flex items-center btn w-fit bg-red-500 hover:shadow-red/50 text-white disabled:bg-black/40 disabled:hover:shadow-none disabled:text-white/50">
                                     <FaSpotify fontSize={24} className="mr-4" />
                                     Unlink Spotify Account
-                                </a>
+                                </button>
                             </>
                         )}
 
@@ -189,6 +176,10 @@ export default function Profile() {
 
                         <p className="text-red-500 text-center">
                             {error}
+                        </p>
+
+                        <p className="text-green-500 text-center">
+                            {success}
                         </p>
 
                         <h1 className="text-center text-2xl font-bold">

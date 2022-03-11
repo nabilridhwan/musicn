@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { FaUser, FaSpotify, FaShareAlt, FaPlay, FaPause, FaExclamationTriangle, FaStopCircle, FaPlus, FaPlusCircle } from "react-icons/fa"
 import NavigationBar from "../components/NavigationBar";
 import relativeDate from "relative-date";
@@ -13,22 +13,33 @@ export default function User() {
     const app_userid = params.id;
 
 
-    const { data: user, status: userStatus } = useQuery("user", () => fetch(`/api/user/${app_userid}`).then(res => res.json()))
-    const { data: currentSong, status: currentSongStatus } = useQuery("currently_playing", () => fetch(`/api/songs/${app_userid}/currently_playing`).then(res => res.json()), {
+    const { data: user, status: userStatus } = useQuery("user", () => fetch(`/api/v1/user/${app_userid}`).then(res => res.json()))
+    const { data: currentSong, status: currentSongStatus } = useQuery("currently_playing", () => fetch(`/api/v1/songs/${app_userid}/currently_playing`).then(res => res.json()), {
         staleTime: 1000,
         cacheTime: 0,
-        refetchOnWindowFocus: true
+        refetchOnWindowFocus: true,
+        refetchInterval: 30000,
+        refetchIntervalInBackground: 0,
     })
-    const { data: topSongs, status: topSongsStatus } = useQuery("top_songs", () => fetch(`/api/songs/${app_userid}/top_songs`).then(res => res.json()), {
+    const { data: topSongs, status: topSongsStatus } = useQuery("top_songs", () => fetch(`/api/v1/songs/${app_userid}/top_songs`).then(res => res.json()), {
         cacheTime: 0
     })
-    const { data: recentlyPlayed, status: recentlyPlayedStatus } = useQuery("recently_played", () => fetch(`/api/songs/${app_userid}/recently_played`).then(res => res.json()), {
+    const { data: recentlyPlayed, status: recentlyPlayedStatus } = useQuery("recently_played", () => fetch(`/api/v1/songs/${app_userid}/recently_played`).then(res => res.json()), {
         cacheTime: 0
     })
 
 
     const [sections] = useState(["Top Songs", "Recently Played"]);
     const [currentActiveSection, setCurrentActiveSection] = useState("Top Songs");
+
+    useEffect(() => {
+        console.log(`%c userStatus: ${userStatus}`, "color: red;")
+        console.log(`%c currentSongStatus: ${currentSongStatus}`, "color: lightblue;")
+        console.log(`%c topSongsStatus: ${topSongsStatus}`, "color: lightgreen;")
+        console.log(`%c recentlyPlayedStatus: ${recentlyPlayedStatus}`, "color: pink;")
+        console.log(`%c                      `, "background-color: black;")
+
+    }, [userStatus, currentSongStatus, topSongsStatus, recentlyPlayedStatus])
 
     useEffect(() => {
         if (currentActiveSection === "Top Songs") {
@@ -59,87 +70,99 @@ export default function User() {
             <NavigationBar />
 
             <div className="py-2 flex">
-                <p className="flex-1 text-xs text-black/50 text-center">
-                    Want your profile too? <a className="underline" href="/">Click here</a>
+                <p className="flex-1 text-sm text-black/50 text-center">
+                    Want your profile too? <Link className="underline" to="/">Click here</Link>
                 </p>
             </div>
 
 
-            {userStatus == "success" && (
-                <>
-                    <div className="my-10 flex items-center justify-center">
+            <div className="my-10 flex items-center justify-center">
 
-                        {user.profile_pic_url && user.profile_pic_url != "null" ?
+                {userStatus == "success" && user.profile_pic_url && user.profile_pic_url != "null" ?
 
-                            <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
+                    <img src={user.profile_pic_url} className="profile_picture rounded-full w-24 h-24" />
 
-                            :
-                            <div className="h-24 w-24 m-1 flex justify-center items-center bg-brand-color rounded-full">
-                                <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
-                            </div>
-                        }
+                    :
+                    <div className="h-24 w-24 m-1 flex justify-center items-center bg-brand-color rounded-full">
+                        <FaUser className="fa fa-user text-4xl text-center text-white/90" aria-hidden="true"></FaUser>
+                    </div>
+                }
 
-                        <div className="ml-4">
+                <div className="ml-4">
+
+                    {userStatus == "success" && user.name && user.username ? (
+                        <>
 
                             <h2 className="text-3xl font-bold">{user.name && decodeURI(user.name)}</h2>
                             <p className="text-sm text-black/50" id="follower-count-text">
                                 @{user.username}
                             </p>
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="text-3xl font-bold">
+                                Unknown User     
+                            </h2>
+                            <p className="text-sm text-black/50" id="follower-count-text">
+                                Unknown User
+                            </p>
+                        </>
+                    )}
 
-                            <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" profileButton={true} />
 
+                    {userStatus == "success" ? (
+                        <SpotifyButton href={"https://open.spotify.com/user/" + user.spotify_userid} text="Profile" profileButton={true} />
+                    ) : (
 
-                        </div>
+                        <SpotifyButton href={""} text="Profile" profileButton={true} />
+                    )
+                
+                }
 
-                    </div>
+                </div>
 
-
-                </>
-            )}
+            </div>
 
             <div className="currently-listening my-14 flex-col justify-center">
 
                 <>
 
                     <h5 className="text-center font-bold text-black/70">I'm currently listening to</h5>
-                    {currentSong && currentSong.currently_playing_type == "track" ? (
-                        <>
+                    {currentSongStatus == "success" && currentSong && currentSong.currently_playing_type == "track" ? (
 
-                            <div className={`flex bg-white rounded-lg border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing && "scale-105 drop-shadow-lg")}`}>
-
-
-                                <img src={currentSong.item.album.images[0].url} className="h-14 p-1.5" />
-
-                                <div className="mx-4">
-                                    <p className="font-bold">
-
-                                        {/* Below block will show when the md breakpoint is hit */}
-                                        <span className="hidden md:block">
-                                            {currentSong.item.name}
-                                        </span>
-
-                                        {/* Below block will hide when the md breakpoint is hit */}
-                                        <span className="block md:hidden">
-                                            {currentSong.item.name.length > 25 ? (
-                                                currentSong.item.name.substring(0, 25) + "..."
-                                            ) : (
-                                                currentSong.item.name
-                                            )}
-                                        </span>
-                                    </p>
-                                    <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
-                                </div>
-
-                                <div className="mr-4 text-lg text-spotify-green">
-                                    <a href={currentSong.item.external_urls.spotify}>
-                                        <FaSpotify className="transition ease-out duration-500 hover:scale-125" />
-                                    </a>
-                                </div>
+                        <div className={`flex bg-white rounded-lg border w-fit m-auto transition ease-out items-center ${(currentSong.is_playing && "scale-105 drop-shadow-lg")}`}>
 
 
+                            <img src={currentSong.item.album.images[0].url} className="h-14 p-1.5" />
+
+                            <div className="mx-4">
+                                <p className="font-bold">
+
+                                    {/* Below block will show when the md breakpoint is hit */}
+                                    <span className="hidden md:block">
+                                        {currentSong.item.name}
+                                    </span>
+
+                                    {/* Below block will hide when the md breakpoint is hit */}
+                                    <span className="block md:hidden">
+                                        {currentSong.item.name.length > 25 ? (
+                                            currentSong.item.name.substring(0, 25) + "..."
+                                        ) : (
+                                            currentSong.item.name
+                                        )}
+                                    </span>
+                                </p>
+                                <p className="text-black/50 text-sm">{currentSong.item.artists[0].name}</p>
                             </div>
 
-                        </>
+                            <div className="mr-4 text-lg text-spotify-green">
+                                <a href={currentSong.item.external_urls.spotify}>
+                                    <FaSpotify className="transition ease-out duration-500 hover:scale-125" />
+                                </a>
+                            </div>
+
+
+                        </div>
 
                     ) : (
                         <div className="w-fit mx-auto">
@@ -190,7 +213,7 @@ export default function User() {
 
             {currentActiveSection == "Top Songs" && (
 
-                topSongs && topSongs.items.length > 0 ? (
+                topSongsStatus == "success" && topSongs && topSongs.items.length > 0 ? (
                     <>
 
                         <h4 className="text-center text-xl font-bold my-4">Top songs of the month</h4>
@@ -228,7 +251,7 @@ export default function User() {
 
 
             {currentActiveSection == "Recently Played" && (
-                recentlyPlayed.items ? (
+                recentlyPlayedStatus == "success" && recentlyPlayed.items ? (
                     <>
 
                         <h4 className="text-center font-bold text-xl my-4">Recently Played Songs</h4>

@@ -6,8 +6,8 @@ import { useQuery } from "react-query"
 
 export default function Users() {
 
-    const { data: users, status, isLoading} = useQuery("users", () => fetch("/api/user").then(res => res.json()), {
-        staleTime: 60*1000,
+    const { data: users, status } = useQuery("users", () => fetch("/api/v1/user").then(res => res.json()), {
+        staleTime: 60 * 1000,
     })
 
     function handleSearch() {
@@ -55,13 +55,15 @@ export default function Users() {
             </form> */}
 
             {
-                isLoading ? (
+                status == "loading" && (
                     <div className="container">
-                        <div className="jumbotron my-10 flex flex-col items-center">
-                            <h1>Loading...</h1>
-                        </div>
+                        <p className="text-center">Loading...</p>
                     </div>
-                ) : (
+                )
+            }
+
+            {
+                status == "success" && (
 
 
                     <>
@@ -93,6 +95,7 @@ export default function Users() {
                             </div>
                         ))}
                     </>
+
                 )
             }
 
