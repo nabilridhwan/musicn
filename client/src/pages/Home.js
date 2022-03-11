@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import NavigationBar from "../components/NavigationBar";
 
 export default function Home() {
@@ -18,9 +19,9 @@ export default function Home() {
 
                 </p>
 
-                <a href="/signup" className="block mt-10 w-fit m-auto btn p-4 shadow-lg shadow-brand-color/50">
+                <Link to="/signup" className="block mt-10 w-fit m-auto btn p-4 shadow-lg shadow-brand-color/50">
                     Get Started
-                </a>
+                </Link>
 
 
 
