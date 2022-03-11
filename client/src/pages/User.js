@@ -6,6 +6,7 @@ import relativeDate from "relative-date";
 import SpotifyButton from "../components/SpotifyButton";
 import { useQuery } from "react-query"
 import queryClient from "../utils/queryClient";
+import { Helmet } from "react-helmet";
 
 export default function User() {
 
@@ -68,6 +69,15 @@ export default function User() {
         <div>
 
             <NavigationBar />
+            {
+                userStatus == "success" && (
+                    <Helmet>
+                        <title>{decodeURI(user.name)} - Musicn</title>
+                        <meta name="description" content={`Check out ${decodeURI(user.name)}'s Top Songs on Musicn!`} />
+                    </Helmet>
+                )
+            }
+
 
             <div className="py-2 flex">
                 <p className="flex-1 text-sm text-black/50 text-center">
@@ -101,7 +111,7 @@ export default function User() {
                     ) : (
                         <>
                             <h2 className="text-3xl font-bold">
-                                Unknown User     
+                                Unknown User
                             </h2>
                             <p className="text-sm text-black/50" id="follower-count-text">
                                 Unknown User
@@ -116,8 +126,8 @@ export default function User() {
 
                         <SpotifyButton href={""} text="Profile" profileButton={true} />
                     )
-                
-                }
+
+                    }
 
                 </div>
 

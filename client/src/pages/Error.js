@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
 import { useQuery } from "react-query"
+import { Helmet } from "react-helmet";
 
 export default function Error() {
 
@@ -22,6 +23,11 @@ export default function Error() {
             {status == "success" && (
 
                 <>
+
+                    <Helmet>
+                        <title>{error.title} - Musicn</title>
+                    </Helmet>
+
                     <div className="jumbotron my-24">
                         <h1>
                             {error.title}

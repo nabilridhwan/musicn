@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
 import { FaUser, FaSearch } from "react-icons/fa"
 import { useQuery } from "react-query"
+import { Helmet } from "react-helmet"
 
 export default function Users() {
 
@@ -31,6 +32,10 @@ export default function Users() {
         <div className="">
 
             <NavigationBar />
+
+            {/* TODO: Implement Helmet */}
+            <Helmet >
+            </Helmet>
 
             <div className="jumbotron my-24">
                 <h1>Users</h1>

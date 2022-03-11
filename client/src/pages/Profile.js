@@ -5,6 +5,7 @@ import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
 import { useQuery } from "react-query";
 import queryClient from "../utils/queryClient";
+import { Helmet } from "react-helmet";
 
 let reauth_url = "/api/v1/auth";
 let unlink_url = "/api/v1/auth/unlink";
@@ -94,6 +95,10 @@ export default function Profile() {
 
 
             <NavigationBar />
+
+            <Helmet>
+                <title>Profile - Musicn</title>
+            </Helmet>
 
             {userStatus == "success" && (
                 <>

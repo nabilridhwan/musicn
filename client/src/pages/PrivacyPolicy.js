@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import NavigationBar from "../components/NavigationBar";
 
 export default function PrivacyPolicy() {
@@ -5,6 +6,10 @@ export default function PrivacyPolicy() {
         <div>
 
             <NavigationBar />
+
+            <Helmet>
+                <title>Privacy Policy - Musicn</title>
+            </Helmet>
 
             <div className="jumbotron my-10">
                 <h1>Privacy Policy</h1>

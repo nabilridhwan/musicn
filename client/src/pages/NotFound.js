@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet"
 import { Link } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
 
@@ -7,6 +8,10 @@ export default function NotFound() {
         <div className="">
 
             <NavigationBar />
+
+            <Helmet>
+                <title>Not Found - Musicn</title>
+            </Helmet>
 
             <>
                 <div className="jumbotron my-24">

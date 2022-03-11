@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar";
 
@@ -72,6 +73,10 @@ export default function SignUp() {
         <div>
 
             <NavigationBar />
+
+            <Helmet>
+                <title>Sign Up - Musicn</title>
+            </Helmet>
 
             <div className="jumbotron my-10 flex flex-col items-center">
                 <h1>

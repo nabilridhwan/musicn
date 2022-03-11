@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import NavigationBar from "../components/NavigationBar";
 
@@ -7,6 +8,11 @@ export default function Home() {
         <div>
 
             <NavigationBar />
+
+            <Helmet>
+                <title>Home - Musicn</title>
+                <meta name="description" content="With Musicn, you have your own Spotify profile page showing the song you're listening to, your top songs of the month, and recently played songs! Also, share your profile with your friends with a click of a button!" />
+            </Helmet>
 
             <div className="jumbotron my-24">
                 <h1 className="my-10">

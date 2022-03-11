@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar";
 
@@ -57,6 +58,10 @@ export default function Login() {
         <div >
 
             <NavigationBar />
+
+            <Helmet>
+                <title>Log In - Musicn</title>
+            </Helmet>
 
 
 
