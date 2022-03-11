@@ -35,13 +35,13 @@ const errorRoutes = require("./controller/Error")
 // Backend routes
 
 // Auth routes
-app.use("/api/auth/", authRoutes)
-app.use("/api/auth/app", appAuthRoutes)
+app.use("/api/v1/auth/", authRoutes)
+app.use("/api/v1/auth/app", appAuthRoutes)
 
-app.use("/api/error/", errorRoutes);
-app.use("/api/me/", meRoutes)
-app.use("/api/songs", songApiRoutes)
-app.use("/api/user", userApiRoutes)
+app.use("/api/v1/error/", errorRoutes);
+app.use("/api/v1/me/", meRoutes)
+app.use("/api/v1/songs", songApiRoutes)
+app.use("/api/v1/user", userApiRoutes)
 
 app.get("*", (req, res) => {res.sendFile(path.join(__dirname, "./client/build/index.html"))})
 
