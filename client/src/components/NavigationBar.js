@@ -15,7 +15,7 @@ export default function NavigationBar() {
                     </Link>
                 </li>
                 <li className="inline"><Link to="/">Home</Link></li>
-                <li className="inline"><Link to="/users">Users</Link></li>
+                {/* <li className="inline"><Link to="/users">Users</Link></li> */}
 
 
                 <div className="float-right space-x-6">
