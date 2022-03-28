@@ -4,6 +4,7 @@ const axios = require("axios");
 const SpotifyUser = require("../models/SpotifyUser");
 const UserUtils = require("../utils/User");
 const UserView = require("../models/UserView");
+const cors = require("cors");
 
 router.get("/:id/top_songs", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
@@ -41,7 +42,7 @@ router.get("/:id/top_songs", (req, res) => {
         })
 })
 
-router.get("/:id/currently_playing", (req, res) => {
+router.get("/:id/currently_playing", cors(), (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token
