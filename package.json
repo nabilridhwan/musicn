@@ -21,7 +21,7 @@
   "homepage": "https://github.com/nabilridhwan/spotifyer#readme",
   "dependencies": {
     "@supabase/supabase-js": "^1.30.7",
-    "axios": "^0.26.0",
+    "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
