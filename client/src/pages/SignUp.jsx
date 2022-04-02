@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import Container from "../components/Container";
+import FormGroup from "../components/FormGroup";
 import NavigationBar from "../components/NavigationBar";
 
 export default function SignUp() {
@@ -69,7 +71,7 @@ export default function SignUp() {
     }
 
     return (
-        <div>
+        <Container>
 
             <NavigationBar />
 
@@ -96,17 +98,30 @@ export default function SignUp() {
                 <form onSubmit={handleSubmit}>
 
 
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" required placeholder="Email" className="block w-full" onChange={e => setEmail(e.target.value)} />
+                    <FormGroup>
 
-                    <label htmlFor="username">Username</label>
-                    <input type="text" id="username" required placeholder="Username" className="block w-full" onChange={e => setUsername(e.target.value)} />
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" required placeholder="Email" className="block w-full" onChange={e => setEmail(e.target.value)} />
+                    </FormGroup>
 
-                    <label htmlFor="password">Password</label>
-                    <input type="password" id="password" required placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
 
-                    <label htmlFor="confirm-password">Confirm Password</label>
-                    <input type="password" id="confirm-password" required placeholder="Re-enter your password" className="block w-full" onChange={e => setConfirmPassword(e.target.value)} />
+                    <FormGroup>
+
+                        <label htmlFor="username">Username</label>
+                        <input type="text" id="username" required placeholder="Username" className="block w-full" onChange={e => setUsername(e.target.value)} />
+                    </FormGroup>
+
+                    <FormGroup>
+
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" required placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+                    </FormGroup>
+
+                    <FormGroup>
+
+                        <label htmlFor="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" required placeholder="Re-enter your password" className="block w-full" onChange={e => setConfirmPassword(e.target.value)} />
+                    </FormGroup>
 
                     <p className="text-center text-sm text-black/50">
                         By Signing up, you agree to <Link className="underline " to="/privacy-policy">
@@ -114,14 +129,16 @@ export default function SignUp() {
                         </Link>
                     </p>
 
-                    <button
-                        className="btn my-6">
-                        Sign Up
-                    </button>
+                    <FormGroup>
+                        <button
+                            className="btn my-6">
+                            Sign Up
+                        </button>
+                    </FormGroup>
                 </form>
 
             </div>
 
-        </div>
+        </Container>
     )
 }

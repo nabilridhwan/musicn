@@ -3,6 +3,8 @@ import { Link } from "react-router-dom"
 import NavigationBar from "../components/NavigationBar"
 import { FaUser, FaSearch } from "react-icons/fa"
 import { useQuery } from "react-query"
+import DefaultProfilePicture from "../components/DefaultProfilePicture"
+import Container from "../components/Container"
 
 export default function Users() {
 
@@ -28,7 +30,7 @@ export default function Users() {
     }
 
     return (
-        <div className="">
+        <Container>
 
             <NavigationBar />
 
@@ -74,9 +76,7 @@ export default function Users() {
                                     {user.profile_pic_url && user.profile_pic_url != "null" ?
                                         <img className="profile_picture rounded-full w-14 h-14 m-1" src={user.profile_pic_url} alt="profile picture" />
                                         :
-                                        <div className="h-14 w-14 m-1 flex justify-center items-center bg-brand-color rounded-full">
-                                            <FaUser className="fa fa-user text-lg text-center text-white/90" aria-hidden="true"></FaUser>
-                                        </div>
+                                        <DefaultProfilePicture size={14} />
                                     }
 
                                     <div className="ml-5">
@@ -100,6 +100,6 @@ export default function Users() {
             }
 
 
-        </div>
+        </Container>
     )
 }

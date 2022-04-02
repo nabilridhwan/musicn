@@ -5,6 +5,8 @@ import NavigationBar from "../components/NavigationBar";
 import Cookies from "universal-cookie";
 import { useQuery } from "react-query";
 import queryClient from "../utils/queryClient";
+import Container from "../components/Container";
+import FormGroup from "../components/FormGroup";
 
 let reauth_url = "/api/v1/auth";
 let unlink_url = "/api/v1/auth/unlink";
@@ -89,7 +91,7 @@ export default function Profile() {
     }
 
     return (
-        <div>
+        <Container>
 
 
 
@@ -117,7 +119,7 @@ export default function Profile() {
                                 <Link to={"/user/" + user.username} id="spotify-profile-link"
                                     className="btn w-fit mx-auto mt-5 flex items-center">
                                     <FaUser className="mr-2" />
-                                    Go to profile page
+                                    Profile page
                                 </Link>
                             )
 
@@ -188,6 +190,7 @@ export default function Profile() {
 
                         <form onSubmit={handleUpdate}>
 
+<FormGroup>
                             <label htmlFor="displayName">
                                 Display Name
                             </label>
@@ -205,11 +208,19 @@ export default function Profile() {
                                 <input disabled type="text" name="displayName" id="displayName" placeholder="Display Name" value={displayName} className="block w-full" onChange={(e) => setDisplayName(e.target.value)} />
 
                             }
+</FormGroup>
+
+<FormGroup>
+
                             <label htmlFor="email">
                                 Email
                             </label>
 
                             <input type="email" name="email" id="email" placeholder="Email" value={email} className="block w-full" onChange={(e) => setEmail(e.target.value)} />
+</FormGroup>
+
+<FormGroup>
+
 
 
                             <label htmlFor="username">
@@ -217,6 +228,7 @@ export default function Profile() {
                             </label>
 
                             <input type="text" required id="username" placeholder="Username" value={username} className="block w-full" onChange={e => setUsername(e.target.value)} />
+</FormGroup>
 
                             <button className="btn">
                                 Update Profile
@@ -235,6 +247,6 @@ export default function Profile() {
 
 
 
-        </div>
+        </Container>
     )
 }

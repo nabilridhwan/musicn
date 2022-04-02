@@ -18,7 +18,7 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/privacy-policy" element={<PrivacyPolicy />} />
 
-        {/* <Route exact path="/users" element={<Users />} /> */}
+        <Route exact path="/users" element={<Users />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
         <Route exact path="/profile" element={<Profile />} />

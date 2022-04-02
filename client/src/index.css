@@ -50,7 +50,7 @@
     }
 
     input {
-        @apply border-2 border-black/20 rounded-lg p-2 px-4 mb-5;
+        @apply border-2 border-black/20 rounded-lg p-2 px-4 ;
     }
 
     .btn{
@@ -62,7 +62,7 @@
     }
 
     .jumbotron {
-        @apply text-center m-auto w-4/5 md:w-1/2;
+        @apply text-center m-auto my-20;
     }
 
     .jumbotron h1 {
@@ -75,5 +75,9 @@
 
     input:disabled{
         @apply opacity-50;
+    }
+
+    .muted{
+        @apply text-black/40;
     }
 }

@@ -4,15 +4,15 @@ const router = express.Router();
 const PublicUserView = require("../models/PublicUserView");
 
 router.get("/", (req, res) => {
-    if(req.query.q){
-       PublicUserView.getUserByLikeUsernameOrName(req.query.q).then(users => {
-           return res.json(users);
-       }) 
-    }else{
+    if (req.query.q) {
+        PublicUserView.getUserByLikeUsernameOrName(req.query.q).then(users => {
+            return res.json(users);
+        })
+    } else {
 
-    PublicUserView.getAllUsers().then(users => {
-        return res.json(users)
-    })
+        PublicUserView.getAllUsers().then(users => {
+            return res.json(users)
+        })
     }
 })
 
