@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const SpotifyUser = require("../models/SpotifyUser");
 const UserUtils = require("../utils/User");
 const UserView = require("../models/UserView");
-const cors = require("cors");
 
 router.get("/:id/top_songs", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
+    // throw new Error("Not implemented");
 
     // Get new token from refresh token
     UserView.getUserByUsername(req.params.id)
@@ -42,7 +41,8 @@ router.get("/:id/top_songs", (req, res) => {
         })
 })
 
-router.get("/:id/currently_playing", cors(), (req, res) => {
+router.get("/:id/currently_playing", (req, res) => {
+    // throw new Error("Not implemented");
     if (!req.params.id) return res.sendStatus(400);
 
     // Get new token from refresh token

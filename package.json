@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest",
+    "dev:client": "npm start --prefix client",
+    "dev:server": "nodemon server.js",
     "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
@@ -32,6 +34,7 @@
     "mongodb": "^4.4.0",
     "morgan": "^1.10.0",
     "nanoid": "^3.3.1",
+    "needle": "^3.0.0",
     "pg": "^8.7.3",
     "randomstring": "^1.2.2",
     "relative-date": "^1.1.3",

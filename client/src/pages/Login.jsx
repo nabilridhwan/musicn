@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import Container from "../components/Container";
+import FormGroup from "../components/FormGroup";
 import NavigationBar from "../components/NavigationBar";
 
 export default function Login() {
@@ -54,7 +56,7 @@ export default function Login() {
     }
 
     return (
-        <div >
+        <Container >
 
             <NavigationBar />
 
@@ -76,21 +78,29 @@ export default function Login() {
 
                 <form onSubmit={handleSubmit}>
 
+                    <FormGroup>
 
-                    <label htmlFor="email">Email or Username</label>
-                    <input type="text" required id="email" placeholder="Email or Username" className="block w-full" onChange={e => setEmail(e.target.value)} />
+                        <label htmlFor="email">Email or Username</label>
+                        <input type="text" required id="email" placeholder="Email or Username" className="block w-full" onChange={e => setEmail(e.target.value)} />
+                    </FormGroup>
 
-                    <label htmlFor="password">Password</label>
-                    <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+                    <FormGroup>
 
-                    <button
-                        className="btn">
-                        Log In
-                    </button>
+
+                        <label htmlFor="password">Password</label>
+                        <input type="password" required id="password" placeholder="Enter your password" className="block w-full" onChange={e => setPassword(e.target.value)} />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <button
+                            className="btn">
+                            Log In
+                        </button>
+                    </FormGroup>
                 </form>
 
             </div>
 
-        </div>
+        </Container>
     )
 }

@@ -5,6 +5,7 @@ const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
 const requestMethods = require("./middlewares/requestMethods");
 const morgan = require("morgan");
+const cors = require("cors");
 
 require("dotenv").config({path: path.join(__dirname, "../.env")});
 
@@ -16,6 +17,8 @@ app.use(morgan('tiny'))
 // Limit size 1kb
 app.use(express.json({limit: "1kb"}));
 app.use(express.urlencoded({ extended: false, limit: "1kb" }));
+
+app.use(cors())
 
 app.use(cookieParser());
 
