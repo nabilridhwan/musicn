@@ -8,10 +8,18 @@ router.get("/:id/top_songs", (req, res) => {
     if (!req.params.id) return res.sendStatus(400);
     // throw new Error("Not implemented");
 
+    let limit = 15;
+    let term = "short_term"
+
+    if (req.query.term) {
+        term = req.query.term;
+    }
+
+                    console.log(limit, term)
+
     // Get new token from refresh token
     UserView.getUserByUsername(req.params.id)
         .then(user => {
-            console.log(user)
             if (!user || user.length == 0) {
                 return res.sendStatus(404);
             } else {
@@ -20,9 +28,11 @@ router.get("/:id/top_songs", (req, res) => {
                         access_token
                     } = data;
 
+
+
                     axios({
                         method: "GET",
-                        url: `https://api.spotify.com/v1/me/top/tracks?limit=15&time_range=short_term`,
+                        url: `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${term}`,
                         headers: {
                             "Authorization": `Bearer ${access_token}`
                         }

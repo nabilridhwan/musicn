@@ -17,13 +17,23 @@ export default function NavigationBar() {
                         <img className="w-8" src={logo} />
                     </Link>
                 </li>
-                <li className="hidden md:inline md:flex-1"><Link to="/">Home</Link></li>
+
+                {/* {
+                    document.cookie && (
+                        <>
+                            <li className="md:inline md:flex-1"><Link to="/share">Share</Link></li>
+                        </>
+                    )
+                } */}
+
                 {/* <li className="inline"><Link to="/users">Users</Link></li> */}
 
                 <div className="md:flex-none flex-1">
-
                     <SearchBar />
                 </div>
+
+
+
 
                 <div className="float-right space-x-6">
                     {document.cookie ? (
@@ -31,7 +41,7 @@ export default function NavigationBar() {
                             <li className="inline">
 
                                 <Link to="/profile">
-                                    {localStorage.profile_pic_url && localStorage.profile_pic_url !== "null" ?(
+                                    {localStorage.profile_pic_url && localStorage.profile_pic_url !== "null" ? (
                                         <img className="w-8 rounded-full border" src={localStorage["profile_pic_url"]} />
                                     ) : (
                                         <DefaultProfilePicture size={8} />

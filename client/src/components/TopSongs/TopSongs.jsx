@@ -20,7 +20,7 @@ export default function TopSongs({ elemRef, tracks }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 id="top-tracks"
-                className="grid grid-cols-3 lg:grid-cols-6 mx-2 gap-3">
+                className="grid grid-cols-2 lg:grid-cols-6 mx-2 gap-2">
 
                 <AnimatePresence>
                     {tracks.items.map((track) => (

@@ -1,12 +1,11 @@
 # Changelog
 
-## [1.1.0 - Unreleased] - 2022-04-02
+## 1.1.0 - 2022-04-02
 
 ### Added
 
 - Added the ability to search for users via the search bar
 -   Added animations to each page
--   Share with your friends button now shares your Top Songs of the month in a picture! (Subject to changes)
 
 ### Changed
 
@@ -15,6 +14,7 @@
 -   Better error handling for User page (currently listening, top songs and recently played)
 -   The top songs have 3 columns in small, and 6 columns in large (from sm:2 md:3)
 -   The navigation bar now shows your profile picture while you're logged in
+-   The Recently played date is now placed above the title of the song
 
 ### Fixed
 
