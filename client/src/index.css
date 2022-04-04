@@ -80,4 +80,8 @@
     .muted{
         @apply text-black/40;
     }
+
+    select{
+        @apply outline-none border border-black/20 rounded-lg p-4 px-5 focus:border-brand-color;
+    }
 }

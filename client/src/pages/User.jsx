@@ -53,26 +53,26 @@ export default function User() {
     }, [app_userid])
 
     async function handleShare() {
+        // console.log(saveRef)
+        // DOMToImage.toPng(saveRef.current).then(function (dataUrl) {
+        //     console.log(dataUrl)
+        //     var link = document.createElement('a');
+        //     link.download = 'topSongs.png';
+        //     link.href = dataUrl;
+        //     link.click();
+        // })
 
-        console.log(saveRef)
-        DOMToImage.toPng(saveRef.current).then(function (dataUrl) {
-            console.log(dataUrl)
-            var link = document.createElement('a');
-            link.download = 'topSongs.png';
-            link.href = dataUrl;
-            link.click();
-        })
-        // try {
+        try {
 
-        //     await navigator.share({
-        //         url: window.location.href,
-        //         title: "Musicn",
-        //         text: "Check out my top songs of the month!"
-        //     })
+            await navigator.share({
+                url: window.location.href,
+                title: "Musicn",
+                text: "Check out my top songs of the month!"
+            })
 
-        // } catch (e) {
-        //     console.log(e)
-        // }
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
