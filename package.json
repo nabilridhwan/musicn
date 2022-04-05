@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/nabilridhwan/spotifyer#readme",
   "dependencies": {
-    "@supabase/supabase-js": "^1.30.7",
+    "@supabase/supabase-js": "^1.31.0",
     "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
