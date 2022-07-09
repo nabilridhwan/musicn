@@ -9,8 +9,6 @@ const SCOPE =
 	"user-read-private user-read-email user-top-read user-read-recently-played user-read-currently-playing";
 const SHOW_DIALOG = true;
 
-const needle = require("needle");
-
 router.get("/", (req, res) => {
 	return res.redirect(
 		`https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${process.env.REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
@@ -35,27 +33,6 @@ router.get("/callback", isCookieAvailable, (req, res) => {
 		formData.append("grant_type", "authorization_code");
 		formData.append("code", code);
 		formData.append("redirect_uri", process.env.REDIRECT_URI);
-
-		needle(
-			"post",
-			"https://accounts.spotify.com/api/token",
-			{
-				grant_type: "authorization_code",
-				code: code,
-				redirect_uri: process.env.REDIRECT_URI,
-			},
-			{
-				multipart: true,
-				headers: {
-					Authorization: `Basic ${Buffer.from(
-						`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
-					).toString("base64")}`,
-				},
-			}
-		).then((res) => {
-			console.log("Posted data!");
-			console.log(res.body);
-		});
 
 		axios({
 			method: "POST",
