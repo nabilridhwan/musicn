@@ -5,144 +5,162 @@ const SpotifyUser = require("../models/SpotifyUser");
 const isCookieAvailable = require("../middlewares/isCookieAvailable");
 const jwt = require("jsonwebtoken");
 
-const SCOPE = "user-read-private user-read-email user-top-read user-read-recently-played user-read-currently-playing"
+const SCOPE =
+	"user-read-private user-read-email user-top-read user-read-recently-played user-read-currently-playing";
 const SHOW_DIALOG = true;
 
 const needle = require("needle");
 
 router.get("/", (req, res) => {
-    return res.redirect(`https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${process.env.REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`)
-})
-
+	return res.redirect(
+		`https://accounts.spotify.com/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${process.env.REDIRECT_URI}&scope=${SCOPE}&show_dialog=${SHOW_DIALOG}`
+	);
+});
 
 router.get("/callback", isCookieAvailable, (req, res) => {
-    if (req.query.error) {
-        // Error has occurred 
-        return res.status(500).json({
-            message: "The user has canceled the authentication"
-        });
-    }
+	if (req.query.error) {
+		// Error has occurred
+		return res.status(500).json({
+			message: "The user has canceled the authentication",
+		});
+	}
 
-    // Decode jwt
-    jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
+	// Decode jwt
+	jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
+		if (err) return res.status(500).send("Error decoding token");
 
+		const { code } = req.query;
 
-        if (err) return res.status(500).send("Error decoding token")
+		const formData = new URLSearchParams();
+		formData.append("grant_type", "authorization_code");
+		formData.append("code", code);
+		formData.append("redirect_uri", process.env.REDIRECT_URI);
 
-        const {
-            code
-        } = req.query;
+		needle(
+			"post",
+			"https://accounts.spotify.com/api/token",
+			{
+				grant_type: "authorization_code",
+				code: code,
+				redirect_uri: process.env.REDIRECT_URI,
+			},
+			{
+				multipart: true,
+				headers: {
+					Authorization: `Basic ${Buffer.from(
+						`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
+					).toString("base64")}`,
+				},
+			}
+		).then((res) => {
+			console.log("Posted data!");
+			console.log(res.body);
+		});
 
-        const formData = new URLSearchParams();
-        formData.append("grant_type", "authorization_code")
-        formData.append("code", code)
-        formData.append("redirect_uri", process.env.REDIRECT_URI)
+		axios({
+			method: "POST",
+			url: "https://accounts.spotify.com/api/token",
+			data: formData,
+			headers: {
+				Authorization: `Basic ${Buffer.from(
+					`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
+				).toString("base64")}`,
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+		})
+			.then((tokenResponse) => {
+				// Save the access token in database
+				// Get user email
 
-        needle("post", "https://accounts.spotify.com/api/token", {
-            "grant_type": "authorization_code",
-            "code": code,
-            "redirect_uri": process.env.REDIRECT_URI,
-        }, {
-            multipart: true,
-            headers: {
-                "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString("base64")}`,
-            }
-        }).then(res=> {
-            console.log("Posted data!")
-            console.log(res.body)
-        })
+				axios
+					.get("https://api.spotify.com/v1/me", {
+						headers: {
+							Authorization: `Bearer ${tokenResponse.data.access_token}`,
+						},
+					})
+					.then((userResponse) => {
+						let { email, display_name, country, images, id } =
+							userResponse.data;
 
-        axios({
-            method: "POST",
-            url: "https://accounts.spotify.com/api/token",
-            data: formData,
-            headers: {
-                "Authorization": `Basic ${Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString("base64")}`,
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-        }).then(tokenResponse => {
-            // Save the access token in database
-            // Get user email
+						if (images.length == 0) {
+							images = null;
+						} else {
+							images = images[0].url;
+						}
 
-            axios.get("https://api.spotify.com/v1/me", {
-                headers: {
-                    "Authorization": `Bearer ${tokenResponse.data.access_token}`
-                }
-            }).then(userResponse => {
+						let saveBody = {
+							email: email,
+							name: display_name,
+							country: country,
+							spotify_userid: id,
+							profile_pic_url: images,
+							refresh_token: tokenResponse.data.refresh_token,
+							user_id: decoded.user_id,
+						};
 
-                let {
-                    email,
-                    display_name,
-                    country,
-                    images,
-                    id,
-                } = userResponse.data;
+						// Check if user exists or not
+						SpotifyUser.getUserByEmail(email)
+							.then((user) => {
+								if (user.length == 0) {
+									console.log("Inserting new Spotify User");
+									SpotifyUser.insertUser(saveBody)
+										.then((user) => {
+											return res.redirect(
+												`${process.env.FRONTEND_URL}/profile`
+											);
+										})
+										.catch((error) => {
+											return res.status(500).json(error);
+										});
+								} else {
+									console.log(
+										`Account exists already. Updating user.`
+									);
 
-                if (images.length == 0) {
-                    images = null
-                } else {
-                    images = images[0].url
-                }
-
-                let saveBody = {
-                    email: email,
-                    name: display_name,
-                    country: country,
-                    spotify_userid: id,
-                    profile_pic_url: images,
-                    refresh_token: tokenResponse.data.refresh_token,
-                    user_id: decoded.user_id
-                }
-
-                // Check if user exists or not
-                SpotifyUser.getUserByEmail(email).then(user => {
-                    if (user.length == 0) {
-                        console.log("Inserting new Spotify User")
-                        SpotifyUser.insertUser(saveBody).then(user => {
-                            return res.redirect(`${process.env.FRONTEND_URL}/profile`)
-                        }).catch(error => {
-                            return res.status(500).json(error)
-                        })
-                    } else {
-                        console.log(`Account exists already. Updating user.`)
-
-                        SpotifyUser.updateSpotifyUser(saveBody, user[0].id).then(user => {
-                            return res.redirect(`${process.env.FRONTEND_URL}/profile`)
-                        }).catch(error => {
-                            console.log("Error updating user")
-                            console.log(error)
-                            return res.status(500).json(error)
-                        })
-                    }
-                }).catch(error => {
-                    console.log(error)
-                    return res.status(500).json(error)
-                })
-
-
-
-            }).catch(error => {
-                console.log(error)
-                return res.send("There is a problem registering your account. Please try again later!")
-            })
-
-        }).catch(error => {
-            console.log("An error occured")
-            return res.status(500).send(error)
-        })
-    })
-})
+									SpotifyUser.updateSpotifyUser(
+										saveBody,
+										user[0].id
+									)
+										.then((user) => {
+											return res.redirect(
+												`${process.env.FRONTEND_URL}/profile`
+											);
+										})
+										.catch((error) => {
+											console.log("Error updating user");
+											console.log(error);
+											return res.status(500).json(error);
+										});
+								}
+							})
+							.catch((error) => {
+								console.log(error);
+								return res.status(500).json(error);
+							});
+					})
+					.catch((error) => {
+						console.log(error);
+						return res.send(
+							"There is a problem registering your account. Please try again later!"
+						);
+					});
+			})
+			.catch((error) => {
+				console.log("An error occured");
+				return res.status(500).send(error);
+			});
+	});
+});
 
 // TODO: Impletement this
 // router.delete("/unlink", isCookieAvailable, (req, res) => {
 //     if (req.query.error) {
-//         // Error has occurred 
+//         // Error has occurred
 //         return res.status(500).json({message: "The user has canceled the authentication"});
 //     }
 
 //     // Decode jwt
 //     jwt.verify(req.cookies.jwt, process.env.JWT_KEY, (err, decoded) => {
-
 
 //         if (err) return res.status(500).send("Error decoding token")
 
@@ -221,8 +239,6 @@ router.get("/callback", isCookieAvailable, (req, res) => {
 //                     console.log(error)
 //                     return res.status(500).json(error)
 //                 })
-
-
 
 //             }).catch(error => {
 //                 console.log(error)

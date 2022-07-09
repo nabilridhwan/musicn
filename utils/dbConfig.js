@@ -1,10 +1,7 @@
-const {
-    Pool 
-} = require('pg')
+const { Pool } = require("pg");
 
+require("dotenv").config();
 
-require("dotenv").config()
+const pool = new Pool();
 
-const pool = new Pool()
-
-module.exports = pool 
+module.exports = pool;
