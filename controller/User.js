@@ -1,32 +1,27 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
+const PublicUserView = require('../models/PublicUserView');
 
-const PublicUserView = require("../models/PublicUserView");
-
-router.get("/", (req, res) => {
-	if (req.query.q) {
-		PublicUserView.getUserByLikeUsernameOrName(req.query.q).then(
-			(users) => {
-				return res.json(users);
-			}
-		);
-	} else {
-		PublicUserView.getAllUsers().then((users) => {
-			return res.json(users);
-		});
-	}
+router.get('/', async (req, res) => {
+  if (req.query.q) {
+    const users = await PublicUserView.getUserByLikeUsernameOrName(req.query.q);
+    return res.json(users);
+  }
+  const users = await PublicUserView.getAllUsers();
+  return res.json(users);
 });
 
-router.get("/:id", (req, res) => {
-	if (!req.params.id) return res.sendStatus(400);
+router.get('/:id', async (req, res) => {
+  if (!req.params.id) return res.sendStatus(400);
 
-	PublicUserView.getUserByUsername(req.params.id).then((user) => {
-		if (!user || user.length == 0) {
-			return res.sendStatus(404);
-		} else {
-			return res.json(user[0]);
-		}
-	});
+  const user = await PublicUserView.getUserByUserID(req.params.id);
+
+  if (!user || user.length === 0) {
+    return res.sendStatus(404);
+  }
+
+  return res.json(user[0]);
 });
 
 module.exports = router;

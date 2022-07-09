@@ -1,78 +1,95 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
 
-const jwt = require("jsonwebtoken");
-const User = require("../models/AppUser");
-const isCookieAvailable = require("../middlewares/isCookieAvailable");
-const isUsernameForbidden = require("../utils/isUsernameForbidden");
+const yup = require('yup');
 
-const validator = require("validator");
+const jwt = require('jsonwebtoken');
+const User = require('../models/AppUser');
+const getUserToken = require('../middlewares/getUserToken');
+const isUsernameForbidden = require('../utils/isUsernameForbidden');
 
-const UserView = require("../models/UserView");
+const UserView = require('../models/UserView');
 
-router.get("/", isCookieAvailable, (req, res) => {
-	const { jwt: token } = req.cookies;
-	console.log(token);
-	jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-		if (err) {
-			return res.sendStatus(403);
-		} else {
-			UserView.getUserByUserID(decoded.user_id).then((user) => {
-				if (user.length == 0) {
-					return res.sendStatus(404);
-				}
-				return res.json(user);
-			});
-		}
-	});
+// ! Get the current user details
+router.get('/', getUserToken, async (req, res) => {
+  const { token } = req;
+
+  let userIdFromToken;
+
+  try {
+    const { user_id } = await jwt.verify(token, process.env.JWT_KEY);
+    userIdFromToken = user_id;
+    console.log('Decoded');
+  } catch (error) {
+    return res.status(403).json({ message: 'Token error' });
+  }
+
+  const user = await UserView.getUserByUserID(userIdFromToken);
+
+  if (user.length === 0) {
+    return res.sendStatus(404);
+  }
+  return res.json(user);
 });
 
-router.put("/", isCookieAvailable, (req, res) => {
-	const { jwt: token } = req.cookies;
+// ! Update the current user details
+router.put('/', getUserToken, async (req, res) => {
+  const { token } = req;
 
-	let { username, email, name } = req.body;
+  const reqBodySchema = yup.object().shape({
+    username: yup.string().required(),
+    email: yup
+      .string()
+      .email()
+      .required(),
+    password: yup.string().required(),
+  });
 
-	if (!validator.isEmail(email)) {
-		return res.status(400).json({
-			message: "Email is not valid",
-		});
-	}
+  try {
+    const validated = reqBodySchema.validate(req.body);
 
-	if (isUsernameForbidden(username)) {
-		return res.status(400).json({
-			message:
-				"Usernames can only contain a-z, underscore, periods and numbers",
-		});
-	}
+    let { username, email, name } = validated;
 
-	email = encodeURI(email);
-	name = encodeURI(name);
+    if (isUsernameForbidden(username)) {
+      return res.status(400).json({
+        message:
+          'Usernames can only contain a-z, underscore, periods and numbers',
+      });
+    }
 
-	jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-		if (err) {
-			return res.sendStatus(403);
-		} else {
-			User.updateUser(
-				{
-					username,
-					email,
-					name,
-				},
-				decoded.user_id
-			)
-				.then((user) => {
-					console.log("Body : " + JSON.stringify(req.body));
-					console.log(user);
-					return res.json(user);
-				})
-				.catch((e) => {
-					console.log(e);
-					return res
-						.status(409)
-						.send({ message: "Username or Email already exists" });
-				});
-		}
-	});
+    email = encodeURI(email);
+    name = encodeURI(name);
+
+    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+
+      User.updateUser(
+        {
+          username,
+          email,
+          name,
+        },
+        decoded.user_id,
+      )
+        .then((user) => {
+          console.log('Body : ' + JSON.stringify(req.body));
+          console.log(user);
+          return res.json(user);
+        })
+        .catch((e) => {
+          console.log(e);
+          return res
+            .status(409)
+            .send({ message: 'Username or Email already exists' });
+        });
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({ message: 'Invalid request' });
+  }
 });
 
 module.exports = router;

@@ -1,69 +1,49 @@
-const pool = require("../utils/dbConfig");
+const pool = require('../utils/dbConfig');
 
 const PublicUserView = {
-	getAllUsers: async () => {
-		try {
-			let res = await pool.query(
-				`SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id;`
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+  getAllUsers: async () => {
+    const res = await pool.query(
+      'SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id;',
+    );
+    return res.rows;
+  },
 
-	getUserByUserID: async (userid) => {
-		try {
-			let res = await pool.query(
-				`SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.user_id = ${userid};`
-			);
+  getUserByUserID: async (userId) => {
+    const res = await pool.query(
+      `SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.user_id = ${userId};`,
+    );
 
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+    return res.rows;
+  },
 
-	getUserByUsername: async (username) => {
-		try {
-			let res = await pool.query(
-				`SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.username = '${username}';`
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+  getUserByUsername: async (username) => {
+    const res = await pool.query(
+      `SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.username = '${username}';`,
+    );
+    return res.rows;
+  },
 
-	getUserByLikeUsernameOrName: async (username) => {
-		try {
-			let res = await pool.query(
-				`
+  getUserByLikeUsernameOrName: async (username) => {
+    const res = await pool.query(
+      `
                 SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid
                 FROM app_users a 
                 LEFT JOIN spotify_users s
-                ON a.user_id = s.user_id WHERE (a.username LIKE '%${username}%' OR s."name" LIKE '%${username}%');`
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+                ON a.user_id = s.user_id WHERE (a.username LIKE '%${username}%' OR s."name" LIKE '%${username}%');`,
+    );
+    return res.rows;
+  },
 
-	getUserByEmail: async (email) => {
-		try {
-			let res = await pool.query(
-				`
+  getUserByEmail: async (email) => {
+    const res = await pool.query(
+      `
                 SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid
                 FROM app_users a 
                 LEFT JOIN spotify_users s
-                ON a.user_id = s.user_id WHERE a.email = "${email}"%');`
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+                ON a.user_id = s.user_id WHERE a.email = "${email}"%');`,
+    );
+    return res.rows;
+  },
 };
 
 module.exports = PublicUserView;

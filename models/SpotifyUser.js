@@ -1,70 +1,67 @@
-const pool = require("../utils/dbConfig");
+const pool = require('../utils/dbConfig');
 
 const SpotifyUser = {
-	getUserByEmail: async (email) => {
-		try {
-			let res = await pool.query(
-				`
-                SELECT * FROM spotify_users WHERE email = '${email}'; 
-                `
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+  getUserByEmail: async (email) => {
+    const response = await pool.query(
+      'SELECT * FROM spotify_users WHERE email = $1;',
+      [email],
+    );
+    return response.rows;
+  },
 
-	updateSpotifyUser: async (newStuff, id) => {
-		const {
-			email,
-			name,
-			country,
-			spotify_userid,
-			profile_pic_url,
-			refresh_token,
-			user_id,
-		} = newStuff;
+  updateSpotifyUser: async (data, id) => {
+    const {
+      email,
+      name,
+      country,
+      spotify_userid,
+      profile_pic_url,
+      refresh_token,
+      user_id,
+    } = data;
 
-		try {
-			let res = await pool.query(
-				`
+    const response = await pool.query(
+      `
                 UPDATE spotify_users
-                SET email = '${email}',
-                name = '${name}',
-                country = '${country}',
-                spotify_userid = '${spotify_userid}',
-                profile_pic_url = '${profile_pic_url}',
-                refresh_token = '${refresh_token}',
-                user_id = '${user_id}'
-                WHERE id = ${id};
-                `
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+                SET email = $1,
+                name = $2,
+                country = $3,
+                spotify_userid = $4,
+                profile_pic_url = $5,
+                refresh_token = $6,
+                user_id = $7
+                WHERE id = $8;
+                `,
+      [
+        email,
+        name,
+        country,
+        spotify_userid,
+        profile_pic_url,
+        refresh_token,
+        user_id,
+        id,
+      ],
+    );
+    return response.rows;
+  },
 
-	insertUser: async ({
-		email,
-		name,
-		spotify_userid,
-		country,
-		profile_pic_url,
-		refresh_token,
-		user_id,
-	}) => {
-		try {
-			let res = await pool.query(
-				`
+  insertUser: async ({
+    email,
+    name,
+    spotify_userid,
+    country,
+    profile_pic_url,
+    refresh_token,
+    user_id,
+  }) => {
+    const res = await pool.query(
+      `
                 INSERT INTO spotify_users (email, name, spotify_userid, country, profile_pic_url, refresh_token, user_id) VALUES ('${email}', '${name}', '${spotify_userid}', '${country}', '${profile_pic_url}', '${refresh_token}', '${user_id}') RETURNING id, email, name, country, spotify_userid, profile_pic_url, refresh_token, user_id;
-                `
-			);
-			return res.rows;
-		} catch (e) {
-			throw e;
-		}
-	},
+                `,
+    );
+    return res.rows;
+  },
 };
 
 module.exports = SpotifyUser;

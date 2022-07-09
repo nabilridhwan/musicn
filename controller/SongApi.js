@@ -1,128 +1,105 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
-const axios = require("axios");
-const UserUtils = require("../utils/User");
-const UserView = require("../models/UserView");
+const axios = require('axios');
+const getAccessToken = require('../utils/getAccessToken');
+const UserView = require('../models/UserView');
+const getUserIdFromParams = require('../middlewares/getUserIdFromParams');
 
-router.get("/:id/top_songs", (req, res) => {
-	if (!req.params.id) return res.sendStatus(400);
-	// throw new Error("Not implemented");
+// ! Gets the user's top songs
+router.get('/:id/top_songs', getUserIdFromParams, async (req, res) => {
+  const limit = 15;
+  let term = 'short_term';
 
-	let limit = 15;
-	let term = "short_term";
+  if (req.query.term) {
+    term = req.query.term;
+  }
 
-	if (req.query.term) {
-		term = req.query.term;
-	}
+  const { userId } = req;
 
-	console.log(limit, term);
+  // Get new token from refresh token
+  try {
+    const user = await UserView.getUserByUsername(userId);
+    if (!user || user.length === 0) {
+      return res.sendStatus(404);
+    }
 
-	// Get new token from refresh token
-	UserView.getUserByUsername(req.params.id)
-		.then((user) => {
-			if (!user || user.length == 0) {
-				return res.sendStatus(404);
-			} else {
-				UserUtils.getAccessToken(user[0].refresh_token)
-					.then((data) => {
-						const { access_token } = data;
+    const accessTokenData = await getAccessToken(user[0].refresh_token);
+    const { access_token } = accessTokenData;
 
-						axios({
-							method: "GET",
-							url: `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${term}`,
-							headers: {
-								Authorization: `Bearer ${access_token}`,
-							},
-						})
-							.then((response) => {
-								return res.json(response.data);
-							})
-							.catch((error) => {
-								return res
-									.status(500)
-									.json(error.response.data);
-							});
-					})
-					.catch((error) => {
-						return res.status(500).json(error);
-					});
-			}
-		})
-		.catch((err) => {
-			console.log(err);
-			return res.status(500).json(err);
-		});
+    const response = await axios({
+      method: 'GET',
+      url: `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${term}`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
 });
 
-router.get("/:id/currently_playing", (req, res) => {
-	// throw new Error("Not implemented");
-	if (!req.params.id) return res.sendStatus(400);
+// ! Gets the user currently playing track
+router.get('/:id/currently_playing', getUserIdFromParams, async (req, res) => {
+  const { userId } = req;
 
-	// Get new token from refresh token
-	UserView.getUserByUsername(req.params.id).then((user) => {
-		if (!user || user.length == 0) {
-			return res.sendStatus(404);
-		} else {
-			UserUtils.getAccessToken(user[0].refresh_token)
-				.then((data) => {
-					const { access_token } = data;
+  try {
+    // Get new token from refresh token
+    const user = await UserView.getUserByUsername(userId);
+    if (!user || user.length === 0) {
+      return res.sendStatus(404);
+    }
 
-					axios({
-						method: "GET",
-						url: `https://api.spotify.com/v1/me/player/currently-playing`,
-						headers: {
-							Authorization: `Bearer ${access_token}`,
-						},
-					})
-						.then((response) => {
-							return res.json(response.data);
-						})
-						.catch((error) => {
-							return res.status(500).json(error.response.data);
-						});
-				})
-				.catch((error) => {
-					return res.status(500).json(error);
-				});
-		}
-	});
+    const accessTokenData = await getAccessToken(user[0].refresh_token);
+
+    const { access_token } = accessTokenData;
+
+    const response = await axios({
+      method: 'GET',
+      url: 'https://api.spotify.com/v1/me/player/currently-playing',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 });
 
-router.get("/:id/recently_played", (req, res) => {
-	if (!req.params.id) return res.sendStatus(400);
+// ! Gets the user's recently played
+router.get('/:id/recently_played', getUserIdFromParams, async (req, res) => {
+  const { userId } = req;
 
-	// Get new token from refresh token
-	UserView.getUserByUsername(req.params.id).then((user) => {
-		if (!user || user.length == 0) {
-			return res.sendStatus(404);
-		} else {
-			UserUtils.getAccessToken(user[0].refresh_token)
-				.then((data) => {
-					const { access_token } = data;
+  try {
+    // Get new token from refresh token
+    const user = await UserView.getUserByUsername(userId);
 
-					console.log("access_token: " + access_token);
+    if (!user || user.length === 0) {
+      return res.sendStatus(404);
+    }
+    const accessTokenData = await getAccessToken(user[0].refresh_token);
+    const { access_token } = accessTokenData;
 
-					axios({
-						method: "GET",
-						url: `https://api.spotify.com/v1/me/player/recently-played?limit=10`,
-						headers: {
-							Authorization: `Bearer ${access_token}`,
-						},
-					})
-						.then((response) => {
-							return res.json(response.data);
-						})
-						.catch((error) => {
-							console.log("Error while getting recently played");
-							return res.status(500).json(error.response.data);
-						});
-				})
-				.catch((error) => {
-					console.log("Error while getting access token");
-					return res.status(500).json(error);
-				});
-		}
-	});
+    //   console.log('access_token: ' + access_token);
+
+    const response = await axios({
+      method: 'GET',
+      url: 'https://api.spotify.com/v1/me/player/recently-played?limit=10',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
 });
 
 module.exports = router;
