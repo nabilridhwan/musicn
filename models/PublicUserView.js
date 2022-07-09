@@ -10,7 +10,8 @@ const PublicUserView = {
 
   getUserByUserID: async (userId) => {
     const res = await pool.query(
-      `SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.user_id = ${userId};`,
+      'SELECT a.user_id, a.username, s.name, s.country, s.profile_pic_url, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE a.username= $1',
+      [userId],
     );
 
     return res.rows;
