@@ -1,13 +1,17 @@
 const pool = require('../utils/dbConfig');
-const { SpotifyUser } = require('../utils/sequelize');
+const { SpotifyUser, AppUser } = require('../utils/sequelize');
 
 const SpotifyUserModel = {
   getUserByEmail: async (email) => {
-    const response = await pool.query(
-      'SELECT * FROM spotify_users WHERE email = $1;',
-      [email],
-    );
-    return response.rows;
+    const results = await SpotifyUser.findAll({
+      where: {
+        email,
+      },
+      raw: true,
+      nest: true,
+    });
+
+    return results;
   },
 
   // TODO: Test this function
@@ -20,7 +24,7 @@ const SpotifyUserModel = {
     return affectedModels;
   },
 
-  insertUser: async ({
+  insertNewSpotifyUser: async ({
     email,
     name,
     spotify_userid,
@@ -29,12 +33,20 @@ const SpotifyUserModel = {
     refresh_token,
     user_id,
   }) => {
-    const res = await pool.query(
-      `
-                INSERT INTO spotify_users (email, name, spotify_userid, country, profile_pic_url, refresh_token, user_id) VALUES ('${email}', '${name}', '${spotify_userid}', '${country}', '${profile_pic_url}', '${refresh_token}', '${user_id}') RETURNING id, email, name, country, spotify_userid, profile_pic_url, refresh_token, user_id;
-                `,
+    const results = await SpotifyUser.create(
+      {
+        email,
+        name,
+        spotify_userid,
+        country,
+        profile_pic_url,
+        refresh_token,
+        user_id,
+      },
+      { returning: true },
     );
-    return res.rows;
+
+    return results;
   },
 };
 

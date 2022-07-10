@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const yup = require('yup');
 
 const AppUser = require('../models/AppUser');
-const UserView = require('../models/UserView');
 const isUsernameForbidden = require('../utils/isUsernameForbidden');
 const Passwords = require('../utils/Passwords');
 // const isCookieAvailable = require('../middlewares/getUserToken');
@@ -12,6 +11,7 @@ const {
   ForeignKeyConstraintError,
   UniqueConstraintError,
 } = require('sequelize');
+const Users = require('../models/Users');
 
 const router = express.Router();
 
@@ -134,7 +134,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Verify the username and password
-    const user = await UserView.getUserByEmailOrUsername(email, email);
+    const user = await Users.getUserByEmailOrUsername(email, email, true);
     console.log(user);
 
     // Check if there is no user

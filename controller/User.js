@@ -1,27 +1,30 @@
 const express = require('express');
 
 const router = express.Router();
-const PublicUserView = require('../models/PublicUserView');
+const Users = require('../models/Users');
 
 router.get('/', async (req, res) => {
   if (req.query.q) {
-    const users = await PublicUserView.getUserByLikeUsernameOrName(req.query.q);
-    return res.json(users);
+    const users = await Users.getUserByLikeUsernameOrName(req.query.q);
+    if (!users || users.length === 0) {
+      return res.json([]);
+    }
+    return res.json(users[0]);
   }
-  const users = await PublicUserView.getAllUsers();
+  const users = await Users.getAllUsers();
   return res.json(users);
 });
 
 router.get('/:id', async (req, res) => {
   if (!req.params.id) return res.sendStatus(400);
 
-  const user = await PublicUserView.getUserByUserID(req.params.id);
+  const user = await Users.getUserByUserID(req.params.id);
 
-  if (!user || user.length === 0) {
-    return res.sendStatus(404);
+  if (!user) {
+    return res.status(200).json([]);
   }
 
-  return res.json(user[0]);
+  return res.json(user);
 });
 
 module.exports = router;
