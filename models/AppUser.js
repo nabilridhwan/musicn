@@ -1,6 +1,7 @@
 const pool = require('../utils/dbConfig');
+const { AppUser, SpotifyUser } = require('../utils/sequelize');
 
-const AppUser = {
+const AppUserModel = {
   updateUser: async ({ username, email, name }, user_id) => {
     // TODO: Make this into a single query
     const res = await pool.query(
@@ -27,6 +28,11 @@ const AppUser = {
     );
     return res.rows;
   },
+
+  createNewUser: async ({ username, password, email }) => {
+    const response = await AppUser.create({ username, email, password });
+    return response;
+  },
 };
 
-module.exports = AppUser;
+module.exports = AppUserModel;

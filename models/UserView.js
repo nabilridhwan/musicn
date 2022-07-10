@@ -1,13 +1,29 @@
+const { Op } = require('sequelize');
 const pool = require('../utils/dbConfig');
+const { AppUser } = require('../utils/sequelize');
 
+/*
+  ! This file is meant for User View (including getting the Passwords of users while Public User View is not)
+*/
 const UserView = {
   // Used in sign up
   getUserByEmailOrUsername: async (username, email) => {
-    const response = await pool.query(
-      `SELECT a.*, s."name", s.country, s.profile_pic_url, s.refresh_token, s.spotify_userid FROM app_users a LEFT JOIN spotify_users s ON a.user_id = s.user_id WHERE (a.username = '${username}' OR a.email = '${email}');`,
-    );
+    const response = await AppUser.findOne({
+      where: {
+        [Op.or]: [
+          {
+            username,
+          },
+          {
+            email,
+          },
+        ],
+      },
+      raw: true,
+      nest: true,
+    });
 
-    return response.rows;
+    return response;
   },
 
   getAllUsers: async () => {
