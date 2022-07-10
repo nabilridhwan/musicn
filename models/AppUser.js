@@ -1,5 +1,5 @@
 const pool = require('../utils/dbConfig');
-const { AppUser, SpotifyUser } = require('../utils/sequelize');
+const { AppUser } = require('../utils/sequelize');
 
 const AppUserModel = {
   updateUser: async ({ username, email, name }, user_id) => {
@@ -18,13 +18,6 @@ const AppUserModel = {
                 name = '${name}'
                 WHERE spotify_users.user_id = ${user_id};
                 `,
-    );
-    return res.rows;
-  },
-
-  insertUser: async ({ username, password, email }) => {
-    const res = await pool.query(
-      `INSERT INTO app_users (username, password, email) VALUES ('${username}', '${password}', '${email}') RETURNING user_id, username;`,
     );
     return res.rows;
   },
