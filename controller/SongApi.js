@@ -19,10 +19,12 @@ router.get('/:username/top_songs', getUsernameFromParams, async (req, res) => {
 
   // Get new token from refresh token
   try {
-    const user = await Users.getUserByUsername(username, false, true);
-    if (!user) {
+    const users = await Users.getUsersByUsername(username, false, true);
+    if (!users || users.length === 0) {
       return res.sendStatus(404);
     }
+
+    const user = users[0];
 
     if (user.spotify_user.refresh_token === null) {
       return res.sendStatus(404);
@@ -40,8 +42,8 @@ router.get('/:username/top_songs', getUsernameFromParams, async (req, res) => {
         Authorization: `Bearer ${access_token}`,
       },
     });
-
-    return res.json(response.data);
+    const { data, status } = response;
+    return res.status(status).json(data);
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -57,10 +59,15 @@ router.get(
 
     try {
       // Get new token from refresh token
-      const user = await Users.getUserByUsername(username, false, true);
-      if (!user) {
+      const users = await Users.getUsersByUsername(username, false, true);
+
+      if (!users || users.length === 0) {
         return res.sendStatus(404);
       }
+
+      const user = users[0];
+
+      console.log(user);
 
       if (user.spotify_user.refresh_token === null) {
         return res.sendStatus(404);
@@ -80,8 +87,10 @@ router.get(
         },
       });
 
-      return res.json(response.data);
+      const { data, status } = response;
+      return res.status(status).json(data);
     } catch (error) {
+      console.log(error);
       return res.status(500).json(error);
     }
   },
@@ -94,27 +103,27 @@ router.get(
   async (req, res) => {
     const { username } = req;
 
-    let user;
+    let users;
     let access_token;
+    let user;
 
     try {
       // Get new token from refresh token
-      user = await Users.getUserByUsername(username, false, true);
+      users = await Users.getUsersByUsername(username, false, true);
     } catch (error) {
       console.log('Error getting user by username');
       return res.status(500).json(error);
     }
 
     try {
-      if (!user) {
+      if (!users || users.length === 0) {
         return res.sendStatus(404);
       }
+      user = users[0];
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
     }
-
-    console.log(user);
 
     if (user.spotify_user.refresh_token === null) {
       return res.sendStatus(404);
@@ -140,7 +149,8 @@ router.get(
         },
       });
 
-      return res.json(response.data);
+      const { data, status } = response;
+      return res.status(status).json(data);
     } catch (error) {
       console.log("Error getting user's recently played");
       return res.status(500).json(error);
