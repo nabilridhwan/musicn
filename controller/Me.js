@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/AppUser');
 const getUserToken = require('../middlewares/getUserToken');
 const isUsernameForbidden = require('../utils/isUsernameForbidden');
-
-const UserView = require('../models/UserView');
+const Users = require('../models/Users');
 
 // ! Get the current user details
 router.get('/', getUserToken, async (req, res) => {
@@ -25,7 +24,7 @@ router.get('/', getUserToken, async (req, res) => {
     return res.status(403).json({ message: 'Token error' });
   }
 
-  const user = await UserView.getUserByUserID(userIdFromToken);
+  const user = await Users.getUserByUserID(userIdFromToken, true);
 
   if (user.length === 0) {
     return res.sendStatus(404);

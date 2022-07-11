@@ -1,52 +1,30 @@
 const pool = require('../utils/dbConfig');
+const { SpotifyUser, AppUser } = require('../utils/sequelize');
 
-const SpotifyUser = {
+const SpotifyUserModel = {
   getUserByEmail: async (email) => {
-    const response = await pool.query(
-      'SELECT * FROM spotify_users WHERE email = $1;',
-      [email],
-    );
-    return response.rows;
-  },
-
-  updateSpotifyUser: async (data, id) => {
-    const {
-      email,
-      name,
-      country,
-      spotify_userid,
-      profile_pic_url,
-      refresh_token,
-      user_id,
-    } = data;
-
-    const response = await pool.query(
-      `
-                UPDATE spotify_users
-                SET email = $1,
-                name = $2,
-                country = $3,
-                spotify_userid = $4,
-                profile_pic_url = $5,
-                refresh_token = $6,
-                user_id = $7
-                WHERE id = $8;
-                `,
-      [
+    const results = await SpotifyUser.findAll({
+      where: {
         email,
-        name,
-        country,
-        spotify_userid,
-        profile_pic_url,
-        refresh_token,
-        user_id,
-        id,
-      ],
-    );
-    return response.rows;
+      },
+      raw: true,
+      nest: true,
+    });
+
+    return results;
   },
 
-  insertUser: async ({
+  // TODO: Test this function
+  updateSpotifyUser: async (data, id) => {
+    const [affectedRows, affectedModels] = await SpotifyUser.update(
+      { ...data },
+      { where: { id } },
+    );
+
+    return affectedModels;
+  },
+
+  insertNewSpotifyUser: async ({
     email,
     name,
     spotify_userid,
@@ -55,13 +33,21 @@ const SpotifyUser = {
     refresh_token,
     user_id,
   }) => {
-    const res = await pool.query(
-      `
-                INSERT INTO spotify_users (email, name, spotify_userid, country, profile_pic_url, refresh_token, user_id) VALUES ('${email}', '${name}', '${spotify_userid}', '${country}', '${profile_pic_url}', '${refresh_token}', '${user_id}') RETURNING id, email, name, country, spotify_userid, profile_pic_url, refresh_token, user_id;
-                `,
+    const results = await SpotifyUser.create(
+      {
+        email,
+        name,
+        spotify_userid,
+        country,
+        profile_pic_url,
+        refresh_token,
+        user_id,
+      },
+      { returning: true },
     );
-    return res.rows;
+
+    return results;
   },
 };
 
-module.exports = SpotifyUser;
+module.exports = SpotifyUserModel;
