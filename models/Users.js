@@ -45,7 +45,7 @@ const Users = {
     return response;
   },
 
-  getUserByUsername: async (
+  getUsersByUsername: async (
     username,
     showPassword = false,
     showRefreshToken = false,
