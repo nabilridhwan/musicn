@@ -5,7 +5,7 @@ const Users = require('../models/Users');
 
 router.get('/', async (req, res) => {
   if (req.query.q) {
-    const users = await Users.getUserByLikeUsernameOrName(req.query.q);
+    const users = await Users.getUsersByLikeUsernameOrName(req.query.q);
     if (!users || users.length === 0) {
       return res.json([]);
     }
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   if (!req.params.id) return res.sendStatus(400);
 
-  const user = await Users.getUserByUserID(req.params.id);
+  const user = await Users.getUserByUsername(req.params.id);
 
   if (!user) {
     return res.status(200).json([]);

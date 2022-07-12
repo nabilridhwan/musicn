@@ -2,15 +2,14 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const yup = require('yup');
 
-const AppUser = require('../models/AppUser');
-const isUsernameForbidden = require('../utils/isUsernameForbidden');
-const Passwords = require('../utils/Passwords');
-// const isCookieAvailable = require('../middlewares/getUserToken');
-
 const {
   ForeignKeyConstraintError,
   UniqueConstraintError,
 } = require('sequelize');
+
+const AppUser = require('../models/AppUser');
+const isUsernameForbidden = require('../utils/isUsernameForbidden');
+const Passwords = require('../utils/Passwords');
 const Users = require('../models/Users');
 
 const router = express.Router();
@@ -18,6 +17,7 @@ const router = express.Router();
 router.post('/signup', async (req, res) => {
   // Validate input
   const schema = yup.object().shape({
+    name: yup.string().required(),
     email: yup
       .string()
       .email()
@@ -34,7 +34,7 @@ router.post('/signup', async (req, res) => {
     });
   }
 
-  let { email, username, password } = req.body;
+  let { name, email, username, password } = req.body;
 
   // Check username
   if (isUsernameForbidden(username)) {
@@ -54,6 +54,7 @@ router.post('/signup', async (req, res) => {
     // Hash the password
     const hashedPassword = await Passwords.generateHash(password);
     const inserted = await AppUser.createNewUser({
+      name,
       email,
       username,
       password: hashedPassword,
@@ -134,7 +135,7 @@ router.post('/login', async (req, res) => {
 
   try {
     // Verify the username and password
-    const user = await Users.getUserByEmailOrUsername(email, email, true);
+    const user = await Users.getUsersByEmailOrUsername(email, email, true);
     console.log(user);
 
     // Check if there is no user

@@ -4,8 +4,8 @@ const { AppUser, SpotifyUser } = require('../utils/sequelize');
 const Users = {
   getAllUsers: async (showPassword = false) => {
     const appUserAttributes = showPassword
-      ? ['user_id', 'username', 'password']
-      : ['user_id', 'username'];
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
 
     const response = await AppUser.findAll({
       attributes: appUserAttributes,
@@ -24,8 +24,8 @@ const Users = {
 
   getUserByUserID: async (userId, showPassword = false) => {
     const appUserAttributes = showPassword
-      ? ['user_id', 'username', 'password']
-      : ['user_id', 'username'];
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
 
     const response = await AppUser.findAll({
       attributes: appUserAttributes,
@@ -51,8 +51,8 @@ const Users = {
     showRefreshToken = false,
   ) => {
     const appUserAttributes = showPassword
-      ? ['user_id', 'username', 'password']
-      : ['user_id', 'username'];
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
 
     const spotifyUserAttributes = showRefreshToken
       ? [
@@ -82,10 +82,10 @@ const Users = {
     return response;
   },
 
-  getUserByLikeUsernameOrName: async (username, showPassword = false) => {
+  getUsersByLikeUsernameOrName: async (username, showPassword = false) => {
     const appUserAttributes = showPassword
-      ? ['user_id', 'username', 'password']
-      : ['user_id', 'username'];
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
 
     const response = await AppUser.findAll({
       attributes: appUserAttributes,
@@ -114,10 +114,10 @@ const Users = {
 
   getUserByEmail: async (email, showPassword = false) => {
     const appUserAttributes = showPassword
-      ? ['user_id', 'username', 'password']
-      : ['user_id', 'username'];
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
 
-    const response = await AppUser.findAll({
+    const response = await AppUser.findOne({
       attributes: appUserAttributes,
       include: [
         {
@@ -135,12 +135,12 @@ const Users = {
     return response;
   },
 
-  getUserByEmailOrUsername: async (username, email, showPassword = false) => {
+  getUsersByEmailOrUsername: async (username, email, showPassword = false) => {
     const appUserAttributes = showPassword
-      ? ['user_id', 'username', 'password']
-      : ['user_id', 'username'];
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
 
-    const response = await AppUser.findAll({
+    const response = await AppUser.findOne({
       attributes: appUserAttributes,
       where: {
         [Op.or]: [
@@ -151,6 +151,43 @@ const Users = {
             email,
           },
         ],
+      },
+      raw: true,
+      nest: true,
+    });
+
+    return response;
+  },
+
+  getUserByUsername: async (
+    username,
+    showPassword = false,
+    showAccessToken = false,
+  ) => {
+    const appUserAttributes = showPassword
+      ? ['user_id', 'name', 'username', 'password']
+      : ['user_id', 'name', 'username'];
+
+    const spotifyUserAttributes = showAccessToken
+      ? [
+          'name',
+          'country',
+          'profile_pic_url',
+          'spotify_userid',
+          'refresh_token',
+        ]
+      : ['name', 'country', 'profile_pic_url', 'spotify_userid'];
+
+    const response = await AppUser.findOne({
+      attributes: appUserAttributes,
+      include: [
+        {
+          model: SpotifyUser,
+          attributes: spotifyUserAttributes,
+        },
+      ],
+      where: {
+        username,
       },
       raw: true,
       nest: true,

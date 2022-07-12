@@ -20,6 +20,9 @@ const app = express();
 // Dotenv
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
+// Use cors
+app.use(cors());
+
 // https://www.npmjs.com/package/hpp
 app.use(hpp());
 
@@ -27,9 +30,6 @@ app.use(morgan('tiny'));
 
 // Use cookies
 app.use(cookieParser());
-
-// Use cors
-app.use(cors());
 
 // Limit size 1kb
 app.use(express.json({ limit: '1kb' }));

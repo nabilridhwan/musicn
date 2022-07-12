@@ -19,12 +19,10 @@ router.get('/:username/top_songs', getUsernameFromParams, async (req, res) => {
 
   // Get new token from refresh token
   try {
-    const users = await Users.getUsersByUsername(username, false, true);
-    if (!users || users.length === 0) {
+    const user = await Users.getUserByUsername(username, false, true);
+    if (!user) {
       return res.sendStatus(404);
     }
-
-    const user = users[0];
 
     if (user.spotify_user.refresh_token === null) {
       return res.sendStatus(404);
@@ -59,13 +57,11 @@ router.get(
 
     try {
       // Get new token from refresh token
-      const users = await Users.getUsersByUsername(username, false, true);
+      const user = await Users.getUserByUsername(username, false, true);
 
-      if (!users || users.length === 0) {
+      if (!user) {
         return res.sendStatus(404);
       }
-
-      const user = users[0];
 
       console.log(user);
 
@@ -103,23 +99,21 @@ router.get(
   async (req, res) => {
     const { username } = req;
 
-    let users;
     let access_token;
     let user;
 
     try {
       // Get new token from refresh token
-      users = await Users.getUsersByUsername(username, false, true);
+      user = await Users.getUserByUsername(username, false, true);
     } catch (error) {
       console.log('Error getting user by username');
       return res.status(500).json(error);
     }
 
     try {
-      if (!users || users.length === 0) {
+      if (!user) {
         return res.sendStatus(404);
       }
-      user = users[0];
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
