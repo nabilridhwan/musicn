@@ -2,36 +2,30 @@ const { AppUser, SpotifyUser } = require('../utils/sequelize');
 
 const AppUserModel = {
   // Updates the user information of username, email and name
-  updateUser: async ({ username, email, name }, user_id) => {
+  updateUser: async (params, user_id) => {
+    console.log(`Updating ${user_id} with ${JSON.stringify({ ...params })}`);
     // Update the App User table
-    await AppUser.update(
-      {
-        username,
-        email,
-      },
+    const result = await AppUser.update(
+      { ...params },
       {
         where: {
           user_id,
         },
+        returning: true,
       },
     );
 
-    // Update the Spotify User table
-    await SpotifyUser.update(
-      { name },
-      {
-        where: {
-          user_id,
-        },
-      },
-    );
-
-    return true;
+    return result;
   },
 
   // Creates a new user in App User
-  createNewUser: async ({ username, password, email }) => {
-    const response = await AppUser.create({ username, email, password });
+  createNewUser: async (params) => {
+    const response = await AppUser.create({
+      name: params.name,
+      username: params.username,
+      email: params.email,
+      password: params.password,
+    });
     return response;
   },
 };
